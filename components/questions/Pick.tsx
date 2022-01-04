@@ -1,9 +1,11 @@
 import { gql, useMutation } from "@apollo/client";
-import { useState } from "react";
+import { useRouter } from "next/router";
 import { apolloClient } from "../../src/apolloClient";
+import { routes } from "../../src/routes";
+import { loginUserVar } from "../../src/utils/auth.utils";
 
 const PICK_MUTATION = gql`
-  mutation Pick($id: Int!, $pick: Int!) {
+  mutation pick($id: Int!, $pick: Int!) {
     pick(id: $id, pick: $pick) {
       ok
       error
@@ -12,9 +14,15 @@ const PICK_MUTATION = gql`
 `;
 
 export default function Pick({ question }: any) {
+  const loginUser = loginUserVar();
+  const router = useRouter();
   const id = question.id;
   const [pickMutation] = useMutation(PICK_MUTATION);
   const onPickClick = (pick: number) => {
+    if (!loginUser) {
+      router.push(routes.login);
+      return;
+    }
     pickMutation({
       variables: {
         id,

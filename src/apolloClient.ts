@@ -2,12 +2,10 @@ import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
-import { isQuestionLoadFinishVar } from "./utils/questions.utils";
 import { ACCESS_TOKEN } from "./utils/auth.utils";
-import { isQuestionCommentLoadFinishVar } from "./utils/questionComments.utils";
 
 const REFRESH_TOKEN_MUTATION = gql`
-  mutation Mutation {
+  mutation refreshToken {
     refreshToken {
       ok
       error
@@ -16,7 +14,7 @@ const REFRESH_TOKEN_MUTATION = gql`
   }
 `;
 
-export const refreshToken = async () => {
+export const refreshAccessToken = async () => {
   const result = await apolloClient.mutate({
     mutation: REFRESH_TOKEN_MUTATION,
   });
@@ -45,7 +43,7 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
     graphQLErrors.forEach((err) => {
       // 액세스 토큰 갱신
       if (err.message === "유효한 액세스 토큰이 아닙니다.") {
-        refreshToken();
+        refreshAccessToken();
       }
       // 리프레시 불가능시 액세스 토큰 삭제
       if (err.message.indexOf("유효한 갱신 토큰이 아닙니다.") > -1) {
@@ -67,16 +65,11 @@ const uploadHttpLink = createUploadLink({
   credentials: "include",
 });
 
-const mergeCursorPaginate = (
-  existing: any,
-  incoming: any,
-  reactiveVar: any
-) => {
+const mergeCursorPaginate = (existing: any, incoming: any) => {
   const existArr = existing.map((item: any) => item.__ref);
   const filteredIncoming = incoming.filter(
     (item: any) => !existArr.includes(item.__ref)
   );
-  if (filteredIncoming.length === 0) reactiveVar(true);
   return [...existing, ...filteredIncoming];
 };
 
@@ -88,11 +81,7 @@ export const apolloClient = new ApolloClient({
         fields: {
           showQuestions: {
             merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(
-                existing,
-                incoming,
-                isQuestionLoadFinishVar
-              );
+              return mergeCursorPaginate(existing, incoming);
             },
             read(existing) {
               return existing && Object.values(existing);
@@ -100,11 +89,7 @@ export const apolloClient = new ApolloClient({
           },
           showQuestionComments: {
             merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(
-                existing,
-                incoming,
-                isQuestionCommentLoadFinishVar
-              );
+              return mergeCursorPaginate(existing, incoming);
             },
             read(existing) {
               return existing && Object.values(existing);

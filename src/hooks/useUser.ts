@@ -1,5 +1,5 @@
-import { gql, useQuery, useReactiveVar } from "@apollo/client";
-import { refreshToken } from "../apolloClient";
+import { gql, useQuery } from "@apollo/client";
+import { refreshAccessToken } from "../apolloClient";
 import { BASIC_USER_FRAGMENT } from "../fragments";
 import { ACCESS_TOKEN } from "../utils/auth.utils";
 
@@ -17,7 +17,7 @@ function useUser() {
     process.browser ? localStorage.getItem(ACCESS_TOKEN) : false
   );
   if (process.browser && !hasToken) {
-    refreshToken();
+    refreshAccessToken();
   }
   const { data, loading } = useQuery(ME_QUERY, {
     skip: !hasToken,

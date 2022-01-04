@@ -1,6 +1,5 @@
 import moment from "moment";
 import "moment/locale/ko";
-import { useEffect, useState } from "react";
 
 export default function QuestionInfo({ question }: any) {
   moment.locale();

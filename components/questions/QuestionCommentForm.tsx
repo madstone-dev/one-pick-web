@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
-import useUser from "../../src/hooks/useUser";
 import TextareaAutosize from "react-textarea-autosize";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
+import { loginUserVar } from "../../src/utils/auth.utils";
 
 const CREATE_QUESTION_COMMENT_MUTATION = gql`
   mutation createQuestionComment($id: Int!, $content: String!) {
@@ -24,7 +24,7 @@ export default function QuestionCommentForm({
 }: any) {
   const [formFocused, setFormFocused] = useState(false);
   const { register, handleSubmit, setValue } = useForm();
-  const { data } = useUser();
+  const loginUser = loginUserVar();
   const [createQuestionComment, { loading }] = useMutation(
     CREATE_QUESTION_COMMENT_MUTATION,
     {
@@ -42,17 +42,22 @@ export default function QuestionCommentForm({
     setValue("content", "");
   };
 
+  const onCancelClick = () => {
+    setValue("content", "");
+    setFormFocused(false);
+  };
+
   return (
     <div>
       <div className="flex">
         <img
           src={
-            data?.me?.avatar ||
+            loginUser?.avatar ||
             encodeURI(
-              `https://ui-avatars.com/api/?name=${data?.me?.username}&color=7F9CF5&background=EBF4FF`
+              `https://ui-avatars.com/api/?name=${loginUser?.username}&color=7F9CF5&background=EBF4FF`
             )
           }
-          alt={`${data?.me?.username}의 프로필`}
+          alt={`${loginUser?.username}의 프로필`}
           className="w-10 h-10 mr-3 rounded-full"
         />
         <TextareaAutosize
@@ -76,7 +81,10 @@ export default function QuestionCommentForm({
       </div>
       {formFocused && (
         <div className="flex justify-end mt-3">
-          <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <button
+            onClick={onCancelClick}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
             취소
           </button>
           <button

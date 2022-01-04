@@ -46,6 +46,7 @@ export default function CreateQuestion() {
     shouldRefetchQuestionsVar(true);
     router.push(routes.home);
   };
+  const [fileError, setFileError] = useState("");
 
   const [createQuestion, { loading }] = useMutation(CREATE_QUESTION_MUTATION, {
     onCompleted: onCreateQuestion,
@@ -72,6 +73,11 @@ export default function CreateQuestion() {
       target: { files },
     } = event;
     const file = files[0];
+    if (file.size > 5242880) {
+      setFileError("최대 5MB 까지 가능합니다.");
+      event.target.value = "";
+      return;
+    }
     const photo = {
       url: URL.createObjectURL(file),
       file,
@@ -86,7 +92,10 @@ export default function CreateQuestion() {
   return (
     <Layout>
       <div className="w-full py-4 sm:py-6 lg:py-8">
-        <div className="max-w-4xl p-4 mx-auto overflow-hidden bg-white rounded-md shadow-md sm:p-6 lg:p-8">
+        <div
+          className="max-w-4xl p-4 mx-auto overflow-hidden bg-white rounded-3xl sm:p-6 lg:p-8"
+          style={{ boxShadow: "0 1px 20px 0 rgb(0 0 0 / 10%)" }}
+        >
           <form
             className="space-y-8 divide-y divide-gray-200"
             onSubmit={handleSubmit(onSubmitValid)}
@@ -142,6 +151,7 @@ export default function CreateQuestion() {
                           <p className="text-xs text-gray-500">
                             PNG, JPG 최대 5MB
                           </p>
+                          <FormError message={fileError} />
                         </div>
                       </label>
                     </div>

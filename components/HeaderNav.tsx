@@ -6,7 +6,7 @@ import { routes } from "../src/routes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import useUser from "../src/hooks/useUser";
-import { ACCESS_TOKEN } from "../src/utils/auth.utils";
+import { ACCESS_TOKEN, loginUserVar } from "../src/utils/auth.utils";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -20,6 +20,7 @@ function classNames(...classes: any) {
 export default function HeaderNav() {
   const router = useRouter();
   const { data, loading } = useUser();
+  loginUserVar(data?.me);
   const userLogout = () => {
     localStorage.removeItem(ACCESS_TOKEN);
     router.push("/logout");
@@ -129,7 +130,7 @@ export default function HeaderNav() {
                                   <a
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
+                                      "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     )}
                                   >
                                     {item.name}

@@ -70,6 +70,8 @@ export const SHOW_QUESTION_COMMENT_FRAGMENT = gql`
     content
     isBlocked
     pick
+    createdAt
+    updatedAt
   }
   ${BASIC_USER_FRAGMENT}
 `;
