@@ -12,7 +12,7 @@ import { loginUserVar } from "../../src/utils/auth.utils";
 import QuestionDropdown from "../../components/questions/QuestionDropdown";
 import QuestionImageZoom from "../../components/questions/QuestionImageZoom";
 
-const SHOW_QUESTION_QUERY = gql`
+export const SHOW_QUESTION_QUERY = gql`
   query showQuestion($id: Int!) {
     showQuestion(id: $id) {
       ...ShowQuestionFragment
@@ -82,7 +82,7 @@ export default function ShowQuestion({ data }: any) {
                   <Pick question={question} />
                 </div>
               </div>
-              <div className="mt-14">
+              <div className="mt-12">
                 <QuestionCommentList question={question} />
               </div>
             </div>

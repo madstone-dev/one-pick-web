@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { ApolloCache, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import Layout from "../../components/auth/Layout";
 import FormError from "../../components/auth/FormError";
 import Link from "next/link";

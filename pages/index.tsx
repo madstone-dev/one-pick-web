@@ -12,8 +12,6 @@ import Layout from "../components/auth/Layout";
 import { HashLoader } from "react-spinners";
 import { SHOW_QUESTIONS_FRAGMENT } from "../src/fragments";
 import LinesEllipsis from "react-lines-ellipsis";
-import QuestionBlockButton from "../components/questions/QuestionBlockButton";
-import QuestionReportModal from "../components/questions/QuestionReportModal";
 import { loginUserVar } from "../src/utils/auth.utils";
 import QuestionDropdown from "../components/questions/QuestionDropdown";
 
