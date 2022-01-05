@@ -1,12 +1,6 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import {
-  DotsVerticalIcon,
-  PencilAltIcon,
-  TrashIcon,
-  BanIcon,
-  FlagIcon,
-} from "@heroicons/react/solid";
+import { DotsVerticalIcon } from "@heroicons/react/solid";
 import {
   editingCommentVar,
   focusedCommentVar,
@@ -119,7 +113,7 @@ export default function QuestionCommentDropdown({
           focusedCommentVar(null);
         }}
       >
-        <Menu.Items className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg w-fit ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             {loginUser?.id === comment.user.id ? (
               <>
@@ -132,14 +126,10 @@ export default function QuestionCommentDropdown({
                       }}
                       className={classNames(
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "group flex items-center px-4 py-2 text-sm w-full"
+                        "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
                       )}
                     >
-                      <PencilAltIcon
-                        className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
-                      />
-                      수정
+                      댓글 수정
                     </button>
                   )}
                 </Menu.Item>
@@ -148,15 +138,11 @@ export default function QuestionCommentDropdown({
                     <button
                       className={classNames(
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "group flex items-center px-4 py-2 text-sm w-full"
+                        "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
                       )}
                       onClick={onDeleteClick}
                     >
-                      <TrashIcon
-                        className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
-                      />
-                      삭제
+                      댓글 삭제
                     </button>
                   )}
                 </Menu.Item>
@@ -168,15 +154,11 @@ export default function QuestionCommentDropdown({
                     <button
                       className={classNames(
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "group flex items-center px-4 py-2 text-sm w-full"
+                        "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
                       )}
                       onClick={onBlockClick}
                     >
-                      <BanIcon
-                        className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
-                      />
-                      차단 {comment.isBlocked && "해제"}
+                      댓글 숨기기 {comment.isBlocked && "해제"}
                     </button>
                   )}
                 </Menu.Item>
@@ -185,17 +167,13 @@ export default function QuestionCommentDropdown({
                     <button
                       className={classNames(
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "group flex items-center px-4 py-2 text-sm w-full"
+                        "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
                       )}
                       onClick={() => {
                         setReportOpen(true);
                       }}
                     >
-                      <FlagIcon
-                        className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
-                      />
-                      신고
+                      댓글 신고
                     </button>
                   )}
                 </Menu.Item>

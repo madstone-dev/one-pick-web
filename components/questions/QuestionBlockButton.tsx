@@ -37,7 +37,7 @@ export default function QuestionBlockButton({ question }: any) {
 
   return (
     <button
-      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap"
       onClick={onBlockClick}
     >
       {question.isBlocked ? "숨기기 해제" : "콘텐츠 숨기기"}

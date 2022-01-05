@@ -9,8 +9,8 @@ import { apolloClient } from "../../src/apolloClient";
 import { SHOW_QUESTION_FRAGMENT } from "../../src/fragments";
 import QuestionCommentList from "../../components/questions/QuestionCommentList";
 import { loginUserVar } from "../../src/utils/auth.utils";
-import Link from "next/link";
 import QuestionDropdown from "../../components/questions/QuestionDropdown";
+import QuestionImageZoom from "../../components/questions/QuestionImageZoom";
 
 const SHOW_QUESTION_QUERY = gql`
   query showQuestion($id: Int!) {
@@ -64,24 +64,7 @@ export default function ShowQuestion({ data }: any) {
                         alt={`${question?.content}`}
                         className="object-contain w-full h-full"
                       />
-                      <Link href={question?.image.Location} passHref={true}>
-                        <a className="absolute p-2 bg-white rounded-full right-3 bottom-3">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-5 h-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
-                          </svg>
-                        </a>
-                      </Link>
+                      <QuestionImageZoom image={question?.image.Location} />
                     </div>
                   ) : (
                     <NoImage className={"md:h-96"} />
