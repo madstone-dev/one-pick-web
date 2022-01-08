@@ -8,10 +8,7 @@ import {
 import { ApolloCache, gql, useMutation } from "@apollo/client";
 import { apolloClient } from "../../src/apolloClient";
 import { loginUserVar } from "../../src/utils/auth.utils";
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../../src/utils/utils";
 
 const DELETE_QUESTION_COMMENT_MUTATION = gql`
   mutation deleteQuestionComment($id: Int!) {

@@ -10,7 +10,9 @@ import { useForm } from "react-hook-form";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import moment from "moment";
 import QuestionCommentReportModal from "./QuestionCommentReportModal";
-import { loginUserVar } from "../../src/utils/auth.utils";
+import { getAvatar, loginUserVar } from "../../src/utils/auth.utils";
+import "moment/locale/ko";
+import Link from "next/link";
 
 const UPDATE_QUESTION_COMMENT_MUTATION = gql`
   mutation updateQuestionComment($id: Int!, $content: String!) {
@@ -26,7 +28,6 @@ const UPDATE_QUESTION_COMMENT_MUTATION = gql`
 `;
 
 export default function QuestionComment({ question, comment }: any) {
-  moment.locale();
   const createdAt = moment(moment.unix(comment.createdAt / 1000)).fromNow();
   const loginUser = loginUserVar();
   const focusedComment = useReactiveVar(focusedCommentVar);
@@ -79,21 +80,24 @@ export default function QuestionComment({ question, comment }: any) {
   return (
     <div className="py-6 group">
       <div className="flex items-start">
-        <img
-          src={
-            comment.user.avatar ||
-            encodeURI(
-              `https://ui-avatars.com/api/?name=${comment.user.username}&color=7F9CF5&background=EBF4FF`
-            )
-          }
-          alt={`${comment.user.username}.`}
-          className="w-10 h-10 rounded-full"
-        />
+        <Link href={`/users/${comment.user.id}`}>
+          <a>
+            <img
+              src={comment.user.avatar || getAvatar(comment.user.username)}
+              alt={`${comment.user.username}.`}
+              className="w-10 h-10 rounded-full"
+            />
+          </a>
+        </Link>
         <div className="flex-1 ml-4">
           <h4>
-            <span className="text-sm font-bold text-gray-900">
-              {comment.user.username}
-            </span>
+            <Link href={`/users/${comment.user.id}`}>
+              <a>
+                <span className="text-sm font-bold text-gray-900">
+                  {comment.user.username}
+                </span>
+              </a>
+            </Link>
             <span className="ml-3 text-xs">{createdAt}</span>
           </h4>
           {comment.isBlocked ? (

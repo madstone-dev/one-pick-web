@@ -1,5 +1,6 @@
 import { ApolloCache, gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import { routes } from "../../src/routes";
 
 export const TOGGLE_QUESTION_BLOCK_MUTATION = gql`
   mutation toggleQuestionBlock($id: Int!) {
@@ -21,7 +22,9 @@ export default function QuestionBlockButton({ question }: any) {
         },
       },
     });
-    router.push("/");
+    if (router.pathname === "/questions/[id]") {
+      router.push(routes.home);
+    }
   };
 
   const [toggleQuestionBlock] = useMutation(TOGGLE_QUESTION_BLOCK_MUTATION, {

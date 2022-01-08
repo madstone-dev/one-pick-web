@@ -12,8 +12,9 @@ import Layout from "../components/auth/Layout";
 import { HashLoader } from "react-spinners";
 import { SHOW_QUESTIONS_FRAGMENT } from "../src/fragments";
 import LinesEllipsis from "react-lines-ellipsis";
-import { loginUserVar } from "../src/utils/auth.utils";
+import { headerHeightVar, loginUserVar } from "../src/utils/auth.utils";
 import QuestionDropdown from "../components/questions/QuestionDropdown";
+import { SearchIcon } from "@heroicons/react/outline";
 import ContentSection from "../components/ContentSection";
 
 const SHOW_QUESTIONS_QUERY = gql`
@@ -25,15 +26,17 @@ const SHOW_QUESTIONS_QUERY = gql`
   ${SHOW_QUESTIONS_FRAGMENT}
 `;
 
-export default function Home() {
+export default function Search() {
   const focusedQuestion = useReactiveVar(focusedQuestionVar);
   const loginUser = loginUserVar();
   const loader = useRef(null);
   const [take, setTake] = useState(20);
+  const [scrollHeight, setScrollHeight] = useState(0);
   const { data, loading, fetchMore, refetch } = useQuery(SHOW_QUESTIONS_QUERY, {
     variables: {
       take,
     },
+    skip: true,
     onCompleted: () => {
       isQuestionLoadFinishVar(false);
     },
@@ -89,17 +92,27 @@ export default function Home() {
     }
   }, [handleObserver]);
 
+  const trackScroll = () => {
+    setScrollHeight(window.scrollY);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", trackScroll);
+    setScrollHeight(window.scrollY);
+    return () => {
+      window.removeEventListener("scroll", trackScroll);
+    };
+  }, []);
+
   return (
     <Layout>
       <ContentSection>
         <section
           aria-labelledby="products-heading"
-          className={`py-4 sm:py-6 lg:py-8 w-full px-4 sm:px-6 lg:px-8 ${
-            loading && "contents"
-          }`}
+          className={`pb-4 sm:pb-6 lg:pb-8 w-full ${loading && "contents"}`}
         >
           <h2 id="products-heading" className="sr-only">
-            질문들
+            검색
           </h2>
           {loading && (
             <div className="flex items-center justify-center flex-1">
@@ -107,10 +120,46 @@ export default function Home() {
             </div>
           )}
           <div className={`${loading && "hidden"}`}>
+            <div
+              className={`sticky z-30 w-full bg-white ${
+                scrollHeight === 0 ? "" : "shadow-sm"
+              }`}
+              style={{
+                top: `${headerHeightVar()}px`,
+              }}
+            >
+              <div className="flex-1 min-w-0 py-4 mx-auto md:max-w-3xl md:px-8 lg:px-0">
+                <div className="flex items-center px-4 lg:mx-0 xl:px-0 sm:px-6 lg:px-8">
+                  <div className="w-full">
+                    <label htmlFor="search" className="sr-only">
+                      검색
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none sm:left-2">
+                        <SearchIcon
+                          className="w-4 h-4 text-gray-400 sm:w-5 sm:h-5"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <input
+                        id="search"
+                        name="search"
+                        className="block w-full py-2 pl-10 pr-3 text-sm placeholder-gray-500 bg-gray-200 border border-gray-100 rounded-full sm:py-3 sm:text-base sm:pl-14 focus:bg-gray-50 hover:bg-gray-200 focus:outline-none focus:text-gray-900 focus:placeholder-gray-400 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
+                        placeholder="검색"
+                        type="search"
+                        autoFocus
+                        autoComplete="off"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {data?.showQuestions?.length > 0 ? (
               <Masonry
                 breakpointCols={breakpointColumnsObj}
-                className="my-masonry-grid"
+                className="px-4 my-masonry-grid sm:px-6 lg:px-8"
                 columnClassName="my-masonry-grid_column"
               >
                 {data?.showQuestions?.map((question: any) => (
@@ -214,8 +263,7 @@ export default function Home() {
                   transform: "translate(-50%,-50%)",
                 }}
               >
-                <span className="block">당신이 처음입니다</span>
-                <span className="block">첫 게시물을 작성해보세요!</span>
+                <span className="block">검색 결과가 없습니다</span>
               </div>
             )}
           </div>

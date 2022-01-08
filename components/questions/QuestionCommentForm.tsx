@@ -3,7 +3,7 @@ import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
-import { loginUserVar } from "../../src/utils/auth.utils";
+import { getAvatar, loginUserVar } from "../../src/utils/auth.utils";
 
 const CREATE_QUESTION_COMMENT_MUTATION = gql`
   mutation createQuestionComment($id: Int!, $content: String!) {
@@ -51,12 +51,7 @@ export default function QuestionCommentForm({
     <div>
       <div className="flex">
         <img
-          src={
-            loginUser?.avatar ||
-            encodeURI(
-              `https://ui-avatars.com/api/?name=${loginUser?.username}&color=7F9CF5&background=EBF4FF`
-            )
-          }
+          src={loginUser?.avatar || getAvatar(loginUser?.username)}
           alt={`${loginUser?.username}의 프로필`}
           className="w-10 h-10 mr-3 rounded-full"
         />
