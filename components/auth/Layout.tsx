@@ -15,7 +15,7 @@ export default function Layout({ children }: Ichildren) {
   return (
     <div className="flex flex-col items-stretch w-full h-full min-h-screen">
       <HeaderNav user={data} />
-      <div>{children}</div>
+      <div className="flex flex-col flex-1">{children}</div>
       {(router.pathname === routes.home ||
         router.pathname === routes.search) && <ActionBar user={data} />}
     </div>

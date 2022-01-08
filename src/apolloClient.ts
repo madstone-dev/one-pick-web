@@ -95,6 +95,14 @@ export const apolloClient = new ApolloClient({
               return existing && Object.values(existing);
             },
           },
+          searchQuestions: {
+            merge(existing = [], incoming = []) {
+              return mergeCursorPaginate(existing, incoming);
+            },
+            read(existing) {
+              return existing && Object.values(existing);
+            },
+          },
         },
       },
       User: {

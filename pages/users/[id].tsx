@@ -8,9 +8,9 @@ import { getAvatar, headerHeightVar } from "../../src/utils/auth.utils";
 import "moment/locale/ko";
 import UserQuestions from "../../components/users/UserQuestions";
 import { SHOW_QUESTIONS_FRAGMENT } from "../../src/fragments";
-import { shouldRefetchQuestionsVar } from "../../src/utils/questions.utils";
 import { classNames } from "../../src/utils/utils";
 import ContentSection from "../../components/ContentSection";
+import { isQuestionLoadFinishVar } from "../../src/utils/questions.utils";
 
 const SHOW_USER_QUERY = gql`
   query showUser($id: Int!, $take: Int, $lastId: Int) {
@@ -47,6 +47,9 @@ export default function ShowUser({ data }: any) {
     variables: {
       id,
     },
+    onCompleted: () => {
+      isQuestionLoadFinishVar(false);
+    },
   });
   const tabs = [
     { name: "작성한 질문", to: "createdQuestions" },
@@ -60,14 +63,6 @@ export default function ShowUser({ data }: any) {
   useEffect(() => {
     setUser(userData?.showUser);
   }, [userData]);
-
-  useEffect(() => {
-    const shouldRefetch = shouldRefetchQuestionsVar();
-    if (shouldRefetch) {
-      refetch();
-      shouldRefetchQuestionsVar(false);
-    }
-  }, []);
 
   const trackScroll = () => {
     setScrollHeight(window.scrollY);
