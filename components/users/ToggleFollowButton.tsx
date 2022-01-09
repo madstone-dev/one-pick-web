@@ -51,7 +51,7 @@ export default function ToggleFollowButton({ user }: ItoggleFollowButton) {
       type="button"
       className={`${
         user?.isFollowing
-          ? "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-offset-gray-100 focus:ring-indigo-500"
+          ? "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-offset-gray-100 focus:ring-indigo-500 pr-8"
           : "text-white bg-indigo-600 border border-transparent hover:bg-indigo-700 focus:ring-offset-gray-100 focus:ring-indigo-500"
       } inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2`}
     >

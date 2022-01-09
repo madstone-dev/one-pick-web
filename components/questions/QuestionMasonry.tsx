@@ -30,7 +30,7 @@ export default function QuestionMasonry({
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
-      className="px-4 my-masonry-grid sm:px-6 lg:px-8"
+      className="my-masonry-grid sm:px-6 lg:px-8"
       columnClassName="my-masonry-grid_column"
     >
       {questions?.map(

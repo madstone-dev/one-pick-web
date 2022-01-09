@@ -100,6 +100,7 @@ export interface showUser_showUser {
   totalPicks: number;
   lastLogin: string | null;
   questions: (showUser_showUser_questions | null)[] | null;
+  totalQuestions: number;
   picks: (showUser_showUser_picks | null)[] | null;
 }
 
