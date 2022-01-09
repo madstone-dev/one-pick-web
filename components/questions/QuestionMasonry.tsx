@@ -14,7 +14,10 @@ const breakpointColumnsObj = {
   280: 1,
 };
 
-export default function QuestionMasonry({ questions }: any) {
+export default function QuestionMasonry({
+  questions,
+  showBlocked = true,
+}: any) {
   const focusedQuestion = useReactiveVar(focusedQuestionVar);
   const loginUser = loginUserVar();
 
@@ -26,7 +29,7 @@ export default function QuestionMasonry({ questions }: any) {
     >
       {questions?.map((question: any) => (
         <div key={question.id} className="mb-3">
-          {question.isBlocked ? (
+          {question.isBlocked && showBlocked ? (
             <>
               <div className="relative w-full shadow-md rounded-2xl aspect-w-1 aspect-h-1 sm:aspect-w-2 sm:aspect-h-3 group">
                 {loginUser && (

@@ -11,8 +11,8 @@ import ContentSection from "../components/ContentSection";
 import QuestionMasonry from "../components/questions/QuestionMasonry";
 
 const SHOW_QUESTIONS_QUERY = gql`
-  query showQuestions($take: Int, $lastId: Int) {
-    showQuestions(take: $take, lastId: $lastId) {
+  query showQuestions($lastId: Int) {
+    showQuestions(lastId: $lastId) {
       ...ShowQuestionsFragment
     }
   }
@@ -21,11 +21,7 @@ const SHOW_QUESTIONS_QUERY = gql`
 
 export default function Home() {
   const loader = useRef(null);
-  const [take, setTake] = useState(20);
   const { data, loading, fetchMore, refetch } = useQuery(SHOW_QUESTIONS_QUERY, {
-    variables: {
-      take,
-    },
     onCompleted: () => {
       isQuestionLoadFinishVar(false);
     },
@@ -50,7 +46,6 @@ export default function Home() {
         const lastId = data?.showQuestions[data.showQuestions.length - 1]?.id;
         const more: any = await fetchMore({
           variables: {
-            take,
             lastId,
           },
         });
@@ -78,12 +73,12 @@ export default function Home() {
     <Layout>
       <ContentSection>
         <section
-          aria-labelledby="products-heading"
+          aria-labelledby="questions-heading"
           className={`py-4 sm:py-6 lg:py-8 w-full px-4 sm:px-6 lg:px-8 ${
             loading && "contents"
           }`}
         >
-          <h2 id="products-heading" className="sr-only">
+          <h2 id="questions-heading" className="sr-only">
             질문들
           </h2>
           {loading && (

@@ -113,7 +113,7 @@ export default function HeaderNav({ user }: any) {
                             <img
                               className="object-cover rounded-full w-9 h-9"
                               src={
-                                user?.me?.avatar ||
+                                user?.me?.avatar?.Location ||
                                 getAvatar(user?.me?.username)
                               }
                               alt={`${user?.me?.username}'s profile`}

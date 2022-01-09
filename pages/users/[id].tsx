@@ -15,9 +15,11 @@ import { SHOW_QUESTIONS_FRAGMENT } from "../../src/fragments";
 import { classNames } from "../../src/utils/utils";
 import ContentSection from "../../components/ContentSection";
 import { isQuestionLoadFinishVar } from "../../src/utils/questions.utils";
+import Link from "next/link";
+import { routes } from "../../src/routes";
 
 const SHOW_USER_QUERY = gql`
-  query showUser($id: Int!, $take: Int, $lastId: Int) {
+  query showUser($id: Int!, $lastId: Int) {
     showUser(id: $id) {
       id
       email
@@ -27,10 +29,10 @@ const SHOW_USER_QUERY = gql`
       isMe
       totalPicks
       lastLogin
-      questions(take: $take, lastId: $lastId) {
+      questions(lastId: $lastId) {
         ...ShowQuestionsFragment
       }
-      picks(take: $take, lastId: $lastId) {
+      picks(lastId: $lastId) {
         ...ShowQuestionsFragment
       }
     }
@@ -89,7 +91,7 @@ export default function ShowUser({ data }: any) {
             <div className="relative">
               <img
                 className="w-16 h-16 rounded-full"
-                src={user?.avatar || getAvatar(user?.username)}
+                src={user?.avatar?.Location || getAvatar(user?.username)}
                 alt={user?.username}
               />
               <span
@@ -109,12 +111,11 @@ export default function ShowUser({ data }: any) {
         </div>
         <div className="flex flex-col-reverse mt-6 space-y-4 space-y-reverse justify-stretch sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
           {id === loginUser?.id && (
-            <button
-              type="button"
-              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-            >
-              계정 설정
-            </button>
+            <Link href={routes.userProfile}>
+              <a className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                계정 설정
+              </a>
+            </Link>
           )}
 
           <button
@@ -128,7 +129,7 @@ export default function ShowUser({ data }: any) {
 
       {/* Tabs */}
       <div
-        className={`sticky z-30 mt-6 bg-white lg:px-6 sm:mt-2 2xl:mt-5 ${
+        className={`sticky z-30 bg-white lg:px-6 ${
           scrollHeight === 0 ? "" : "shadow-sm"
         }`}
         style={{

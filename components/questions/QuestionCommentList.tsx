@@ -7,8 +7,8 @@ import QuestionComment from "./QuestionComment";
 import QuestionCommentForm from "./QuestionCommentForm";
 
 const SHOW_QUESTION_COMMENTS_QUERY = gql`
-  query showQuestionComments($id: Int!, $take: Int, $lastId: Int) {
-    showQuestionComments(id: $id, take: $take, lastId: $lastId) {
+  query showQuestionComments($id: Int!, $lastId: Int) {
+    showQuestionComments(id: $id, lastId: $lastId) {
       ...ShowQuestionCommentFragment
     }
   }
@@ -18,11 +18,9 @@ const SHOW_QUESTION_COMMENTS_QUERY = gql`
 export default function QuestionCommentList({ question }: any) {
   const loginUser = loginUserVar();
   const loader = useRef(null);
-  const [take, setTake] = useState(20);
   const { data, fetchMore, refetch } = useQuery(SHOW_QUESTION_COMMENTS_QUERY, {
     variables: {
       id: question.id,
-      take,
     },
     onCompleted: () => {
       isQuestionCommentLoadFinishVar(false);
@@ -45,7 +43,6 @@ export default function QuestionCommentList({ question }: any) {
           data?.showQuestionComments[data.showQuestionComments.length - 1]?.id;
         const more: any = await fetchMore({
           variables: {
-            take,
             lastId,
           },
         });

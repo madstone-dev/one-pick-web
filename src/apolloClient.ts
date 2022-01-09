@@ -115,6 +115,33 @@ export const apolloClient = new ApolloClient({
               return existing && Object.values(existing);
             },
           },
+          questionComments: {
+            merge(existing = [], incoming = []) {
+              return mergeCursorPaginate(existing, incoming);
+            },
+            read(existing) {
+              return existing && Object.values(existing);
+            },
+          },
+          questionBlocks: {
+            merge(existing = [], incoming = []) {
+              return mergeCursorPaginate(existing, incoming);
+            },
+            read(existing) {
+              return existing && Object.values(existing);
+            },
+          },
+          questionCommentBlocks: {
+            merge(existing = [], incoming = []) {
+              return mergeCursorPaginate(existing, incoming);
+            },
+            read(existing) {
+              return existing && Object.values(existing);
+            },
+          },
+          totalQuestionComments: {
+            keyArgs: false,
+          },
         },
       },
     },

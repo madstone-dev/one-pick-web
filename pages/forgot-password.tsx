@@ -15,50 +15,21 @@ import {
 } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
 
-const LOGIN_MUTATION = gql`
-  mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      ok
-      error
-      accessToken
-    }
-  }
-`;
-
-export default function Login() {
+export default function ForgotPassword() {
   const successNotification = successNotificationVar();
-  const router = useRouter();
-  const [loginError, setLoginError] = useState(DEFAULT_ERROR_MESSAGE);
+  const [formError, setFormError] = useState(DEFAULT_ERROR_MESSAGE);
   const { register, handleSubmit, formState } = useForm({
     mode: "onChange",
   });
-  const onSubmitValid = (data: any) => {
-    if (loading) {
-      return;
-    }
-    login({
-      variables: { ...data },
-    });
+
+  const loading = false;
+
+  const onSubmitValid = (data: any) => {};
+
+  const clearFormError = () => {
+    setFormError(DEFAULT_ERROR_MESSAGE);
   };
-  const onCompleted = (data: any) => {
-    const { login } = data;
-    if (!login?.ok) {
-      setLoginError({
-        message: login?.error,
-      });
-    }
-    login?.accessToken && userLogin(login.accessToken);
-  };
-  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
-    onCompleted,
-  });
-  const clearLoginError = () => {
-    setLoginError(DEFAULT_ERROR_MESSAGE);
-  };
-  const userLogin = (token: string) => {
-    localStorage.setItem(ACCESS_TOKEN, token);
-    router.push(routes.home);
-  };
+
   useEffect(() => {
     return () => {
       successNotificationVar(SUCCESS_DEFAULT);
@@ -68,15 +39,19 @@ export default function Login() {
   return (
     <Layout>
       <ContentSection>
-        <div className="flex flex-col justify-center w-full min-h-full py-12 sm:px-6 lg:px-8">
+        <div className="flex flex-col justify-center w-full min-h-full pb-12 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
-              로그인
+              비밀번호 찾기
             </h2>
           </div>
 
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
+              <div className="mb-4 text-sm text-gray-600">
+                이메일 주소를 입력하세요. 새 비밀번호를 선택할 수 있는 비밀번호
+                재설정 링크를 이메일로 보내드리겠습니다.
+              </div>
               <form
                 className="space-y-6"
                 onSubmit={handleSubmit(onSubmitValid)}
@@ -93,7 +68,7 @@ export default function Login() {
                       {...register("email", {
                         required: "이메일은 필수 항목입니다.",
                       })}
-                      onKeyDown={clearLoginError}
+                      onKeyDown={clearFormError}
                       id="email"
                       name="email"
                       type="text"
@@ -104,42 +79,9 @@ export default function Login() {
                   </div>
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    비밀번호
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      {...register("password", {
-                        required: "비밀번호는 필수 항목입니다.",
-                      })}
-                      onKeyDown={clearLoginError}
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      required
-                      className="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <div className="text-sm">
-                    <Link href={routes.forgotPassword}>
-                      <a className="font-medium text-indigo-600 hover:text-indigo-500">
-                        비밀번호 찾기
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-
-                {loginError.message && (
+                {formError.message && (
                   <div className="flex justify-center w-full">
-                    <FormError message={loginError.message} />
+                    <FormError message={formError.message} />
                   </div>
                 )}
 
@@ -153,30 +95,12 @@ export default function Login() {
                     }`}
                     disabled={!formState.isValid || loading}
                   >
-                    {loading ? "로그인중..." : "로그인"}
+                    {loading
+                      ? "잠시만 기다려주세요..."
+                      : "비밀번호 초기화 링크 전송"}
                   </button>
                 </div>
               </form>
-
-              <div className="mt-6">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 text-gray-500 bg-white">
-                      아직 계정이 없나요?
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-6 text-center">
-                  <Link href={routes.register}>
-                    <a className="font-medium text-indigo-600 hover:text-indigo-500">
-                      계정 만들기
-                    </a>
-                  </Link>
-                </div>
-              </div>
             </div>
           </div>
           {successNotification.title && successNotification.description ? (

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { isQuestionLoadFinishVar } from "../../src/utils/questions.utils";
 import QuestionMasonry from "../questions/QuestionMasonry";
 
-export default function UserQuestions({ questions, fetchMore }: any) {
+export default function BlockedQuestions({ questions, fetchMore }: any) {
   const loader = useRef(null);
 
   const handleObserver = useCallback(
@@ -40,32 +40,20 @@ export default function UserQuestions({ questions, fetchMore }: any) {
   }, [handleObserver]);
 
   return (
-    <div className="flex flex-1 py-4 md:px-6">
-      <section
-        aria-labelledby="question-heading"
-        className="relative w-full px-4 py-4 sm:py-6 lg:py-8 sm:px-6 lg:px-8"
-      >
-        <h2 id="question-heading" className="sr-only">
-          질문들
-        </h2>
-        <div>
-          {questions?.length > 0 ? (
-            <QuestionMasonry questions={questions} />
-          ) : (
-            <div
-              className="absolute text-xl font-bold text-center text-gray-600 sm:text-2xl"
-              style={{
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%,-50%)",
-              }}
-            >
-              <span className="block">작성한 질문이 없습니다</span>
-            </div>
-          )}
-        </div>
-        <div ref={loader} />
-      </section>
+    <div>
+      <h2 id="question-heading" className="sr-only">
+        숨긴 질문들
+      </h2>
+      <div>
+        {questions?.length > 0 ? (
+          <QuestionMasonry questions={questions} showBlocked={false} />
+        ) : (
+          <div className="text-lg font-bold text-center text-gray-600 sm:text-xl">
+            <span className="block">숨겨둔 질문이 없습니다</span>
+          </div>
+        )}
+      </div>
+      <div ref={loader} />
     </div>
   );
 }

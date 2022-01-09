@@ -17,7 +17,8 @@ export default function QuestionInfo({ question }: any) {
               <a>
                 <img
                   src={
-                    question.user.avatar || getAvatar(question.user.username)
+                    question.user.avatar?.Location ||
+                    getAvatar(question.user.username)
                   }
                   alt={`${question.user.username}의 프로필`}
                   className="w-12 h-12 rounded-full"

@@ -21,18 +21,8 @@ const SEARCH_QUESTION_HASHTAGS_QUERY = gql`
 `;
 
 const SEARCH_QUESTIONS_QUERY = gql`
-  query searchQuestions(
-    $keyword: String
-    $isTag: Boolean
-    $take: Int
-    $lastId: Int
-  ) {
-    searchQuestions(
-      keyword: $keyword
-      isTag: $isTag
-      take: $take
-      lastId: $lastId
-    ) {
+  query searchQuestions($keyword: String, $isTag: Boolean, $lastId: Int) {
+    searchQuestions(keyword: $keyword, isTag: $isTag, lastId: $lastId) {
       ...ShowQuestionsFragment
     }
   }
@@ -41,7 +31,6 @@ const SEARCH_QUESTIONS_QUERY = gql`
 
 export default function Search() {
   const loader = useRef(null);
-  const [take, setTake] = useState(20);
   const [scrollHeight, setScrollHeight] = useState(0);
   const [inputFocused, setInputFocused] = useState(false);
 
@@ -96,7 +85,6 @@ export default function Search() {
     setKeyword(keyword.trim());
     refetch({
       keyword: keyword.trim(),
-      take,
       isTag,
     });
   };
@@ -117,7 +105,6 @@ export default function Search() {
         const more: any = await fetchMore({
           variables: {
             keyword,
-            take,
             lastId,
           },
         });
@@ -249,10 +236,10 @@ export default function Search() {
       </div>
       <ContentSection>
         <section
-          aria-labelledby="products-heading"
+          aria-labelledby="search-heading"
           className={`pb-4 sm:pb-6 lg:pb-8 w-full ${loading && "contents"}`}
         >
-          <h2 id="products-heading" className="sr-only">
+          <h2 id="search-heading" className="sr-only">
             검색
           </h2>
           {loading && (

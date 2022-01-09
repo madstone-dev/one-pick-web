@@ -51,7 +51,7 @@ export default function QuestionCommentForm({
     <div>
       <div className="flex">
         <img
-          src={loginUser?.avatar || getAvatar(loginUser?.username)}
+          src={loginUser?.avatar?.Location || getAvatar(loginUser?.username)}
           alt={`${loginUser?.username}의 프로필`}
           className="w-10 h-10 mr-3 rounded-full"
         />
@@ -89,7 +89,7 @@ export default function QuestionCommentForm({
               loading && "opacity-50 pointer-events-none"
             }`}
           >
-            {loading ? "저장 중..." : "댓글"}
+            댓글
           </button>
         </div>
       )}

@@ -8,11 +8,11 @@ import Pick from "../../components/questions/Pick";
 import { apolloClient } from "../../src/apolloClient";
 import { SHOW_QUESTION_FRAGMENT } from "../../src/fragments";
 import QuestionCommentList from "../../components/questions/QuestionCommentList";
-import { loginUserVar } from "../../src/utils/auth.utils";
 import QuestionDropdown from "../../components/questions/QuestionDropdown";
 import QuestionImageZoom from "../../components/questions/QuestionImageZoom";
 import NavBack from "../../components/NavBack";
 import ContentSection from "../../components/ContentSection";
+import useUser from "../../src/hooks/useUser";
 
 export const SHOW_QUESTION_QUERY = gql`
   query showQuestion($id: Int!) {
@@ -24,9 +24,9 @@ export const SHOW_QUESTION_QUERY = gql`
 `;
 
 export default function ShowQuestion({ data }: any) {
+  const { data: userData, loading } = useUser();
   const cardRef = useRef<any>();
   const [cardTop, setCardTop] = useState(0);
-  const loginUser = loginUserVar();
   const router = useRouter();
   const [question, setQuestion] = useState(data);
   const id = parseInt(router.query.id as string);
@@ -52,7 +52,7 @@ export default function ShowQuestion({ data }: any) {
     <Layout>
       <ContentSection>
         {!question ? null : (
-          <div className="flex flex-col flex-1 px-4 py-4 sm:py-6 lg:py-8 sm:px-6 lg:px-8">
+          <div className="flex flex-col flex-1 p-4 sm:p-6 lg:p-8">
             <div
               className="sticky"
               style={{
@@ -70,7 +70,7 @@ export default function ShowQuestion({ data }: any) {
                 <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-6 lg:gap-8">
                   <div className="flex justify-between sm:hidden">
                     <QuestionInfo question={question} />
-                    {loginUser && (
+                    {userData && (
                       <div className="relative z-10 shrink-0">
                         <QuestionDropdown question={question} />
                       </div>
@@ -92,7 +92,7 @@ export default function ShowQuestion({ data }: any) {
                   </div>
                   <div className="justify-between hidden sm:flex">
                     <QuestionInfo question={question} />
-                    {loginUser && (
+                    {userData && (
                       <div className="shrink-0">
                         <QuestionDropdown question={question} />
                       </div>

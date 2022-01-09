@@ -1,4 +1,3 @@
-import { useReactiveVar } from "@apollo/client";
 import { useRouter } from "next/router";
 import useUser from "../../src/hooks/useUser";
 import { Ichildren } from "../../src/interfaces";

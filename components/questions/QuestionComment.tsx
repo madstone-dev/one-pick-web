@@ -83,7 +83,10 @@ export default function QuestionComment({ question, comment }: any) {
         <Link href={`/users/${comment.user.id}`}>
           <a>
             <img
-              src={comment.user.avatar || getAvatar(comment.user.username)}
+              src={
+                comment.user.avatar?.Location ||
+                getAvatar(comment.user.username)
+              }
               alt={`${comment.user.username}.`}
               className="w-10 h-10 rounded-full"
             />
