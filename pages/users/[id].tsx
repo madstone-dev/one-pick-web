@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "../../components/auth/Layout";
 import { apolloClient } from "../../src/apolloClient";
-import { getAvatar, headerHeightVar } from "../../src/utils/auth.utils";
+import {
+  getAvatar,
+  headerHeightVar,
+  loginUserVar,
+} from "../../src/utils/auth.utils";
 import "moment/locale/ko";
 import UserQuestions from "../../components/users/UserQuestions";
 import { SHOW_QUESTIONS_FRAGMENT } from "../../src/fragments";
@@ -36,6 +40,7 @@ const SHOW_USER_QUERY = gql`
 
 export default function ShowUser({ data }: any) {
   const router = useRouter();
+  const loginUser = loginUserVar();
   const id = parseInt(router.query.id as string);
   const [user, setUser] = useState(data);
   const [scrollHeight, setScrollHeight] = useState(0);
@@ -103,12 +108,15 @@ export default function ShowUser({ data }: any) {
           </div>
         </div>
         <div className="flex flex-col-reverse mt-6 space-y-4 space-y-reverse justify-stretch sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
-          <button
-            type="button"
-            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-          >
-            계정 설정
-          </button>
+          {id === loginUser?.id && (
+            <button
+              type="button"
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+            >
+              계정 설정
+            </button>
+          )}
+
           <button
             type="button"
             className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"

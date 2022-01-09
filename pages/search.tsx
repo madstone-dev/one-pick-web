@@ -93,9 +93,9 @@ export default function Search() {
   const onSearch = async (isTag: any = false, keyword: string) => {
     (document.activeElement as HTMLElement).blur();
     isQuestionLoadFinishVar(false);
-    setKeyword(keyword);
+    setKeyword(keyword.trim());
     refetch({
-      keyword,
+      keyword: keyword.trim(),
       take,
       isTag,
     });
