@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { DotsVerticalIcon } from "@heroicons/react/solid";
 import {
@@ -9,8 +9,11 @@ import { ApolloCache, gql, useMutation } from "@apollo/client";
 import { apolloClient } from "../../src/apolloClient";
 import { loginUserVar } from "../../src/utils/auth.utils";
 import { classNames } from "../../src/utils/utils";
+import { deleteQuestionComment } from "../../src/__generated__/deleteQuestionComment";
+import { toggleQuestionCommentBlock } from "../../src/__generated__/toggleQuestionCommentBlock";
+import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
 
-const DELETE_QUESTION_COMMENT_MUTATION = gql`
+export const DELETE_QUESTION_COMMENT_MUTATION = gql`
   mutation deleteQuestionComment($id: Int!) {
     deleteQuestionComment(id: $id) {
       ok
@@ -19,7 +22,7 @@ const DELETE_QUESTION_COMMENT_MUTATION = gql`
   }
 `;
 
-const TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION = gql`
+export const TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION = gql`
   mutation toggleQuestionCommentBlock($id: Int!) {
     toggleQuestionCommentBlock(id: $id) {
       ok
@@ -28,11 +31,17 @@ const TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION = gql`
   }
 `;
 
+interface IquestionCommentDropdown {
+  comment: showQuestionComments_showQuestionComments;
+  setEditable: Dispatch<SetStateAction<boolean>>;
+  setReportOpen: Dispatch<SetStateAction<boolean>>;
+}
+
 export default function QuestionCommentDropdown({
   comment,
   setEditable,
   setReportOpen,
-}: any) {
+}: IquestionCommentDropdown) {
   const loginUser = loginUserVar();
   const deleteQuestionCommentCache = () => {
     apolloClient.cache.evict({
@@ -45,7 +54,7 @@ export default function QuestionCommentDropdown({
     apolloClient.cache.gc();
   };
 
-  const [deleteQuestionComment] = useMutation(
+  const [deleteQuestionCommentMutation] = useMutation<deleteQuestionComment>(
     DELETE_QUESTION_COMMENT_MUTATION,
     {
       variables: {
@@ -57,11 +66,11 @@ export default function QuestionCommentDropdown({
 
   const onDeleteClick = () => {
     if (window.confirm("댓글을 삭제하시겠습니까?")) {
-      deleteQuestionComment();
+      deleteQuestionCommentMutation();
     }
   };
 
-  const onUpdatedCommentBlock = (cache: ApolloCache<any>, result: any) => {
+  const onUpdatedCommentBlock = (cache: ApolloCache<any>) => {
     cache.modify({
       id: `QuestionComment:${comment.id}`,
       fields: {
@@ -72,18 +81,19 @@ export default function QuestionCommentDropdown({
     });
   };
 
-  const [toggleQuestionCommentBlock] = useMutation(
-    TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION,
-    {
-      variables: {
-        id: comment.id,
-      },
-      update: onUpdatedCommentBlock,
-    }
-  );
+  const [toggleQuestionCommentBlockMutation] =
+    useMutation<toggleQuestionCommentBlock>(
+      TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION,
+      {
+        variables: {
+          id: comment.id,
+        },
+        update: onUpdatedCommentBlock,
+      }
+    );
 
   const onBlockClick = () => {
-    toggleQuestionCommentBlock();
+    toggleQuestionCommentBlockMutation();
   };
 
   return (

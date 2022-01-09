@@ -1,8 +1,17 @@
 import { useCallback, useEffect, useRef } from "react";
 import { isQuestionLoadFinishVar } from "../../src/utils/questions.utils";
+import { myBlockContents_me_questionBlocks } from "../../src/__generated__/myBlockContents";
 import QuestionMasonry from "../questions/QuestionMasonry";
 
-export default function BlockedQuestions({ questions, fetchMore }: any) {
+interface IblockedQuestions {
+  questions: (myBlockContents_me_questionBlocks | null)[];
+  fetchMore: any;
+}
+
+export default function BlockedQuestions({
+  questions,
+  fetchMore,
+}: IblockedQuestions) {
   const loader = useRef(null);
 
   const handleObserver = useCallback(
@@ -14,7 +23,7 @@ export default function BlockedQuestions({ questions, fetchMore }: any) {
       const target = entries[0];
       if (questions && target.isIntersecting) {
         const lastId = questions[questions.length - 1]?.id;
-        const more: any = await fetchMore({
+        const more = await fetchMore({
           variables: {
             lastId,
           },

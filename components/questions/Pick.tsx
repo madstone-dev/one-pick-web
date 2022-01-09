@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { apolloClient } from "../../src/apolloClient";
 import { routes } from "../../src/routes";
 import { loginUserVar } from "../../src/utils/auth.utils";
+import { pick } from "../../src/__generated__/pick";
+import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
 
 const PICK_MUTATION = gql`
   mutation pick($id: Int!, $pick: Int!) {
@@ -13,11 +15,15 @@ const PICK_MUTATION = gql`
   }
 `;
 
-export default function Pick({ question }: any) {
+interface Ipick {
+  question: showQuestion_showQuestion;
+}
+
+export default function Pick({ question }: Ipick) {
   const loginUser = loginUserVar();
   const router = useRouter();
   const id = question.id;
-  const [pickMutation] = useMutation(PICK_MUTATION);
+  const [pickMutation] = useMutation<pick>(PICK_MUTATION);
   const onPickClick = (pick: number) => {
     if (!loginUser) {
       router.push(routes.login);

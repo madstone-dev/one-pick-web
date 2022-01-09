@@ -1,5 +1,5 @@
-import { gql, useQuery } from "@apollo/client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ApolloQueryResult, gql, useQuery } from "@apollo/client";
+import { useCallback, useEffect, useRef } from "react";
 import {
   isQuestionLoadFinishVar,
   shouldRefetchQuestionsVar,
@@ -9,6 +9,7 @@ import { HashLoader } from "react-spinners";
 import { SHOW_QUESTIONS_FRAGMENT } from "../src/fragments";
 import ContentSection from "../components/ContentSection";
 import QuestionMasonry from "../components/questions/QuestionMasonry";
+import { showQuestions } from "../src/__generated__/showQuestions";
 
 const SHOW_QUESTIONS_QUERY = gql`
   query showQuestions($lastId: Int) {
@@ -21,11 +22,14 @@ const SHOW_QUESTIONS_QUERY = gql`
 
 export default function Home() {
   const loader = useRef(null);
-  const { data, loading, fetchMore, refetch } = useQuery(SHOW_QUESTIONS_QUERY, {
-    onCompleted: () => {
-      isQuestionLoadFinishVar(false);
-    },
-  });
+  const { data, loading, fetchMore, refetch } = useQuery<showQuestions>(
+    SHOW_QUESTIONS_QUERY,
+    {
+      onCompleted: () => {
+        isQuestionLoadFinishVar(false);
+      },
+    }
+  );
 
   useEffect(() => {
     const shouldRefetch = shouldRefetchQuestionsVar();
@@ -44,7 +48,7 @@ export default function Home() {
       const target = entries[0];
       if (data?.showQuestions && target.isIntersecting) {
         const lastId = data?.showQuestions[data.showQuestions.length - 1]?.id;
-        const more: any = await fetchMore({
+        const more: ApolloQueryResult<showQuestions> = await fetchMore({
           variables: {
             lastId,
           },
@@ -87,7 +91,7 @@ export default function Home() {
             </div>
           )}
           <div className={`${loading && "hidden"}`}>
-            {data?.showQuestions?.length > 0 ? (
+            {data?.showQuestions && data?.showQuestions?.length > 0 ? (
               <QuestionMasonry questions={data.showQuestions} />
             ) : (
               <div

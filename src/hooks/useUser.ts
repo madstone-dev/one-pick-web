@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { refreshAccessToken } from "../apolloClient";
 import { BASIC_USER_FRAGMENT } from "../fragments";
 import { ACCESS_TOKEN } from "../utils/auth.utils";
+import { me } from "../__generated__/me";
 
 export const ME_QUERY = gql`
   query me {
@@ -19,7 +20,7 @@ function useUser() {
   if (process.browser && !hasToken) {
     refreshAccessToken();
   }
-  const { data, loading } = useQuery(ME_QUERY, {
+  const { data, loading } = useQuery<me>(ME_QUERY, {
     skip: !hasToken,
   });
   return { data, loading };

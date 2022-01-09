@@ -1,8 +1,17 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { FlagIcon } from "@heroicons/react/solid";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
+import { createQuestionCommentReport } from "../../src/__generated__/createQuestionCommentReport";
+import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
 
 const REPORT_QUESTION_COMMENT_MUTATION = gql`
   mutation createQuestionCommentReport($id: Int!, $type: Int!) {
@@ -13,15 +22,22 @@ const REPORT_QUESTION_COMMENT_MUTATION = gql`
   }
 `;
 
+interface IquestionCommentReportModal {
+  comment: showQuestionComments_showQuestionComments;
+  reportOpen: boolean;
+  setReportOpen: Dispatch<SetStateAction<boolean>>;
+}
+
 export default function QuestionCommentReportModal({
   comment,
   reportOpen,
   setReportOpen,
-}: any) {
+}: IquestionCommentReportModal) {
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
   const { register, handleSubmit, watch, setValue } = useForm();
-  const [reportQuestionComment] = useMutation(REPORT_QUESTION_COMMENT_MUTATION);
+  const [reportQuestionCommentMutation] =
+    useMutation<createQuestionCommentReport>(REPORT_QUESTION_COMMENT_MUTATION);
   const reportTypes = [
     { label: "상업성 콘텐츠 또는 스팸", value: "1" },
     { label: "증오심 표현 또는 노골적인 폭력", value: "2" },
@@ -38,8 +54,8 @@ export default function QuestionCommentReportModal({
     setReportOpen(open);
   }, [open]);
 
-  const onValid = (data: any) => {
-    reportQuestionComment({
+  const onValid = () => {
+    reportQuestionCommentMutation({
       variables: {
         id: comment.id,
         type: parseInt(watch("commentReport")),

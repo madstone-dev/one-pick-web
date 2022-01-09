@@ -12,6 +12,10 @@ import {
   successNotificationVar,
 } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
+import {
+  resetPassword,
+  resetPasswordVariables,
+} from "../src/__generated__/resetPassword";
 
 const RESET_PASSWORD_MUTATION = gql`
   mutation resetPassword($email: String!, $token: String!, $password: String!) {
@@ -30,7 +34,7 @@ export default function ResetPassword() {
     mode: "onChange",
   });
 
-  const onCompleted = (data: any) => {
+  const onCompleted = (data: resetPassword) => {
     if (data?.resetPassword?.ok) {
       showSuccess({
         title: "비밀번호 변경 완료!",
@@ -38,19 +42,22 @@ export default function ResetPassword() {
       });
       router.push(routes.login);
     } else {
-      setFormError(data?.resetPassword?.error);
+      setFormError(data?.resetPassword?.error || "");
     }
   };
 
-  const [resetPassword, { loading }] = useMutation(RESET_PASSWORD_MUTATION, {
-    onCompleted,
-  });
+  const [resetPasswordMutation, { loading }] = useMutation<resetPassword>(
+    RESET_PASSWORD_MUTATION,
+    {
+      onCompleted,
+    }
+  );
 
-  const onSubmitValid = (data: any) => {
+  const onSubmitValid = (data: resetPasswordVariables) => {
     const {
       query: { email, token },
     } = router;
-    resetPassword({
+    resetPasswordMutation({
       variables: {
         email,
         token,

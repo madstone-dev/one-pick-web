@@ -3,14 +3,16 @@ import { getRefreshToken } from "../../src/utils/auth.utils";
 import { routes } from "../../src/routes";
 import { useCallback, useEffect, useRef } from "react";
 import ProfileAside from "../../components/users/ProfileAside";
-import { gql, useQuery } from "@apollo/client";
+import { ApolloQueryResult, gql, useQuery } from "@apollo/client";
 import { isQuestionCommentLoadFinishVar } from "../../src/utils/questionComments.utils";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import UserComment from "../../components/users/UserComment";
+import { myQuestionComments } from "../../src/__generated__/myQuestionComments";
 
 const ME_QUERY = gql`
-  query me($lastId: Int) {
+  query myQuestionComments($lastId: Int) {
     me {
+      id
       questionComments(lastId: $lastId) {
         ...ShowQuestionCommentFragment
       }
@@ -22,7 +24,7 @@ const ME_QUERY = gql`
 
 export default function UserComments() {
   const loader = useRef(null);
-  const { data, refetch, fetchMore } = useQuery(ME_QUERY, {
+  const { data, refetch, fetchMore } = useQuery<myQuestionComments>(ME_QUERY, {
     onCompleted: () => {
       isQuestionCommentLoadFinishVar(false);
     },
@@ -42,7 +44,7 @@ export default function UserComments() {
       if (data?.me?.questionComments && target.isIntersecting) {
         const lastId =
           data?.me?.questionComments[data.me.questionComments.length - 1]?.id;
-        const more: any = await fetchMore({
+        const more: ApolloQueryResult<myQuestionComments> = await fetchMore({
           variables: {
             lastId,
           },
@@ -96,10 +98,14 @@ export default function UserComments() {
                     </p>
                   </div>
                   <div className="py-4 bg-white sm:py-6">
-                    {data?.me?.questionComments?.length > 0 ? (
-                      data?.me?.questionComments?.map((comment: any) => (
-                        <UserComment key={comment.id} comment={comment} />
-                      ))
+                    {data?.me?.questionComments &&
+                    data?.me?.questionComments?.length > 0 ? (
+                      data?.me?.questionComments?.map(
+                        (comment) =>
+                          comment && (
+                            <UserComment key={comment.id} comment={comment} />
+                          )
+                      )
                     ) : (
                       <div className="text-lg font-bold text-center text-gray-600 sm:text-xl">
                         <span className="block">작성한 댓글이 없습니다</span>

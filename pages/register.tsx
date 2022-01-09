@@ -10,6 +10,10 @@ import { getRefreshToken } from "../src/utils/auth.utils";
 import { useRouter } from "next/router";
 import { showSuccess } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
+import {
+  createUser,
+  createUserVariables,
+} from "../src/__generated__/createUser";
 
 const CREATE_USER_MUTATION = gql`
   mutation createUser($email: String!, $username: String!, $password: String!) {
@@ -26,19 +30,19 @@ export default function Register() {
   const { register, handleSubmit, formState } = useForm({
     mode: "onChange",
   });
-  const onSubmitValid = (data: any) => {
+  const onSubmitValid = (data: createUserVariables) => {
     if (loading) {
       return;
     }
-    createUser({
+    createUserMutation({
       variables: { ...data },
     });
   };
-  const onCompleted = (data: any) => {
+  const onCompleted = (data: createUser) => {
     const { createUser } = data;
     if (!createUser?.ok) {
       setCreateUserError({
-        message: createUser?.error,
+        message: createUser?.error || "",
       });
       return;
     }
@@ -48,9 +52,12 @@ export default function Register() {
     });
     router.push(routes.login);
   };
-  const [createUser, { loading }] = useMutation(CREATE_USER_MUTATION, {
-    onCompleted,
-  });
+  const [createUserMutation, { loading }] = useMutation<createUser>(
+    CREATE_USER_MUTATION,
+    {
+      onCompleted,
+    }
+  );
 
   const clearCreateUserError = () => {
     setCreateUserError(DEFAULT_ERROR_MESSAGE);

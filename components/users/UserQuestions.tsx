@@ -1,8 +1,22 @@
 import { useCallback, useEffect, useRef } from "react";
 import { isQuestionLoadFinishVar } from "../../src/utils/questions.utils";
+import {
+  showUser_showUser_picks,
+  showUser_showUser_questions,
+} from "../../src/__generated__/showUser";
 import QuestionMasonry from "../questions/QuestionMasonry";
 
-export default function UserQuestions({ questions, fetchMore }: any) {
+interface IuserQuestions {
+  questions:
+    | (showUser_showUser_questions | showUser_showUser_picks | null)[]
+    | null;
+  fetchMore: any;
+}
+
+export default function UserQuestions({
+  questions,
+  fetchMore,
+}: IuserQuestions) {
   const loader = useRef(null);
 
   const handleObserver = useCallback(
@@ -14,7 +28,7 @@ export default function UserQuestions({ questions, fetchMore }: any) {
       const target = entries[0];
       if (questions && target.isIntersecting) {
         const lastId = questions[questions.length - 1]?.id;
-        const more: any = await fetchMore({
+        const more = await fetchMore({
           variables: {
             lastId,
           },
@@ -49,7 +63,7 @@ export default function UserQuestions({ questions, fetchMore }: any) {
           질문들
         </h2>
         <div>
-          {questions?.length > 0 ? (
+          {questions && questions?.length > 0 ? (
             <QuestionMasonry questions={questions} />
           ) : (
             <div

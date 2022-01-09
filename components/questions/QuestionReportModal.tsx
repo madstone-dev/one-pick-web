@@ -2,6 +2,8 @@ import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { FlagIcon } from "@heroicons/react/solid";
 import { gql, useMutation } from "@apollo/client";
+import { createQuestionReport } from "../../src/__generated__/createQuestionReport";
+import { showQuestions_showQuestions } from "../../src/__generated__/showQuestions";
 
 const REPORT_QUESTION_MUTATION = gql`
   mutation createQuestionReport($id: Int!, $type: Int!) {
@@ -12,22 +14,30 @@ const REPORT_QUESTION_MUTATION = gql`
   }
 `;
 
-export default function QuestionReportModal({ question }: any) {
+interface IquestionReportModal {
+  question: showQuestions_showQuestions;
+}
+
+export default function QuestionReportModal({
+  question,
+}: IquestionReportModal) {
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
-  const [reportQuestion] = useMutation(REPORT_QUESTION_MUTATION);
+  const [reportQuestionMutation] = useMutation<createQuestionReport>(
+    REPORT_QUESTION_MUTATION
+  );
   const reportTypes = [
     { label: "상업성 콘텐츠 또는 스팸", value: "1" },
     { label: "증오심 표현 또는 노골적인 폭력", value: "2" },
     { label: "희롱 또는 괴롭힘", value: "3" },
   ];
-  const [reportType, setReportType] = useState<any>(null);
+  const [reportType, setReportType] = useState<string | null>(null);
 
   const onClickReport = () => {
-    reportQuestion({
+    reportQuestionMutation({
       variables: {
         id: question.id,
-        type: parseInt(reportType),
+        type: parseInt(reportType || ""),
       },
     });
     setOpen(false);

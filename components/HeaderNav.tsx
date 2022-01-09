@@ -12,13 +12,18 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { classNames } from "../src/utils/utils";
 import { ChevronLeftIcon } from "@heroicons/react/outline";
+import { me } from "../src/__generated__/me";
 
-export default function HeaderNav({ user }: any) {
+interface IheaderNav {
+  user: me | undefined;
+}
+
+export default function HeaderNav({ user }: IheaderNav) {
   const headerRef = useRef<any>();
   const router = useRouter();
   const userLogout = () => {
     localStorage.removeItem(ACCESS_TOKEN);
-    router.push("/logout");
+    router.push(routes.logout);
   };
   const onBackClick = () => {
     router.back();

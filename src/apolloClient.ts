@@ -106,6 +106,7 @@ export const apolloClient = new ApolloClient({
         },
       },
       User: {
+        keyFields: ["id"],
         fields: {
           questions: {
             merge(existing = [], incoming = []) {

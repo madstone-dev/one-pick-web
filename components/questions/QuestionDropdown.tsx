@@ -1,4 +1,3 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { DotsVerticalIcon } from "@heroicons/react/solid";
@@ -7,8 +6,13 @@ import QuestionBlockButton from "./QuestionBlockButton";
 import QuestionReportModal from "./QuestionReportModal";
 import QuestionDeleteButton from "./QeustionDeleteButton";
 import Link from "next/link";
+import { showQuestions_showQuestions } from "../../src/__generated__/showQuestions";
 
-export default function QuestionDropdown({ question }: any) {
+interface IquestionDropdown {
+  question: showQuestions_showQuestions;
+}
+
+export default function QuestionDropdown({ question }: IquestionDropdown) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>

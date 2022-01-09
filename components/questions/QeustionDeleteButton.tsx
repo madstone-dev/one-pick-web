@@ -1,10 +1,9 @@
 import { gql, useMutation } from "@apollo/client";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { apolloClient } from "../../src/apolloClient";
 import { routes } from "../../src/routes";
-import QuestionBlockButton from "./QuestionBlockButton";
-import QuestionReportModal from "./QuestionReportModal";
+import { deleteQuestion } from "../../src/__generated__/deleteQuestion";
+import { showQuestions_showQuestions } from "../../src/__generated__/showQuestions";
 
 const DELETE_QUESTION_MUTATION = gql`
   mutation deleteQuestion($id: Int!) {
@@ -15,7 +14,13 @@ const DELETE_QUESTION_MUTATION = gql`
   }
 `;
 
-export default function QuestionDeleteButton({ question }: any) {
+interface IquestionDeleteButton {
+  question: showQuestions_showQuestions;
+}
+
+export default function QuestionDeleteButton({
+  question,
+}: IquestionDeleteButton) {
   const router = useRouter();
   const deleteQuestionCache = () => {
     apolloClient.cache.evict({
@@ -29,19 +34,17 @@ export default function QuestionDeleteButton({ question }: any) {
     router.push(routes.home);
   };
 
-  const [deleteQuestion, { loading: deleteLoading }] = useMutation(
-    DELETE_QUESTION_MUTATION,
-    {
+  const [deleteQuestionMutation, { loading: deleteLoading }] =
+    useMutation<deleteQuestion>(DELETE_QUESTION_MUTATION, {
       variables: {
         id: question.id,
       },
       onCompleted: () => deleteQuestionCache(),
-    }
-  );
+    });
 
   const onDeleteClick = () => {
     if (window.confirm("해당 글을 삭제하시겠습니까?")) {
-      deleteQuestion();
+      deleteQuestionMutation();
     }
   };
 

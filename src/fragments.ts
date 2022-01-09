@@ -6,7 +6,14 @@ export const BASIC_USER_FRAGMENT = gql`
     email
     username
     avatar
+    role
     isBlocked
+    isFollowing
+    totalFollowings
+    totalFollowers
+    isMe
+    totalPicks
+    lastLogin
   }
 `;
 

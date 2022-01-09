@@ -13,6 +13,10 @@ import QuestionImageZoom from "../../components/questions/QuestionImageZoom";
 import NavBack from "../../components/NavBack";
 import ContentSection from "../../components/ContentSection";
 import useUser from "../../src/hooks/useUser";
+import {
+  showQuestion,
+  showQuestion_showQuestion,
+} from "../../src/__generated__/showQuestion";
 
 export const SHOW_QUESTION_QUERY = gql`
   query showQuestion($id: Int!) {
@@ -23,23 +27,32 @@ export const SHOW_QUESTION_QUERY = gql`
   ${SHOW_QUESTION_FRAGMENT}
 `;
 
-export default function ShowQuestion({ data }: any) {
+interface IshowQuestionServer {
+  data: showQuestion_showQuestion;
+}
+
+export default function ShowQuestion({ data }: IshowQuestionServer) {
   const { data: userData, loading } = useUser();
   const cardRef = useRef<any>();
   const [cardTop, setCardTop] = useState(0);
   const router = useRouter();
   const [question, setQuestion] = useState(data);
   const id = parseInt(router.query.id as string);
-  const { data: questionData, refetch } = useQuery(SHOW_QUESTION_QUERY, {
-    variables: {
-      id,
-    },
-  });
+  const { data: questionData, refetch } = useQuery<showQuestion>(
+    SHOW_QUESTION_QUERY,
+    {
+      variables: {
+        id,
+      },
+    }
+  );
 
   // SSR -> CSR 전환
   useEffect(() => {
     refetch();
-    setQuestion(questionData?.showQuestion);
+    if (questionData?.showQuestion) {
+      setQuestion(questionData?.showQuestion);
+    }
   }, [questionData]);
 
   useEffect(() => {
@@ -117,7 +130,7 @@ export default function ShowQuestion({ data }: any) {
 export async function getServerSideProps(context: any) {
   const {
     data: { showQuestion },
-  } = await apolloClient.query({
+  } = await apolloClient.query<showQuestion>({
     query: SHOW_QUESTION_QUERY,
     variables: {
       id: parseInt(context.query.id),

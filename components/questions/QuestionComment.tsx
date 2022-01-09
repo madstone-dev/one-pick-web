@@ -13,6 +13,9 @@ import QuestionCommentReportModal from "./QuestionCommentReportModal";
 import { getAvatar, loginUserVar } from "../../src/utils/auth.utils";
 import "moment/locale/ko";
 import Link from "next/link";
+import { updateQuestionComment } from "../../src/__generated__/updateQuestionComment";
+import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
+import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
 
 const UPDATE_QUESTION_COMMENT_MUTATION = gql`
   mutation updateQuestionComment($id: Int!, $content: String!) {
@@ -27,8 +30,22 @@ const UPDATE_QUESTION_COMMENT_MUTATION = gql`
   ${SHOW_QUESTION_COMMENT_FRAGMENT}
 `;
 
-export default function QuestionComment({ question, comment }: any) {
-  const createdAt = moment(moment.unix(comment.createdAt / 1000)).fromNow();
+interface IquestionComment {
+  question: showQuestion_showQuestion;
+  comment: showQuestionComments_showQuestionComments;
+}
+
+interface Icomment {
+  content: string;
+}
+
+export default function QuestionComment({
+  question,
+  comment,
+}: IquestionComment) {
+  const createdAt = moment(
+    moment.unix(Number(comment.createdAt) / 1000)
+  ).fromNow();
   const loginUser = loginUserVar();
   const focusedComment = useReactiveVar(focusedCommentVar);
   const editingComment = useReactiveVar(editingCommentVar);
@@ -40,7 +57,9 @@ export default function QuestionComment({ question, comment }: any) {
       content: comment.content,
     },
   });
-  const onUpdateQuestionComment = (cache: ApolloCache<any>, result: any) => {
+  const onUpdateQuestionComment = (
+    cache: ApolloCache<showQuestionComments_showQuestionComments>
+  ) => {
     cache.modify({
       id: `QuestionComment:${comment.id}`,
       fields: {
@@ -51,14 +70,12 @@ export default function QuestionComment({ question, comment }: any) {
     });
     setEditable(false);
   };
-  const [updateQuestionComment, { loading }] = useMutation(
-    UPDATE_QUESTION_COMMENT_MUTATION,
-    {
+  const [updateQuestionCommentMutation, { loading }] =
+    useMutation<updateQuestionComment>(UPDATE_QUESTION_COMMENT_MUTATION, {
       update: onUpdateQuestionComment,
-    }
-  );
-  const onSubmitValid = (data: any) => {
-    updateQuestionComment({
+    });
+  const onSubmitValid = (data: Icomment) => {
+    updateQuestionCommentMutation({
       variables: {
         id: comment.id,
         content: data.content,

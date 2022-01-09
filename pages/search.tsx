@@ -8,8 +8,12 @@ import { headerHeightVar } from "../src/utils/auth.utils";
 import { SearchIcon } from "@heroicons/react/outline";
 import ContentSection from "../components/ContentSection";
 import { Transition } from "@headlessui/react";
-import { useForm } from "react-hook-form";
 import QuestionMasonry from "../components/questions/QuestionMasonry";
+import { searchQuestions } from "../src/__generated__/searchQuestions";
+import {
+  searchQuestionHashtags,
+  searchQuestionHashtags_searchQuestionHashtags,
+} from "../src/__generated__/searchQuestionHashtags";
 
 const SEARCH_QUESTION_HASHTAGS_QUERY = gql`
   query searchQuestionHashtags($keyword: String) {
@@ -49,11 +53,12 @@ export default function Search() {
 
   // search hashtag
   const [keyword, setKeyword] = useState("");
-  const [hashtags, setHashtags] = useState([]);
+  const [hashtags, setHashtags] = useState<
+    (searchQuestionHashtags_searchQuestionHashtags | null)[]
+  >([]);
 
-  const { data: hashtagData, fetchMore: hashtagFetchMore } = useQuery(
-    SEARCH_QUESTION_HASHTAGS_QUERY
-  );
+  const { data: hashtagData, fetchMore: hashtagFetchMore } =
+    useQuery<searchQuestionHashtags>(SEARCH_QUESTION_HASHTAGS_QUERY);
 
   const onChangeInputValue = async () => {
     const more = await hashtagFetchMore({
@@ -61,7 +66,9 @@ export default function Search() {
         keyword,
       },
     });
-    setHashtags(more.data?.searchQuestionHashtags);
+    if (more?.data?.searchQuestionHashtags) {
+      setHashtags(more?.data?.searchQuestionHashtags);
+    }
   };
 
   useEffect(() => {
@@ -77,7 +84,7 @@ export default function Search() {
     loading,
     fetchMore,
     refetch,
-  } = useQuery(SEARCH_QUESTIONS_QUERY);
+  } = useQuery<searchQuestions>(SEARCH_QUESTIONS_QUERY);
 
   const onSearch = async (isTag: any = false, keyword: string) => {
     (document.activeElement as HTMLElement).blur();
@@ -248,7 +255,8 @@ export default function Search() {
             </div>
           )}
           <div className={`${loading && "hidden"}`}>
-            {questionsData?.searchQuestions?.length > 0 ? (
+            {questionsData?.searchQuestions &&
+            questionsData?.searchQuestions?.length > 0 ? (
               <QuestionMasonry questions={questionsData?.searchQuestions} />
             ) : (
               <div

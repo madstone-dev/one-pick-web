@@ -8,7 +8,7 @@ import HeaderNav from "../HeaderNav";
 
 export default function Layout({ children }: Ichildren) {
   const router = useRouter();
-  const { data, loading } = useUser();
+  const { data } = useUser();
   loginUserVar(data?.me);
 
   return (

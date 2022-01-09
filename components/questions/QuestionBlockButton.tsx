@@ -1,6 +1,8 @@
 import { ApolloCache, gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { routes } from "../../src/routes";
+import { showQuestions_showQuestions } from "../../src/__generated__/showQuestions";
+import { toggleQuestionBlock } from "../../src/__generated__/toggleQuestionBlock";
 
 export const TOGGLE_QUESTION_BLOCK_MUTATION = gql`
   mutation toggleQuestionBlock($id: Int!) {
@@ -11,9 +13,15 @@ export const TOGGLE_QUESTION_BLOCK_MUTATION = gql`
   }
 `;
 
-export default function QuestionBlockButton({ question }: any) {
+interface IquestionBlockButton {
+  question: showQuestions_showQuestions;
+}
+
+export default function QuestionBlockButton({
+  question,
+}: IquestionBlockButton) {
   const router = useRouter();
-  const onUpdatedBlock = (cache: ApolloCache<any>, result: any) => {
+  const onUpdatedBlock = (cache: ApolloCache<any>) => {
     cache.modify({
       id: `Question:${question.id}`,
       fields: {
@@ -27,15 +35,18 @@ export default function QuestionBlockButton({ question }: any) {
     }
   };
 
-  const [toggleQuestionBlock] = useMutation(TOGGLE_QUESTION_BLOCK_MUTATION, {
-    variables: {
-      id: question.id,
-    },
-    update: onUpdatedBlock,
-  });
+  const [toggleQuestionBlockMutation] = useMutation<toggleQuestionBlock>(
+    TOGGLE_QUESTION_BLOCK_MUTATION,
+    {
+      variables: {
+        id: question.id,
+      },
+      update: onUpdatedBlock,
+    }
+  );
 
   const onBlockClick = () => {
-    toggleQuestionBlock();
+    toggleQuestionBlockMutation();
   };
 
   return (

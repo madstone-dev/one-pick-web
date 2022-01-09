@@ -5,9 +5,16 @@ import { getAvatar, loginUserVar } from "../../src/utils/auth.utils";
 import "moment/locale/ko";
 import Link from "next/link";
 import UserCommentDropdown from "./UserCommentDropdown";
+import { myQuestionComments_me_questionComments } from "../../src/__generated__/myQuestionComments";
 
-export default function UserComment({ comment }: any) {
-  const createdAt = moment(moment.unix(comment.createdAt / 1000)).fromNow();
+interface IuserComment {
+  comment: myQuestionComments_me_questionComments;
+}
+
+export default function UserComment({ comment }: IuserComment) {
+  const createdAt = moment(
+    moment.unix(Number(comment.createdAt) / 1000)
+  ).fromNow();
   const loginUser = loginUserVar();
   const focusedComment = useReactiveVar(focusedCommentVar);
 

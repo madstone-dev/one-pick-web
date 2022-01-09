@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -12,12 +12,16 @@ import { SHOW_QUESTIONS_FRAGMENT } from "../../src/fragments";
 import { shouldRefetchQuestionsVar } from "../../src/utils/questions.utils";
 import NavBack from "../../components/NavBack";
 import ContentSection from "../../components/ContentSection";
+import {
+  createQuestion,
+  createQuestionVariables,
+} from "../../src/__generated__/createQuestion";
 
 const CREATE_QUESTION_MUTATION = gql`
   mutation createQuestion(
     $content: String!
     $choice: [String!]!
-    $image: Upload
+    $image: Upload!
     $questionHashtags: String
   ) {
     createQuestion(
@@ -36,62 +40,74 @@ const CREATE_QUESTION_MUTATION = gql`
   ${SHOW_QUESTIONS_FRAGMENT}
 `;
 
-interface Iphotos {
+interface Iphoto {
   url: string;
   file: File;
+}
+
+interface IcreateQuestion extends createQuestionVariables {
+  firstPick: string;
+  secondPick: string;
 }
 
 export default function CreateQuestion() {
   const cardRef = useRef<any>();
   const [cardTop, setCardTop] = useState(0);
   const router = useRouter();
-  const [photos, setPhotos] = useState<Iphotos[]>([]);
+  const [photo, setPhoto] = useState<Iphoto>();
   const onCreateQuestion = () => {
     shouldRefetchQuestionsVar(true);
     router.push(routes.home);
   };
   const [fileError, setFileError] = useState("");
 
-  const [createQuestion, { loading }] = useMutation(CREATE_QUESTION_MUTATION, {
-    onCompleted: onCreateQuestion,
-  });
+  const [createQuestionMutation, { loading }] = useMutation<createQuestion>(
+    CREATE_QUESTION_MUTATION,
+    {
+      onCompleted: onCreateQuestion,
+    }
+  );
   const { register, handleSubmit, formState } = useForm({
     mode: "onChange",
   });
 
-  const onSubmitValid = (data: any) => {
-    const files = photos.map((photo) => photo.file);
-    createQuestion({
-      variables: {
-        name: data.name,
-        content: data.content,
-        choice: [data.firstPick, data.secondPick],
-        image: files[0] || undefined,
-        questionHashtags: data.hashtags,
-      },
-    });
+  const onSubmitValid = (data: IcreateQuestion) => {
+    if (photo) {
+      createQuestionMutation({
+        variables: {
+          content: data.content,
+          choice: [data.firstPick, data.secondPick],
+          image: photo.file,
+          questionHashtags: data.questionHashtags,
+        },
+      });
+    } else {
+      setFileError("이미지는 필수 입니다.");
+    }
   };
 
-  const onFileChange = (event: any) => {
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { files },
     } = event;
-    const file = files[0];
-    if (file.size > 5242880) {
-      setFileError("최대 5MB 까지 가능합니다.");
+    const file = files && files[0];
+    if (file) {
+      if (file.size > 5242880) {
+        setFileError("최대 5MB 까지 가능합니다.");
+        event.target.value = "";
+        return;
+      }
+      const photo = {
+        url: URL.createObjectURL(file),
+        file,
+      };
+      setPhoto(photo);
       event.target.value = "";
-      return;
     }
-    const photo = {
-      url: URL.createObjectURL(file),
-      file,
-    };
-    setPhotos([photo]);
-    event.target.value = "";
   };
 
   const onDeleteClick = () => {
-    setPhotos([]);
+    setPhoto(undefined);
   };
 
   useEffect(() => {
@@ -133,7 +149,7 @@ export default function CreateQuestion() {
                     </p>
                   </div>
 
-                  {photos.length < 1 ? (
+                  {!photo ? (
                     <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                       <div className="sm:col-span-6">
                         <label
@@ -181,8 +197,8 @@ export default function CreateQuestion() {
                     <div className="py-8">
                       <div className="relative flex justify-center rounded-lg bg-gray-50">
                         <img
-                          src={photos[0].url}
-                          alt={photos[0].file.name}
+                          src={photo.url}
+                          alt={photo.file.name}
                           className="object-contain"
                           style={{ height: 400 }}
                         />
@@ -292,7 +308,7 @@ export default function CreateQuestion() {
 
                     <div className="sm:col-span-6">
                       <label
-                        htmlFor="hashtags"
+                        htmlFor="questionHashtags"
                         className="block text-sm font-medium text-gray-700"
                       >
                         해시태그
@@ -302,10 +318,10 @@ export default function CreateQuestion() {
                       </label>
                       <div className="mt-1">
                         <input
-                          {...register("hashtags")}
+                          {...register("questionHashtags")}
                           type="text"
-                          name="hashtags"
-                          id="hashtags"
+                          name="questionHashtags"
+                          id="questionHashtags"
                           placeholder="#해시태그 #입니다 ..."
                           className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />

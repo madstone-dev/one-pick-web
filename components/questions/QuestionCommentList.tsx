@@ -1,8 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import { loginUserVar } from "../../src/utils/auth.utils";
 import { isQuestionCommentLoadFinishVar } from "../../src/utils/questionComments.utils";
+import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
+import { showQuestionComments } from "../../src/__generated__/showQuestionComments";
 import QuestionComment from "./QuestionComment";
 import QuestionCommentForm from "./QuestionCommentForm";
 
@@ -15,17 +17,26 @@ const SHOW_QUESTION_COMMENTS_QUERY = gql`
   ${SHOW_QUESTION_COMMENT_FRAGMENT}
 `;
 
-export default function QuestionCommentList({ question }: any) {
+interface IquestionCommentList {
+  question: showQuestion_showQuestion;
+}
+
+export default function QuestionCommentList({
+  question,
+}: IquestionCommentList) {
   const loginUser = loginUserVar();
   const loader = useRef(null);
-  const { data, fetchMore, refetch } = useQuery(SHOW_QUESTION_COMMENTS_QUERY, {
-    variables: {
-      id: question.id,
-    },
-    onCompleted: () => {
-      isQuestionCommentLoadFinishVar(false);
-    },
-  });
+  const { data, fetchMore, refetch } = useQuery<showQuestionComments>(
+    SHOW_QUESTION_COMMENTS_QUERY,
+    {
+      variables: {
+        id: question.id,
+      },
+      onCompleted: () => {
+        isQuestionCommentLoadFinishVar(false);
+      },
+    }
+  );
 
   useEffect(() => {
     refetch();
@@ -41,7 +52,7 @@ export default function QuestionCommentList({ question }: any) {
       if (data?.showQuestionComments && target.isIntersecting) {
         const lastId =
           data?.showQuestionComments[data.showQuestionComments.length - 1]?.id;
-        const more: any = await fetchMore({
+        const more = await fetchMore({
           variables: {
             lastId,
           },
@@ -72,13 +83,16 @@ export default function QuestionCommentList({ question }: any) {
         <QuestionCommentForm question={question} refetch={refetch} />
       )}
       <div>
-        {data?.showQuestionComments?.map((comment: any) => (
-          <QuestionComment
-            key={comment.id}
-            question={question}
-            comment={comment}
-          />
-        ))}
+        {data?.showQuestionComments?.map(
+          (comment) =>
+            comment && (
+              <QuestionComment
+                key={comment.id}
+                question={question}
+                comment={comment}
+              />
+            )
+        )}
       </div>
       <div ref={loader} />
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,15 +14,19 @@ import { SHOW_QUESTION_QUERY } from "../[id]";
 import { HashLoader } from "react-spinners";
 import NavBack from "../../../components/NavBack";
 import ContentSection from "../../../components/ContentSection";
+import { showQuestion } from "../../../src/__generated__/showQuestion";
+import {
+  updateQuestion,
+  updateQuestionVariables,
+} from "../../../src/__generated__/updateQuestion";
 
 const UPDATE_QUESTION_MUTATION = gql`
-  mutation Mutation(
+  mutation updateQuestion(
     $id: Int!
     $content: String
     $image: Upload
     $choice: [String]
     $questionHashtags: String
-    $fileExists: Boolean!
   ) {
     updateQuestion(
       id: $id
@@ -30,7 +34,6 @@ const UPDATE_QUESTION_MUTATION = gql`
       image: $image
       choice: $choice
       questionHashtags: $questionHashtags
-      fileExists: $fileExists
     ) {
       ok
       error
@@ -42,9 +45,14 @@ const UPDATE_QUESTION_MUTATION = gql`
   ${SHOW_QUESTIONS_FRAGMENT}
 `;
 
-interface Iphotos {
+interface Iphoto {
   url: string;
   file: File | undefined;
+}
+
+interface IupdateQuestion extends updateQuestionVariables {
+  firstPick: string;
+  secondPick: string;
 }
 
 export default function EditQuestion() {
@@ -53,9 +61,8 @@ export default function EditQuestion() {
   const router = useRouter();
   const id = parseInt(router.query.id as string);
   const [editError, setEditError] = useState("");
-  const [fileExists, setFileExists] = useState(true);
 
-  const { data: questionData, loading: showLoading } = useQuery(
+  const { data: questionData, loading: showLoading } = useQuery<showQuestion>(
     SHOW_QUESTION_QUERY,
     {
       variables: {
@@ -65,35 +72,35 @@ export default function EditQuestion() {
     }
   );
 
-  const [photos, setPhotos] = useState<Iphotos[]>([]);
-  const onUpdateQuestion = (data: any) => {
+  const [photo, setPhoto] = useState<Iphoto>();
+  const onUpdateQuestion = (data: updateQuestion) => {
     if (data.updateQuestion.ok) {
       shouldRefetchQuestionsVar(true);
       router.push(routes.home);
     } else {
-      setEditError(data.updateQuestion.error);
+      setEditError(data.updateQuestion.error || "");
     }
   };
   const [fileError, setFileError] = useState("");
 
-  const [updateQuestion, { loading }] = useMutation(UPDATE_QUESTION_MUTATION, {
-    onCompleted: onUpdateQuestion,
-  });
+  const [updateQuestionMutation, { loading }] = useMutation<updateQuestion>(
+    UPDATE_QUESTION_MUTATION,
+    {
+      onCompleted: onUpdateQuestion,
+    }
+  );
   const { register, handleSubmit, formState, setValue } = useForm({
     mode: "onChange",
   });
 
-  const onSubmitValid = (data: any) => {
-    const files = photos.map((photo) => photo.file);
-    updateQuestion({
+  const onSubmitValid = (data: IupdateQuestion) => {
+    updateQuestionMutation({
       variables: {
         id,
-        name: data.name,
         content: data.content,
         choice: [data.firstPick, data.secondPick],
-        image: files[0] || undefined,
-        questionHashtags: data.hashtags,
-        fileExists,
+        image: photo?.file || undefined,
+        questionHashtags: data.questionHashtags,
       },
     });
   };
@@ -112,14 +119,8 @@ export default function EditQuestion() {
       url: URL.createObjectURL(file),
       file,
     };
-    setFileExists(true);
-    setPhotos([photo]);
+    setPhoto(photo);
     event.target.value = "";
-  };
-
-  const onDeleteClick = () => {
-    setFileExists(false);
-    setPhotos([]);
   };
 
   useEffect(() => {
@@ -134,14 +135,13 @@ export default function EditQuestion() {
           url: data.image.Location,
           file: undefined,
         };
-        setPhotos([photo]);
+        setPhoto(photo);
       }
-      setValue("name", data.name);
       setValue("content", data.content);
       setValue("firstPick", data.choice[0]);
       setValue("secondPick", data.choice[1]);
       setValue(
-        "hashtags",
+        "questionHashtags",
         data.questionHashtags?.map((item: any) => item.hashtag).join(" ")
       );
       if (data.totalPickers > 0) {
@@ -195,7 +195,7 @@ export default function EditQuestion() {
                       </p>
                     </div>
 
-                    {photos.length < 1 ? (
+                    {!photo ? (
                       <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                         <div className="sm:col-span-6">
                           <label
@@ -243,22 +243,21 @@ export default function EditQuestion() {
                       <div className="py-8">
                         <div className="relative flex justify-center rounded-lg bg-gray-50">
                           <img
-                            src={photos[0].url}
+                            src={photo.url}
                             alt=""
                             className="object-contain"
                             style={{ height: 400 }}
                           />
-                          <button
-                            onClick={onDeleteClick}
-                            type="button"
-                            className="inline-flex absolute top-10 right-10 items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          <label
+                            htmlFor="photo"
+                            className="inline-flex cursor-pointer absolute top-10 right-10 items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
                           >
                             <FontAwesomeIcon
-                              icon={faMinusCircle}
+                              icon={faSyncAlt}
                               className="relative mr-2"
                             />
-                            제거
-                          </button>
+                            변경
+                          </label>
                         </div>
                       </div>
                     )}
@@ -354,7 +353,7 @@ export default function EditQuestion() {
 
                       <div className="sm:col-span-6">
                         <label
-                          htmlFor="hashtags"
+                          htmlFor="questionHashtags"
                           className="block text-sm font-medium text-gray-700"
                         >
                           해시태그
@@ -364,10 +363,10 @@ export default function EditQuestion() {
                         </label>
                         <div className="mt-1">
                           <input
-                            {...register("hashtags")}
+                            {...register("questionHashtags")}
                             type="text"
-                            name="hashtags"
-                            id="hashtags"
+                            name="questionHashtags"
+                            id="questionHashtags"
                             placeholder="#해시태그 #입니다 ..."
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                           />
@@ -388,7 +387,8 @@ export default function EditQuestion() {
                         </a>
                       </Link>
                     )}
-                    {questionData?.showQuestion?.totalPickers > 0 ? (
+                    {questionData?.showQuestion &&
+                    questionData?.showQuestion?.totalPickers > 0 ? (
                       <button
                         type="button"
                         disabled={true}

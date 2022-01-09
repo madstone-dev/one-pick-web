@@ -5,7 +5,7 @@ import { routes } from "../../src/routes";
 import { classNames } from "../../src/utils/utils";
 
 const subNavigation = [
-  { name: "프로필 설정", href: routes.userProfile, icon: UserCircleIcon },
+  { name: "계정 설정", href: routes.userProfile, icon: UserCircleIcon },
   { name: "작성한 댓글", href: routes.userComments, icon: ChatIcon },
   { name: "숨긴 콘텐츠", href: routes.userBlocks, icon: BanIcon },
 ];

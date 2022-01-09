@@ -3,7 +3,7 @@ import { getRefreshToken, headerHeightVar } from "../../src/utils/auth.utils";
 import { routes } from "../../src/routes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ProfileAside from "../../components/users/ProfileAside";
-import { gql, useQuery } from "@apollo/client";
+import { ApolloQueryResult, gql, useQuery } from "@apollo/client";
 import {
   SHOW_QUESTIONS_FRAGMENT,
   SHOW_QUESTION_COMMENT_FRAGMENT,
@@ -12,10 +12,12 @@ import { classNames } from "../../src/utils/utils";
 import BlockedQuestions from "../../components/users/BlockedQuestions";
 import UserComment from "../../components/users/UserComment";
 import { loadContentFinishVar } from "../../src/utils/user.utils";
+import { myBlockContents } from "../../src/__generated__/myBlockContents";
 
 const ME_QUERY = gql`
-  query me($lastId: Int) {
+  query myBlockContents($lastId: Int) {
     me {
+      id
       questionBlocks(lastId: $lastId) {
         ...ShowQuestionsFragment
       }
@@ -48,7 +50,7 @@ export default function UserBlocks() {
   }, []);
 
   const loader = useRef(null);
-  const { data, refetch, fetchMore } = useQuery(ME_QUERY, {
+  const { data, refetch, fetchMore } = useQuery<myBlockContents>(ME_QUERY, {
     onCompleted: () => {
       loadContentFinishVar(false);
     },
@@ -62,7 +64,7 @@ export default function UserBlocks() {
   useEffect(() => {
     if (data?.me?.questionCommentBlocks) {
       const blockCount = data?.me?.questionCommentBlocks?.filter(
-        (comment: any) => comment.isBlocked
+        (comment) => comment?.isBlocked
       );
       setCommentCount(blockCount.length);
     }
@@ -79,7 +81,7 @@ export default function UserBlocks() {
         if (data?.me?.questionBlocks && target.isIntersecting) {
           const lastId =
             data?.me?.questionBlocks[data.me.questionBlocks.length - 1]?.id;
-          const more: any = await fetchMore({
+          const more: ApolloQueryResult<myBlockContents> = await fetchMore({
             variables: {
               lastId,
             },
@@ -94,7 +96,7 @@ export default function UserBlocks() {
             data?.me?.questionCommentBlocks[
               data.me.questionCommentBlocks.length - 1
             ]?.id;
-          const more: any = await fetchMore({
+          const more: ApolloQueryResult<myBlockContents> = await fetchMore({
             variables: {
               lastId,
             },
@@ -178,7 +180,6 @@ export default function UserBlocks() {
                       ? data?.me?.questionBlocks && (
                           <BlockedQuestions
                             questions={data?.me?.questionBlocks}
-                            refetch={refetch}
                             fetchMore={fetchMore}
                           />
                         )
@@ -186,9 +187,12 @@ export default function UserBlocks() {
                     {currentTab === tabs[1].to ? (
                       commentCount > 0 ? (
                         data?.me?.questionCommentBlocks?.map(
-                          (comment: any) =>
-                            comment.isBlocked && (
-                              <UserComment key={comment.id} comment={comment} />
+                          (comment) =>
+                            comment?.isBlocked && (
+                              <UserComment
+                                key={comment?.id}
+                                comment={comment}
+                              />
                             )
                         )
                       ) : (

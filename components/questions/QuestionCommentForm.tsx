@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import { getAvatar, loginUserVar } from "../../src/utils/auth.utils";
+import { createQuestionComment } from "../../src/__generated__/createQuestionComment";
+import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
 
 const CREATE_QUESTION_COMMENT_MUTATION = gql`
   mutation createQuestionComment($id: Int!, $content: String!) {
@@ -18,22 +20,29 @@ const CREATE_QUESTION_COMMENT_MUTATION = gql`
   ${SHOW_QUESTION_COMMENT_FRAGMENT}
 `;
 
+interface IquestionCommentForm {
+  question: showQuestion_showQuestion;
+  refetch: any;
+}
+
+interface Icomment {
+  content: string;
+}
+
 export default function QuestionCommentForm({
   question,
   refetch: refetchComments,
-}: any) {
+}: IquestionCommentForm) {
   const [formFocused, setFormFocused] = useState(false);
   const { register, handleSubmit, setValue } = useForm();
   const loginUser = loginUserVar();
-  const [createQuestionComment, { loading }] = useMutation(
-    CREATE_QUESTION_COMMENT_MUTATION,
-    {
+  const [createQuestionCommentMutation, { loading }] =
+    useMutation<createQuestionComment>(CREATE_QUESTION_COMMENT_MUTATION, {
       update: () => refetchComments(),
-    }
-  );
+    });
 
-  const onSubmitValid = (data: any) => {
-    createQuestionComment({
+  const onSubmitValid = (data: Icomment) => {
+    createQuestionCommentMutation({
       variables: {
         id: question.id,
         content: data.content,

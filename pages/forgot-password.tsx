@@ -11,6 +11,10 @@ import {
   successNotificationVar,
 } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
+import {
+  forgotPassword,
+  forgotPasswordVariables,
+} from "../src/__generated__/forgotPassword";
 
 const FORGOT_PASSWORD_MUTATION = gql`
   mutation forgotPassword($email: String!) {
@@ -28,23 +32,26 @@ export default function ForgotPassword() {
     mode: "onChange",
   });
 
-  const onCompleted = (data: any) => {
+  const onCompleted = (data: forgotPassword) => {
     if (data?.forgotPassword?.ok) {
       showSuccess({
         title: "메일발송 완료!",
         description: "메일이 발송되었습니다. 메일을 확인 하세요!",
       });
     } else {
-      setFormError(data?.forgotPassword?.error);
+      setFormError(data?.forgotPassword?.error || "");
     }
   };
 
-  const [forgotPassword, { loading }] = useMutation(FORGOT_PASSWORD_MUTATION, {
-    onCompleted,
-  });
+  const [forgotPasswordMutation, { loading }] = useMutation<forgotPassword>(
+    FORGOT_PASSWORD_MUTATION,
+    {
+      onCompleted,
+    }
+  );
 
-  const onSubmitValid = (data: any) => {
-    forgotPassword({
+  const onSubmitValid = (data: forgotPasswordVariables) => {
+    forgotPasswordMutation({
       variables: {
         email: data.email,
       },

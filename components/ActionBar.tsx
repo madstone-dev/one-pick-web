@@ -1,10 +1,13 @@
-import { useReactiveVar } from "@apollo/client";
 import { PlusSmIcon, SearchIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import { routes } from "../src/routes";
-import { loginUserVar } from "../src/utils/auth.utils";
+import { me } from "../src/__generated__/me";
 
-export default function ActionBar({ user }: any) {
+interface IactionBar {
+  user: me | undefined;
+}
+
+export default function ActionBar({ user }: IactionBar) {
   return (
     <footer className="fixed z-30 bottom-8 right-4">
       <div className="flex flex-col space-y-4">

@@ -13,7 +13,14 @@ export interface me_me {
   email: string;
   username: string;
   avatar: any | null;
+  role: string;
   isBlocked: boolean;
+  isFollowing: boolean;
+  totalFollowings: number;
+  totalFollowers: number;
+  isMe: boolean;
+  totalPicks: number;
+  lastLogin: string | null;
 }
 
 export interface me {
