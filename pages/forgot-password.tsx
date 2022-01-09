@@ -1,40 +1,59 @@
 import { useForm } from "react-hook-form";
-import { gql, useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { gql, useMutation, useReactiveVar } from "@apollo/client";
+import { useState } from "react";
 import FormError from "../components/auth/FormError";
 import { routes } from "../src/routes";
-import { DEFAULT_ERROR_MESSAGE } from "../src/constances";
 import Success from "../components/notifications/Success";
-import Link from "next/link";
-import { ACCESS_TOKEN, getRefreshToken } from "../src/utils/auth.utils";
+import { getRefreshToken } from "../src/utils/auth.utils";
 import Layout from "../components/auth/Layout";
-import { useRouter } from "next/router";
 import {
+  showSuccess,
   successNotificationVar,
-  SUCCESS_DEFAULT,
 } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
 
+const FORGOT_PASSWORD_MUTATION = gql`
+  mutation forgotPassword($email: String!) {
+    forgotPassword(email: $email) {
+      ok
+      error
+    }
+  }
+`;
+
 export default function ForgotPassword() {
-  const successNotification = successNotificationVar();
-  const [formError, setFormError] = useState(DEFAULT_ERROR_MESSAGE);
+  const successNotification = useReactiveVar(successNotificationVar);
+  const [formError, setFormError] = useState("");
   const { register, handleSubmit, formState } = useForm({
     mode: "onChange",
   });
 
-  const loading = false;
-
-  const onSubmitValid = (data: any) => {};
-
-  const clearFormError = () => {
-    setFormError(DEFAULT_ERROR_MESSAGE);
+  const onCompleted = (data: any) => {
+    if (data?.forgotPassword?.ok) {
+      showSuccess({
+        title: "메일발송 완료!",
+        description: "메일이 발송되었습니다. 메일을 확인 하세요!",
+      });
+    } else {
+      setFormError(data?.forgotPassword?.error);
+    }
   };
 
-  useEffect(() => {
-    return () => {
-      successNotificationVar(SUCCESS_DEFAULT);
-    };
-  }, [successNotification]);
+  const [forgotPassword, { loading }] = useMutation(FORGOT_PASSWORD_MUTATION, {
+    onCompleted,
+  });
+
+  const onSubmitValid = (data: any) => {
+    forgotPassword({
+      variables: {
+        email: data.email,
+      },
+    });
+  };
+
+  const clearFormError = () => {
+    setFormError("");
+  };
 
   return (
     <Layout>
@@ -50,7 +69,8 @@ export default function ForgotPassword() {
             <div className="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
               <div className="mb-4 text-sm text-gray-600">
                 이메일 주소를 입력하세요. 새 비밀번호를 선택할 수 있는 비밀번호
-                재설정 링크를 이메일로 보내드리겠습니다.
+                재설정 링크를 이메일로 보내드리겠습니다. 메일이 도착하지
+                않는다면 스팸함을 확인해주세요.
               </div>
               <form
                 className="space-y-6"
@@ -79,9 +99,9 @@ export default function ForgotPassword() {
                   </div>
                 </div>
 
-                {formError.message && (
+                {formError && (
                   <div className="flex justify-center w-full">
-                    <FormError message={formError.message} />
+                    <FormError message={formError} />
                   </div>
                 )}
 
