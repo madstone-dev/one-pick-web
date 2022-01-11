@@ -6,6 +6,7 @@ import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import { getAvatar, loginUserVar } from "../../src/utils/auth.utils";
 import { createQuestionComment } from "../../src/__generated__/createQuestionComment";
 import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
+import { apolloClient } from "../../src/apolloClient";
 
 const CREATE_QUESTION_COMMENT_MUTATION = gql`
   mutation createQuestionComment($id: Int!, $content: String!) {
@@ -36,9 +37,24 @@ export default function QuestionCommentForm({
   const [formFocused, setFormFocused] = useState(false);
   const { register, handleSubmit, setValue } = useForm();
   const loginUser = loginUserVar();
+
+  const onCompleted = (data: createQuestionComment) => {
+    if (data.createQuestionComment.ok) {
+      refetchComments();
+      apolloClient.cache.modify({
+        id: `Question:${question.id}`,
+        fields: {
+          totalComments(prev) {
+            return prev + 1;
+          },
+        },
+      });
+    }
+  };
+
   const [createQuestionCommentMutation, { loading }] =
     useMutation<createQuestionComment>(CREATE_QUESTION_COMMENT_MUTATION, {
-      update: () => refetchComments(),
+      onCompleted,
     });
 
   const onSubmitValid = (data: Icomment) => {

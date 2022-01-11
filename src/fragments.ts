@@ -74,6 +74,9 @@ export const SHOW_QUESTION_COMMENT_FRAGMENT = gql`
     user {
       ...BasicUserFragment
     }
+    question {
+      id
+    }
     content
     isBlocked
     pick

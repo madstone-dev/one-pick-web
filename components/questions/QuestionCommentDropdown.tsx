@@ -1,35 +1,13 @@
 import { Dispatch, Fragment, SetStateAction } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { DotsVerticalIcon } from "@heroicons/react/solid";
-import {
-  editingCommentVar,
-  focusedCommentVar,
-} from "../../src/utils/questionComments.utils";
-import { ApolloCache, gql, useMutation } from "@apollo/client";
-import { apolloClient } from "../../src/apolloClient";
+import { focusedCommentVar } from "../../src/utils/questionComments.utils";
 import { loginUserVar } from "../../src/utils/auth.utils";
 import { classNames } from "../../src/utils/utils";
-import { deleteQuestionComment } from "../../src/__generated__/deleteQuestionComment";
-import { toggleQuestionCommentBlock } from "../../src/__generated__/toggleQuestionCommentBlock";
 import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
-
-export const DELETE_QUESTION_COMMENT_MUTATION = gql`
-  mutation deleteQuestionComment($id: Int!) {
-    deleteQuestionComment(id: $id) {
-      ok
-      error
-    }
-  }
-`;
-
-export const TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION = gql`
-  mutation toggleQuestionCommentBlock($id: Int!) {
-    toggleQuestionCommentBlock(id: $id) {
-      ok
-      error
-    }
-  }
-`;
+import QuestionCommentDeleteButton from "./QuestionCommentDeleteButton";
+import QuestionCommentEditButton from "./QuestionCommentEditButton";
+import QuestionCommentBlockButton from "./QuestionCommentBlockButton";
 
 interface IquestionCommentDropdown {
   comment: showQuestionComments_showQuestionComments;
@@ -43,58 +21,6 @@ export default function QuestionCommentDropdown({
   setReportOpen,
 }: IquestionCommentDropdown) {
   const loginUser = loginUserVar();
-  const deleteQuestionCommentCache = () => {
-    apolloClient.cache.evict({
-      id: "ROOT_QUERY",
-      fieldName: "showQuestionComments",
-      args: {
-        id: comment.id,
-      },
-    });
-    apolloClient.cache.gc();
-  };
-
-  const [deleteQuestionCommentMutation] = useMutation<deleteQuestionComment>(
-    DELETE_QUESTION_COMMENT_MUTATION,
-    {
-      variables: {
-        id: comment.id,
-      },
-      onCompleted: () => deleteQuestionCommentCache(),
-    }
-  );
-
-  const onDeleteClick = () => {
-    if (window.confirm("댓글을 삭제하시겠습니까?")) {
-      deleteQuestionCommentMutation();
-    }
-  };
-
-  const onUpdatedCommentBlock = (cache: ApolloCache<any>) => {
-    cache.modify({
-      id: `QuestionComment:${comment.id}`,
-      fields: {
-        isBlocked(prev) {
-          return !prev;
-        },
-      },
-    });
-  };
-
-  const [toggleQuestionCommentBlockMutation] =
-    useMutation<toggleQuestionCommentBlock>(
-      TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION,
-      {
-        variables: {
-          id: comment.id,
-        },
-        update: onUpdatedCommentBlock,
-      }
-    );
-
-  const onBlockClick = () => {
-    toggleQuestionCommentBlockMutation();
-  };
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -125,49 +51,25 @@ export default function QuestionCommentDropdown({
             {loginUser?.id === comment.user.id ? (
               <>
                 <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() => {
-                        editingCommentVar(comment.id);
-                        setEditable(true);
-                      }}
-                      className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
-                      )}
-                    >
-                      댓글 수정
-                    </button>
-                  )}
+                  <div>
+                    <QuestionCommentEditButton
+                      comment={comment}
+                      setEditable={setEditable}
+                    />
+                  </div>
                 </Menu.Item>
                 <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
-                      )}
-                      onClick={onDeleteClick}
-                    >
-                      댓글 삭제
-                    </button>
-                  )}
+                  <div>
+                    <QuestionCommentDeleteButton comment={comment} />
+                  </div>
                 </Menu.Item>
               </>
             ) : (
               <>
                 <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
-                      )}
-                      onClick={onBlockClick}
-                    >
-                      댓글 숨기기 {comment.isBlocked && "해제"}
-                    </button>
-                  )}
+                  <div>
+                    <QuestionCommentBlockButton comment={comment} />
+                  </div>
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (

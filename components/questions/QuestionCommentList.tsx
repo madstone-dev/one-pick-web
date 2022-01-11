@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { useCallback, useEffect, useRef } from "react";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import { loginUserVar } from "../../src/utils/auth.utils";
-import { isQuestionCommentLoadFinishVar } from "../../src/utils/questionComments.utils";
+import { loadContentFinishVar } from "../../src/utils/utils";
 import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
 import { showQuestionComments } from "../../src/__generated__/showQuestionComments";
 import QuestionComment from "./QuestionComment";
@@ -33,7 +33,7 @@ export default function QuestionCommentList({
         id: question.id,
       },
       onCompleted: () => {
-        isQuestionCommentLoadFinishVar(false);
+        loadContentFinishVar(false);
       },
     }
   );
@@ -44,7 +44,7 @@ export default function QuestionCommentList({
 
   const handleObserver = useCallback(
     async (entries) => {
-      const loadFinish = isQuestionCommentLoadFinishVar();
+      const loadFinish = loadContentFinishVar();
       if (loadFinish) {
         return;
       }
@@ -58,7 +58,7 @@ export default function QuestionCommentList({
           },
         });
         if (more?.data?.showQuestionComments?.length === 0) {
-          isQuestionCommentLoadFinishVar(true);
+          loadContentFinishVar(true);
         }
       }
     },

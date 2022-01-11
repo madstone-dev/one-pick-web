@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
-import { isQuestionLoadFinishVar } from "../../src/utils/questions.utils";
+import { loadContentFinishVar } from "../../src/utils/utils";
 import { myBlockContents_me_questionBlocks } from "../../src/__generated__/myBlockContents";
 import QuestionMasonry from "../questions/QuestionMasonry";
 
 interface IblockedQuestions {
-  questions: (myBlockContents_me_questionBlocks | null)[];
+  questions: myBlockContents_me_questionBlocks[];
   fetchMore: any;
 }
 
@@ -16,7 +16,7 @@ export default function BlockedQuestions({
 
   const handleObserver = useCallback(
     async (entries) => {
-      const loadFinish = isQuestionLoadFinishVar();
+      const loadFinish = loadContentFinishVar();
       if (loadFinish) {
         return;
       }
@@ -29,7 +29,7 @@ export default function BlockedQuestions({
           },
         });
         if (!more?.data?.questions || more?.data?.questions?.length === 0) {
-          isQuestionLoadFinishVar(true);
+          loadContentFinishVar(true);
         }
       }
     },

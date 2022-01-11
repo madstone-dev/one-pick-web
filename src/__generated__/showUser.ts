@@ -36,7 +36,7 @@ export interface showUser_showUser_questions {
   content: string;
   image: any | null;
   choice: string[];
-  questionHashtags: (showUser_showUser_questions_questionHashtags | null)[] | null;
+  questionHashtags: showUser_showUser_questions_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
   totalComments: number;
@@ -75,7 +75,7 @@ export interface showUser_showUser_picks {
   content: string;
   image: any | null;
   choice: string[];
-  questionHashtags: (showUser_showUser_picks_questionHashtags | null)[] | null;
+  questionHashtags: showUser_showUser_picks_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
   totalComments: number;
@@ -99,9 +99,9 @@ export interface showUser_showUser {
   isMe: boolean;
   totalPicks: number;
   lastLogin: string | null;
-  questions: (showUser_showUser_questions | null)[] | null;
+  questions: showUser_showUser_questions[] | null;
   totalQuestions: number;
-  picks: (showUser_showUser_picks | null)[] | null;
+  picks: showUser_showUser_picks[] | null;
 }
 
 export interface showUser {

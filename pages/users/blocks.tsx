@@ -1,5 +1,5 @@
 import Layout from "../../components/auth/Layout";
-import { getRefreshToken, headerHeightVar } from "../../src/utils/auth.utils";
+import { getRefreshToken } from "../../src/utils/auth.utils";
 import { routes } from "../../src/routes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ProfileAside from "../../components/users/ProfileAside";
@@ -8,11 +8,11 @@ import {
   SHOW_QUESTIONS_FRAGMENT,
   SHOW_QUESTION_COMMENT_FRAGMENT,
 } from "../../src/fragments";
-import { classNames } from "../../src/utils/utils";
+import { loadContentFinishVar } from "../../src/utils/utils";
 import BlockedQuestions from "../../components/users/BlockedQuestions";
 import UserComment from "../../components/users/UserComment";
-import { loadContentFinishVar } from "../../src/utils/user.utils";
 import { myBlockContents } from "../../src/__generated__/myBlockContents";
+import Tabs from "../../components/Tabs";
 
 const ME_QUERY = gql`
   query myBlockContents($lastId: Int) {
@@ -36,18 +36,6 @@ export default function UserBlocks() {
     { name: "숨긴 댓글", to: "comments" },
   ];
   const [currentTab, setCurrentTab] = useState(tabs[0].to);
-  const [scrollHeight, setScrollHeight] = useState(0);
-  const trackScroll = () => {
-    setScrollHeight(window.scrollY);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", trackScroll);
-    setScrollHeight(window.scrollY);
-    return () => {
-      window.removeEventListener("scroll", trackScroll);
-    };
-  }, []);
 
   const loader = useRef(null);
   const { data, refetch, fetchMore } = useQuery<myBlockContents>(ME_QUERY, {
@@ -130,45 +118,11 @@ export default function UserBlocks() {
 
           {/* 코멘트 리스트 */}
           <div className="px-4 space-y-6 sm:px-6 lg:px-8 lg:col-span-9">
-            {/* Tabs */}
-            <div
-              className={`sticky z-30 mt-6 bg-white lg:px-6 sm:mt-2 2xl:mt-5 ${
-                scrollHeight === 0 ? "" : "shadow-sm"
-              }`}
-              style={{
-                top: `${headerHeightVar()}px`,
-              }}
-            >
-              <div className="py-4">
-                <div className="px-4 mx-auto sm:px-6 lg:px-8">
-                  <nav
-                    className="block mx-auto -mb-px space-x-8 w-fit"
-                    aria-label="Tabs"
-                  >
-                    {tabs.map((tab) => (
-                      <button
-                        key={tab.name}
-                        className={classNames(
-                          tab.to === currentTab
-                            ? "border-indigo-500 text-gray-900"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                          "whitespace-nowrap py-2 px-1 border-b-4 text-sm font-semibold"
-                        )}
-                        aria-current={
-                          tab.to === currentTab ? "page" : undefined
-                        }
-                        onClick={() => {
-                          loadContentFinishVar(false);
-                          setCurrentTab(tab.to);
-                        }}
-                      >
-                        {tab.name}
-                      </button>
-                    ))}
-                  </nav>
-                </div>
-              </div>
-            </div>
+            <Tabs
+              tabs={tabs}
+              currentTab={currentTab}
+              setCurrentTab={setCurrentTab}
+            />
             <section aria-labelledby="user-comments-heading">
               <div
                 className="overflow-hidden rounded-3xl"

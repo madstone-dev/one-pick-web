@@ -6,13 +6,12 @@ import { ApolloCache, useMutation } from "@apollo/client";
 import { apolloClient } from "../../src/apolloClient";
 import { classNames } from "../../src/utils/utils";
 import { loginUserVar } from "../../src/utils/auth.utils";
-import {
-  DELETE_QUESTION_COMMENT_MUTATION,
-  TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION,
-} from "../questions/QuestionCommentDropdown";
 import { deleteQuestionComment } from "../../src/__generated__/deleteQuestionComment";
 import { toggleQuestionCommentBlock } from "../../src/__generated__/toggleQuestionCommentBlock";
 import { myQuestionComments_me_questionComments } from "../../src/__generated__/myQuestionComments";
+import Link from "next/link";
+import { DELETE_QUESTION_COMMENT_MUTATION } from "../questions/QuestionCommentDeleteButton";
+import { TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION } from "../questions/QuestionCommentBlockButton";
 
 interface IuserCommentDropdown {
   comment: myQuestionComments_me_questionComments;
@@ -95,6 +94,20 @@ export default function UserCommentDropdown({ comment }: IuserCommentDropdown) {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg w-fit ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
+            <Menu.Item>
+              {({ active }) => (
+                <Link href={`/questions/${comment.question.id}`}>
+                  <a
+                    className={classNames(
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
+                    )}
+                  >
+                    게시물로 이동
+                  </a>
+                </Link>
+              )}
+            </Menu.Item>
             {loginUser?.id === comment.user.id ? (
               <Menu.Item>
                 {({ active }) => (

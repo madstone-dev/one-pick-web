@@ -3,24 +3,20 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "../../components/auth/Layout";
 import { apolloClient } from "../../src/apolloClient";
-import {
-  getAvatar,
-  headerHeightVar,
-  loginUserVar,
-} from "../../src/utils/auth.utils";
+import { getAvatar, loginUserVar } from "../../src/utils/auth.utils";
 import "moment/locale/ko";
 import UserQuestions from "../../components/users/UserQuestions";
 import {
   BASIC_USER_FRAGMENT,
   SHOW_QUESTIONS_FRAGMENT,
 } from "../../src/fragments";
-import { classNames } from "../../src/utils/utils";
 import ContentSection from "../../components/ContentSection";
-import { isQuestionLoadFinishVar } from "../../src/utils/questions.utils";
 import Link from "next/link";
 import { routes } from "../../src/routes";
 import ToggleFollowButton from "../../components/users/ToggleFollowButton";
 import { showUser, showUser_showUser } from "../../src/__generated__/showUser";
+import Tabs from "../../components/Tabs";
+import { loadContentFinishVar } from "../../src/utils/utils";
 
 const SHOW_USER_QUERY = gql`
   query showUser($id: Int!, $lastId: Int) {
@@ -49,13 +45,16 @@ export default function ShowUser({ data }: IshowUserServer) {
   const loginUser = loginUserVar();
   const id = parseInt(router.query.id as string);
   const [user, setUser] = useState(data);
-  const [scrollHeight, setScrollHeight] = useState(0);
-  const { data: userData, fetchMore } = useQuery<showUser>(SHOW_USER_QUERY, {
+  const {
+    data: userData,
+    fetchMore,
+    refetch,
+  } = useQuery<showUser>(SHOW_USER_QUERY, {
     variables: {
       id,
     },
     onCompleted: () => {
-      isQuestionLoadFinishVar(false);
+      loadContentFinishVar(false);
     },
   });
   const tabs = [
@@ -71,16 +70,8 @@ export default function ShowUser({ data }: IshowUserServer) {
     }
   }, [userData]);
 
-  const trackScroll = () => {
-    setScrollHeight(window.scrollY);
-  };
-
   useEffect(() => {
-    window.addEventListener("scroll", trackScroll);
-    setScrollHeight(window.scrollY);
-    return () => {
-      window.removeEventListener("scroll", trackScroll);
-    };
+    refetch();
   }, []);
 
   return (
@@ -132,43 +123,7 @@ export default function ShowUser({ data }: IshowUserServer) {
           )}
         </div>
       </div>
-
-      {/* Tabs */}
-      <div
-        className={`sticky z-30 bg-white lg:px-6 ${
-          scrollHeight === 0 ? "" : "shadow-sm"
-        }`}
-        style={{
-          top: `${headerHeightVar()}px`,
-        }}
-      >
-        <div className="py-4">
-          <div className="px-4 mx-auto sm:px-6 lg:px-8">
-            <nav
-              className="block mx-auto -mb-px space-x-8 w-fit"
-              aria-label="Tabs"
-            >
-              {tabs.map((tab) => (
-                <button
-                  key={tab.name}
-                  className={classNames(
-                    tab.to === currentTab
-                      ? "border-indigo-500 text-gray-900"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                    "whitespace-nowrap py-2 px-1 border-b-4 text-sm font-semibold"
-                  )}
-                  aria-current={tab.to === currentTab ? "page" : undefined}
-                  onClick={() => {
-                    setCurrentTab(tab.to);
-                  }}
-                >
-                  {tab.name}
-                </button>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </div>
+      <Tabs tabs={tabs} currentTab={currentTab} setCurrentTab={setCurrentTab} />
       <ContentSection>
         <div className="flex flex-col w-full">
           {user && (

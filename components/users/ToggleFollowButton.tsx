@@ -18,15 +18,20 @@ interface ItoggleFollowButton {
 }
 
 export default function ToggleFollowButton({ user }: ItoggleFollowButton) {
-  const onCompleted = () => {
-    apolloClient.cache.modify({
-      id: `User:{"id":${user?.id}}`,
-      fields: {
-        isFollowing(prev) {
-          return !prev;
+  const onCompleted = (data: toggleFollowUser) => {
+    if (!data.toggleFollowUser.ok) {
+      alert(data.toggleFollowUser.error);
+      return;
+    } else {
+      apolloClient.cache.modify({
+        id: `User:{"id":${user?.id}}`,
+        fields: {
+          isFollowing(prev) {
+            return !prev;
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   const [toggleFollowUserMutation] = useMutation<toggleFollowUser>(

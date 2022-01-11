@@ -1,15 +1,18 @@
-import { ApolloQueryResult, gql, useQuery } from "@apollo/client";
-import { useCallback, useEffect, useRef } from "react";
 import {
-  isQuestionLoadFinishVar,
-  shouldRefetchQuestionsVar,
-} from "../src/utils/questions.utils";
+  ApolloQueryResult,
+  gql,
+  useQuery,
+  useReactiveVar,
+} from "@apollo/client";
+import { useCallback, useEffect, useRef } from "react";
+import { shouldRefetchQuestionsVar } from "../src/utils/questions.utils";
 import Layout from "../components/auth/Layout";
 import { HashLoader } from "react-spinners";
 import { SHOW_QUESTIONS_FRAGMENT } from "../src/fragments";
 import ContentSection from "../components/ContentSection";
 import QuestionMasonry from "../components/questions/QuestionMasonry";
 import { showQuestions } from "../src/__generated__/showQuestions";
+import { loadContentFinishVar } from "../src/utils/utils";
 
 const SHOW_QUESTIONS_QUERY = gql`
   query showQuestions($lastId: Int) {
@@ -21,27 +24,27 @@ const SHOW_QUESTIONS_QUERY = gql`
 `;
 
 export default function Home() {
+  const shouldRefetch = useReactiveVar(shouldRefetchQuestionsVar);
   const loader = useRef(null);
   const { data, loading, fetchMore, refetch } = useQuery<showQuestions>(
     SHOW_QUESTIONS_QUERY,
     {
       onCompleted: () => {
-        isQuestionLoadFinishVar(false);
+        loadContentFinishVar(false);
       },
     }
   );
 
   useEffect(() => {
-    const shouldRefetch = shouldRefetchQuestionsVar();
     if (shouldRefetch) {
       refetch();
       shouldRefetchQuestionsVar(false);
     }
-  }, []);
+  }, [shouldRefetch]);
 
   const handleObserver = useCallback(
     async (entries) => {
-      const loadFinish = isQuestionLoadFinishVar();
+      const loadFinish = loadContentFinishVar();
       if (loadFinish) {
         return;
       }
@@ -54,7 +57,7 @@ export default function Home() {
           },
         });
         if (more?.data?.showQuestions?.length === 0) {
-          isQuestionLoadFinishVar(true);
+          loadContentFinishVar(true);
         }
       }
     },

@@ -23,10 +23,16 @@ export interface updateQuestionComment_updateQuestionComment_comment_user {
   lastLogin: string | null;
 }
 
+export interface updateQuestionComment_updateQuestionComment_comment_question {
+  __typename: "Question";
+  id: number;
+}
+
 export interface updateQuestionComment_updateQuestionComment_comment {
   __typename: "QuestionComment";
   id: number;
   user: updateQuestionComment_updateQuestionComment_comment_user;
+  question: updateQuestionComment_updateQuestionComment_comment_question;
   content: string;
   isBlocked: boolean;
   pick: number;

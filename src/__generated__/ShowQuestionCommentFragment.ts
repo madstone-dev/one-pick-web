@@ -23,10 +23,16 @@ export interface ShowQuestionCommentFragment_user {
   lastLogin: string | null;
 }
 
+export interface ShowQuestionCommentFragment_question {
+  __typename: "Question";
+  id: number;
+}
+
 export interface ShowQuestionCommentFragment {
   __typename: "QuestionComment";
   id: number;
   user: ShowQuestionCommentFragment_user;
+  question: ShowQuestionCommentFragment_question;
   content: string;
   isBlocked: boolean;
   pick: number;

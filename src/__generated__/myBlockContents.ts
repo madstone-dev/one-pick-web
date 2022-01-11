@@ -36,7 +36,7 @@ export interface myBlockContents_me_questionBlocks {
   content: string;
   image: any | null;
   choice: string[];
-  questionHashtags: (myBlockContents_me_questionBlocks_questionHashtags | null)[] | null;
+  questionHashtags: myBlockContents_me_questionBlocks_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
   totalComments: number;
@@ -62,10 +62,16 @@ export interface myBlockContents_me_questionCommentBlocks_user {
   lastLogin: string | null;
 }
 
+export interface myBlockContents_me_questionCommentBlocks_question {
+  __typename: "Question";
+  id: number;
+}
+
 export interface myBlockContents_me_questionCommentBlocks {
   __typename: "QuestionComment";
   id: number;
   user: myBlockContents_me_questionCommentBlocks_user;
+  question: myBlockContents_me_questionCommentBlocks_question;
   content: string;
   isBlocked: boolean;
   pick: number;
@@ -76,8 +82,8 @@ export interface myBlockContents_me_questionCommentBlocks {
 export interface myBlockContents_me {
   __typename: "User";
   id: number;
-  questionBlocks: (myBlockContents_me_questionBlocks | null)[] | null;
-  questionCommentBlocks: (myBlockContents_me_questionCommentBlocks | null)[] | null;
+  questionBlocks: myBlockContents_me_questionBlocks[] | null;
+  questionCommentBlocks: myBlockContents_me_questionCommentBlocks[] | null;
 }
 
 export interface myBlockContents {

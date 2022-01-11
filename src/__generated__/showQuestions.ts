@@ -36,7 +36,7 @@ export interface showQuestions_showQuestions {
   content: string;
   image: any | null;
   choice: string[];
-  questionHashtags: (showQuestions_showQuestions_questionHashtags | null)[] | null;
+  questionHashtags: showQuestions_showQuestions_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
   totalComments: number;
@@ -47,7 +47,7 @@ export interface showQuestions_showQuestions {
 }
 
 export interface showQuestions {
-  showQuestions: (showQuestions_showQuestions | null)[] | null;
+  showQuestions: showQuestions_showQuestions[];
 }
 
 export interface showQuestionsVariables {

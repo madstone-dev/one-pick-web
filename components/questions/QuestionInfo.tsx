@@ -1,6 +1,7 @@
 import moment from "moment";
 import "moment/locale/ko";
 import Link from "next/link";
+import { routes } from "../../src/routes";
 import { getAvatar } from "../../src/utils/auth.utils";
 import { showQuestions_showQuestions } from "../../src/__generated__/showQuestions";
 
@@ -71,9 +72,9 @@ export default function QuestionInfo({ question }: IquestionInfo) {
           </div>
           <div className="mt-6 space-x-2 space-y-6 text-sm text-gray-600">
             {hashtags.map((tag: string, index: number) => (
-              <span key={index} className="hover:text-indigo-600">
-                {tag}
-              </span>
+              <Link key={index} href={`${routes.search}?tag=${encodeURI(tag)}`}>
+                <a className="hover:text-indigo-600">{tag}</a>
+              </Link>
             ))}
           </div>
         </div>

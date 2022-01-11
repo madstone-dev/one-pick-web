@@ -24,7 +24,7 @@ export default function DeleteUserForm() {
   const onDeleteUser = (data: deleteUser) => {
     if (data.deleteUser?.ok) {
       localStorage.removeItem(ACCESS_TOKEN);
-      router.push(routes.logout);
+      router.replace(routes.logout);
       alert("회원 탈퇴 완료");
     } else {
       setDeleteError(data.deleteUser.error || "");

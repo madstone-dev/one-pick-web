@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 import { createQuestionCommentReport } from "../../src/__generated__/createQuestionCommentReport";
 import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
+import { reportTypes } from "../../src/utils/utils";
 
 const REPORT_QUESTION_COMMENT_MUTATION = gql`
   mutation createQuestionCommentReport($id: Int!, $type: Int!) {
@@ -38,21 +39,16 @@ export default function QuestionCommentReportModal({
   const { register, handleSubmit, watch, setValue } = useForm();
   const [reportQuestionCommentMutation] =
     useMutation<createQuestionCommentReport>(REPORT_QUESTION_COMMENT_MUTATION);
-  const reportTypes = [
-    { label: "상업성 콘텐츠 또는 스팸", value: "1" },
-    { label: "증오심 표현 또는 노골적인 폭력", value: "2" },
-    { label: "희롱 또는 괴롭힘", value: "3" },
-  ];
+
+  useEffect(() => {
+    setReportOpen(open);
+  }, [open]);
 
   useEffect(() => {
     if (reportOpen) {
       setOpen(reportOpen);
     }
   }, [reportOpen]);
-
-  useEffect(() => {
-    setReportOpen(open);
-  }, [open]);
 
   const onValid = () => {
     reportQuestionCommentMutation({
@@ -69,7 +65,7 @@ export default function QuestionCommentReportModal({
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-10 overflow-y-auto"
+        className="fixed inset-0 z-50 overflow-y-auto"
         initialFocus={cancelButtonRef}
         onClose={setOpen}
       >

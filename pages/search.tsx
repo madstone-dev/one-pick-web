@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import { isQuestionLoadFinishVar } from "../src/utils/questions.utils";
 import Layout from "../components/auth/Layout";
 import { HashLoader } from "react-spinners";
 import { SHOW_QUESTIONS_FRAGMENT } from "../src/fragments";
@@ -14,6 +13,7 @@ import {
   searchQuestionHashtags,
   searchQuestionHashtags_searchQuestionHashtags,
 } from "../src/__generated__/searchQuestionHashtags";
+import { loadContentFinishVar } from "../src/utils/utils";
 
 const SEARCH_QUESTION_HASHTAGS_QUERY = gql`
   query searchQuestionHashtags($keyword: String) {
@@ -54,7 +54,7 @@ export default function Search() {
   // search hashtag
   const [keyword, setKeyword] = useState("");
   const [hashtags, setHashtags] = useState<
-    (searchQuestionHashtags_searchQuestionHashtags | null)[]
+    searchQuestionHashtags_searchQuestionHashtags[]
   >([]);
 
   const { data: hashtagData, fetchMore: hashtagFetchMore } =
@@ -88,7 +88,7 @@ export default function Search() {
 
   const onSearch = async (isTag: any = false, keyword: string) => {
     (document.activeElement as HTMLElement).blur();
-    isQuestionLoadFinishVar(false);
+    loadContentFinishVar(false);
     setKeyword(keyword.trim());
     refetch({
       keyword: keyword.trim(),
@@ -99,7 +99,7 @@ export default function Search() {
   // infinity scroll
   const handleObserver = useCallback(
     async (entries) => {
-      const loadFinish = isQuestionLoadFinishVar();
+      const loadFinish = loadContentFinishVar();
       if (loadFinish) {
         return;
       }
@@ -116,7 +116,7 @@ export default function Search() {
           },
         });
         if (more?.data?.searchQuestions?.length === 0) {
-          isQuestionLoadFinishVar(true);
+          loadContentFinishVar(true);
         }
       }
     },

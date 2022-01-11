@@ -1,18 +1,21 @@
-import { Fragment } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { DotsVerticalIcon } from "@heroicons/react/solid";
 import { focusedQuestionVar } from "../../src/utils/questions.utils";
 import QuestionBlockButton from "./QuestionBlockButton";
-import QuestionReportModal from "./QuestionReportModal";
 import QuestionDeleteButton from "./QeustionDeleteButton";
 import Link from "next/link";
 import { showQuestions_showQuestions } from "../../src/__generated__/showQuestions";
 
 interface IquestionDropdown {
   question: showQuestions_showQuestions;
+  setReportOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function QuestionDropdown({ question }: IquestionDropdown) {
+export default function QuestionDropdown({
+  question,
+  setReportOpen,
+}: IquestionDropdown) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -49,17 +52,28 @@ export default function QuestionDropdown({ question }: IquestionDropdown) {
                   </Link>
                 </Menu.Item>
                 <Menu.Item>
-                  <QuestionDeleteButton question={question} />
+                  <div>
+                    <QuestionDeleteButton question={question} />
+                  </div>
                 </Menu.Item>
               </>
             ) : (
               <>
                 <Menu.Item>
-                  <QuestionBlockButton question={question} />
+                  <div>
+                    <QuestionBlockButton question={question} />
+                  </div>
                 </Menu.Item>
                 {!question.isBlocked && (
                   <Menu.Item>
-                    <QuestionReportModal question={question} />
+                    <button
+                      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap"
+                      onClick={() => {
+                        setReportOpen(true);
+                      }}
+                    >
+                      콘텐츠 신고
+                    </button>
                   </Menu.Item>
                 )}
               </>

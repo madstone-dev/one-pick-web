@@ -65,12 +65,21 @@ const uploadHttpLink = createUploadLink({
   credentials: "include",
 });
 
-const mergeCursorPaginate = (existing: any, incoming: any) => {
+const mergeFilteredItems = (existing: any, incoming: any) => {
   const existArr = existing.map((item: any) => item.__ref);
   const filteredIncoming = incoming.filter(
     (item: any) => !existArr.includes(item.__ref)
   );
   return [...existing, ...filteredIncoming];
+};
+
+const cursurPaginate = {
+  merge(existing = [], incoming = []) {
+    return mergeFilteredItems(existing, incoming);
+  },
+  read(existing: any) {
+    return existing && Object.values(existing);
+  },
 };
 
 export const apolloClient = new ApolloClient({
@@ -79,67 +88,18 @@ export const apolloClient = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          showQuestions: {
-            merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(existing, incoming);
-            },
-            read(existing) {
-              return existing && Object.values(existing);
-            },
-          },
-          showQuestionComments: {
-            merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(existing, incoming);
-            },
-            read(existing) {
-              return existing && Object.values(existing);
-            },
-          },
-          searchQuestions: {
-            merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(existing, incoming);
-            },
-            read(existing) {
-              return existing && Object.values(existing);
-            },
-          },
+          showQuestions: cursurPaginate,
+          showQuestionComments: cursurPaginate,
+          searchQuestions: cursurPaginate,
         },
       },
       User: {
         keyFields: ["id"],
         fields: {
-          questions: {
-            merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(existing, incoming);
-            },
-            read(existing) {
-              return existing && Object.values(existing);
-            },
-          },
-          questionComments: {
-            merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(existing, incoming);
-            },
-            read(existing) {
-              return existing && Object.values(existing);
-            },
-          },
-          questionBlocks: {
-            merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(existing, incoming);
-            },
-            read(existing) {
-              return existing && Object.values(existing);
-            },
-          },
-          questionCommentBlocks: {
-            merge(existing = [], incoming = []) {
-              return mergeCursorPaginate(existing, incoming);
-            },
-            read(existing) {
-              return existing && Object.values(existing);
-            },
-          },
+          questions: cursurPaginate,
+          questionComments: cursurPaginate,
+          questionBlocks: cursurPaginate,
+          questionCommentBlocks: cursurPaginate,
           totalQuestionComments: {
             keyArgs: false,
           },

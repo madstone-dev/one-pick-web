@@ -10,4 +10,7 @@ export const routes = {
   userComments: "/users/comments",
   userBlocks: "/users/blocks",
   createQuestion: "/questions/create",
+  adminMenu: "/admin/dashboard",
+  adminUserList: "/admin/users",
+  adminReport: "/admin/reports",
 };

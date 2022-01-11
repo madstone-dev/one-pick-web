@@ -36,7 +36,7 @@ export interface createQuestion_createQuestion_question {
   content: string;
   image: any | null;
   choice: string[];
-  questionHashtags: (createQuestion_createQuestion_question_questionHashtags | null)[] | null;
+  questionHashtags: createQuestion_createQuestion_question_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
   totalComments: number;

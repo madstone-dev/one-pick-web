@@ -36,7 +36,7 @@ export interface updateQuestion_updateQuestion_question {
   content: string;
   image: any | null;
   choice: string[];
-  questionHashtags: (updateQuestion_updateQuestion_question_questionHashtags | null)[] | null;
+  questionHashtags: updateQuestion_updateQuestion_question_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
   totalComments: number;

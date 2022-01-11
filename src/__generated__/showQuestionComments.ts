@@ -23,10 +23,16 @@ export interface showQuestionComments_showQuestionComments_user {
   lastLogin: string | null;
 }
 
+export interface showQuestionComments_showQuestionComments_question {
+  __typename: "Question";
+  id: number;
+}
+
 export interface showQuestionComments_showQuestionComments {
   __typename: "QuestionComment";
   id: number;
   user: showQuestionComments_showQuestionComments_user;
+  question: showQuestionComments_showQuestionComments_question;
   content: string;
   isBlocked: boolean;
   pick: number;
@@ -35,7 +41,7 @@ export interface showQuestionComments_showQuestionComments {
 }
 
 export interface showQuestionComments {
-  showQuestionComments: (showQuestionComments_showQuestionComments | null)[] | null;
+  showQuestionComments: showQuestionComments_showQuestionComments[];
 }
 
 export interface showQuestionCommentsVariables {

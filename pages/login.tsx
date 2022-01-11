@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { successNotificationVar } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
 import { login } from "../src/__generated__/login";
+import { apolloClient } from "../src/apolloClient";
 
 const LOGIN_MUTATION = gql`
   mutation login($email: String!, $password: String!) {
@@ -34,6 +35,10 @@ export default function Login() {
     if (loading) {
       return;
     }
+    apolloClient.cache.evict({
+      fieldName: "me",
+    });
+    apolloClient.cache.gc();
     loginMutation({
       variables: { ...data },
     });

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { isQuestionLoadFinishVar } from "../../src/utils/questions.utils";
+import { loadContentFinishVar } from "../../src/utils/utils";
 import {
   showUser_showUser_picks,
   showUser_showUser_questions,
@@ -7,9 +7,7 @@ import {
 import QuestionMasonry from "../questions/QuestionMasonry";
 
 interface IuserQuestions {
-  questions:
-    | (showUser_showUser_questions | showUser_showUser_picks | null)[]
-    | null;
+  questions: (showUser_showUser_questions | showUser_showUser_picks)[] | null;
   fetchMore: any;
 }
 
@@ -21,7 +19,7 @@ export default function UserQuestions({
 
   const handleObserver = useCallback(
     async (entries) => {
-      const loadFinish = isQuestionLoadFinishVar();
+      const loadFinish = loadContentFinishVar();
       if (loadFinish) {
         return;
       }
@@ -34,7 +32,7 @@ export default function UserQuestions({
           },
         });
         if (!more?.data?.questions || more?.data?.questions?.length === 0) {
-          isQuestionLoadFinishVar(true);
+          loadContentFinishVar(true);
         }
       }
     },
@@ -74,7 +72,7 @@ export default function UserQuestions({
                 transform: "translate(-50%,-50%)",
               }}
             >
-              <span className="block">작성한 질문이 없습니다</span>
+              <span className="block">질문이 없습니다</span>
             </div>
           )}
         </div>

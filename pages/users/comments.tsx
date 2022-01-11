@@ -4,10 +4,10 @@ import { routes } from "../../src/routes";
 import { useCallback, useEffect, useRef } from "react";
 import ProfileAside from "../../components/users/ProfileAside";
 import { ApolloQueryResult, gql, useQuery } from "@apollo/client";
-import { isQuestionCommentLoadFinishVar } from "../../src/utils/questionComments.utils";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import UserComment from "../../components/users/UserComment";
 import { myQuestionComments } from "../../src/__generated__/myQuestionComments";
+import { loadContentFinishVar } from "../../src/utils/utils";
 
 const ME_QUERY = gql`
   query myQuestionComments($lastId: Int) {
@@ -26,7 +26,7 @@ export default function UserComments() {
   const loader = useRef(null);
   const { data, refetch, fetchMore } = useQuery<myQuestionComments>(ME_QUERY, {
     onCompleted: () => {
-      isQuestionCommentLoadFinishVar(false);
+      loadContentFinishVar(false);
     },
   });
 
@@ -36,7 +36,7 @@ export default function UserComments() {
 
   const handleObserver = useCallback(
     async (entries) => {
-      const loadFinish = isQuestionCommentLoadFinishVar();
+      const loadFinish = loadContentFinishVar();
       if (loadFinish) {
         return;
       }
@@ -50,7 +50,7 @@ export default function UserComments() {
           },
         });
         if (more?.data?.me?.questionComments?.length === 0) {
-          isQuestionCommentLoadFinishVar(true);
+          loadContentFinishVar(true);
         }
       }
     },

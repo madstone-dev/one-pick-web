@@ -36,7 +36,7 @@ export interface searchQuestions_searchQuestions {
   content: string;
   image: any | null;
   choice: string[];
-  questionHashtags: (searchQuestions_searchQuestions_questionHashtags | null)[] | null;
+  questionHashtags: searchQuestions_searchQuestions_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
   totalComments: number;
@@ -47,7 +47,7 @@ export interface searchQuestions_searchQuestions {
 }
 
 export interface searchQuestions {
-  searchQuestions: (searchQuestions_searchQuestions | null)[] | null;
+  searchQuestions: searchQuestions_searchQuestions[] | null;
 }
 
 export interface searchQuestionsVariables {

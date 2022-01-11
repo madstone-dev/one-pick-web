@@ -22,16 +22,32 @@ export default function QuestionDeleteButton({
   question,
 }: IquestionDeleteButton) {
   const router = useRouter();
+
   const deleteQuestionCache = () => {
     apolloClient.cache.evict({
-      id: "ROOT_QUERY",
-      fieldName: "showQuestions",
-      args: {
-        id: question.id,
-      },
+      id: `Question:${question.id}`,
     });
     apolloClient.cache.gc();
-    router.push(routes.home);
+    if (
+      router.pathname !== routes.adminReport &&
+      router.pathname !== "/users/[id]"
+    ) {
+      router.push(routes.home);
+    }
+  };
+
+  const onCompleted = (data: deleteQuestion) => {
+    if (data.deleteQuestion.ok) {
+      deleteQuestionCache();
+      apolloClient.cache.modify({
+        id: `User:{"id":${question.user?.id}}`,
+        fields: {
+          totalQuestions(prev) {
+            return prev - 1;
+          },
+        },
+      });
+    }
   };
 
   const [deleteQuestionMutation, { loading: deleteLoading }] =
@@ -39,7 +55,7 @@ export default function QuestionDeleteButton({
       variables: {
         id: question.id,
       },
-      onCompleted: () => deleteQuestionCache(),
+      onCompleted,
     });
 
   const onDeleteClick = () => {

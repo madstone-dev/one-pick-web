@@ -37,7 +37,7 @@ export interface showQuestion_showQuestion {
   content: string;
   image: any | null;
   choice: string[];
-  questionHashtags: (showQuestion_showQuestion_questionHashtags | null)[] | null;
+  questionHashtags: showQuestion_showQuestion_questionHashtags[];
   totalPickers: number;
   isPicker: boolean;
   myPick: number | null;
