@@ -7,9 +7,13 @@ import QuestionCommentReportDropdown from "./QuestionCommentReportDropdown";
 
 interface IquestionReport {
   report: showQuestionCommentReports_showQuestionCommentReports_reports;
+  isLast: boolean;
 }
 
-export default function QuestionCommentReport({ report }: IquestionReport) {
+export default function QuestionCommentReport({
+  report,
+  isLast,
+}: IquestionReport) {
   const reportLabel = reportTypes.find(
     (type) => Number(type.value) === Number(report.type)
   );
@@ -17,46 +21,41 @@ export default function QuestionCommentReport({ report }: IquestionReport) {
     moment.unix(Number(report.createdAt) / 1000)
   ).fromNow();
   return (
-    <tr>
-      <td className="px-6 py-4">
-        <div className="flex items-start">
-          <div className="flex-shrink-0 w-10 h-10">
+    <li className="sm:rounded-md">
+      <div className="flex items-start px-4 py-4 sm:px-6">
+        <div className="flex items-start flex-1 min-w-0">
+          <div className="flex-shrink-0">
             <img
               src={
                 report.questionComment.user.avatar?.Location ||
                 getAvatar(report.questionComment.user.username)
               }
               alt={report.questionComment.user.username}
-              className="object-cover object-center w-10 h-10 rounded-full"
+              className="object-cover object-center w-12 h-12 rounded-full"
             />
           </div>
-          <div className="flex-1 ml-4">
-            <div className="text-sm font-medium text-gray-900 break-all">
-              {report.questionComment.content}
+          <div className="flex-1 min-w-0 px-4 md:grid md:grid-cols-2 md:gap-4">
+            <div>
+              <p className="text-sm font-medium text-gray-600">
+                {report.questionComment.content}
+              </p>
+              <p className="flex items-center mt-2 text-sm text-gray-500">
+                <span className="truncate">{reportLabel?.label}</span>
+              </p>
             </div>
-            <div className="mt-1 text-sm text-gray-500">
-              {reportLabel?.label}
-            </div>
-
-            <div className="flex items-center justify-between mt-2 md:hidden">
-              <div className="text-sm text-gray-500 whitespace-nowrap">
-                {createdAt}
-              </div>
-              <div className="relative flex text-sm font-medium whitespace-nowrap">
-                <QuestionCommentReportDropdown report={report} />
+            <div className="hidden md:block">
+              <div>
+                <p className="flex items-center mt-2 text-sm text-gray-500">
+                  {createdAt}
+                </p>
               </div>
             </div>
           </div>
         </div>
-      </td>
-      <td className="hidden px-6 py-4 text-sm text-gray-500 whitespace-nowrap md:table-cell">
-        {createdAt}
-      </td>
-      <td className="hidden px-6 py-4 text-sm font-medium whitespace-nowrap md:table-cell">
-        <div className="relative flex justify-end">
-          <QuestionCommentReportDropdown report={report} />
+        <div>
+          <QuestionCommentReportDropdown report={report} isLast={isLast} />
         </div>
-      </td>
-    </tr>
+      </div>
+    </li>
   );
 }

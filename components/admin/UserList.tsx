@@ -7,48 +7,33 @@ interface IuserList {
 
 export default function UserList({ users }: IuserList) {
   return (
-    <div className="flex flex-col">
-      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="inline-block w-full max-w-full min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                  >
-                    사용자
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase md:table-cell"
-                  >
-                    최근 접속일
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase md:table-cell"
-                  >
-                    권한
-                  </th>
-                  <th
-                    scope="col"
-                    className="relative hidden px-6 py-3 md:table-cell"
-                  >
-                    <span className="sr-only">보기</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {users?.map((user, index) => (
-                  <User user={user} key={index} />
-                ))}
-              </tbody>
-            </table>
+    <div className="pb-20 bg-white sm:rounded-md sm:px-2">
+      <ul
+        role="list"
+        className="border border-gray-100 divide-y divide-gray-200 shadow-md sm:rounded-md"
+      >
+        {/* list header */}
+        <li className="sm:rounded-md">
+          <div className="flex items-start px-6 py-3 bg-gray-50">
+            <div className="flex-1 min-w-0 md:grid md:grid-cols-2 md:gap-6">
+              <div>
+                <p className="text-xs text-gray-500">닉네임 / 이메일</p>
+              </div>
+              <div className="hidden md:block">
+                <p className="text-xs text-gray-500">최근 접속시간</p>
+              </div>
+            </div>
+            <div className="sr-only">메뉴</div>
           </div>
-        </div>
-      </div>
+        </li>
+        {users?.map((user, index) => (
+          <User
+            user={user}
+            key={index}
+            isLast={index > 1 && users?.length === index + 1}
+          />
+        ))}
+      </ul>
     </div>
   );
 }

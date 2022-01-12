@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
-import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
 import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
 import { updateQuestionComment } from "../../src/__generated__/updateQuestionComment";
 

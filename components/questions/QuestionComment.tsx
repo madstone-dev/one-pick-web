@@ -5,9 +5,9 @@ import {
   focusedCommentVar,
 } from "../../src/utils/questionComments.utils";
 import QuestionCommentDropdown from "./QuestionCommentDropdown";
-import moment from "moment";
 import QuestionCommentReportModal from "./QuestionCommentReportModal";
 import { getAvatar, loginUserVar } from "../../src/utils/auth.utils";
+import moment from "moment";
 import "moment/locale/ko";
 import Link from "next/link";
 import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";

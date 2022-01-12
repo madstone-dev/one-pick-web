@@ -6,11 +6,15 @@ import { showQuestionReports_showQuestionReports_reports } from "../../src/__gen
 import QuestionDeleteButton from "../questions/QeustionDeleteButton";
 import QuestionReportDeleteButton from "./QuestionReportDeleteButton";
 
-interface IquestionDropdown {
+interface IquestionReportDropdown {
   report: showQuestionReports_showQuestionReports_reports;
+  isLast: boolean;
 }
 
-export default function QuestionReportDropdown({ report }: IquestionDropdown) {
+export default function QuestionReportDropdown({
+  report,
+  isLast,
+}: IquestionReportDropdown) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -29,7 +33,11 @@ export default function QuestionReportDropdown({ report }: IquestionDropdown) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white rounded-md shadow-lg w-fit ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items
+          className={`${
+            isLast ? "mr-2 bottom-0 right-full" : "mt-2"
+          } absolute right-0 z-10 origin-top-right bg-white rounded-md shadow-lg w-fit ring-1 ring-black ring-opacity-5 focus:outline-none`}
+        >
           <div className="py-1">
             <Menu.Item>
               <Link href={`/questions/${report.question?.id}`}>

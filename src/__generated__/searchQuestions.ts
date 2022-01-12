@@ -52,6 +52,6 @@ export interface searchQuestions {
 
 export interface searchQuestionsVariables {
   keyword?: string | null;
-  isTag?: boolean | null;
+  type?: string | null;
   lastId?: number | null;
 }

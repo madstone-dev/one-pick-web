@@ -1,19 +1,16 @@
-import { gql, useQuery } from "@apollo/client";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { gql, useLazyQuery } from "@apollo/client";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Layout from "../components/auth/Layout";
 import { HashLoader } from "react-spinners";
 import { SHOW_QUESTIONS_FRAGMENT } from "../src/fragments";
 import { headerHeightVar } from "../src/utils/auth.utils";
 import { SearchIcon } from "@heroicons/react/outline";
 import ContentSection from "../components/ContentSection";
-import { Transition } from "@headlessui/react";
 import QuestionMasonry from "../components/questions/QuestionMasonry";
 import { searchQuestions } from "../src/__generated__/searchQuestions";
-import {
-  searchQuestionHashtags,
-  searchQuestionHashtags_searchQuestionHashtags,
-} from "../src/__generated__/searchQuestionHashtags";
+import { searchQuestionHashtags } from "../src/__generated__/searchQuestionHashtags";
 import { loadContentFinishVar } from "../src/utils/utils";
+import HashtagList from "../components/search/hashtagList";
 
 const SEARCH_QUESTION_HASHTAGS_QUERY = gql`
   query searchQuestionHashtags($keyword: String) {
@@ -25,8 +22,8 @@ const SEARCH_QUESTION_HASHTAGS_QUERY = gql`
 `;
 
 const SEARCH_QUESTIONS_QUERY = gql`
-  query searchQuestions($keyword: String, $isTag: Boolean, $lastId: Int) {
-    searchQuestions(keyword: $keyword, isTag: $isTag, lastId: $lastId) {
+  query searchQuestions($keyword: String, $type: String!, $lastId: Int) {
+    searchQuestions(keyword: $keyword, type: $type, lastId: $lastId) {
       ...ShowQuestionsFragment
     }
   }
@@ -53,22 +50,15 @@ export default function Search() {
 
   // search hashtag
   const [keyword, setKeyword] = useState("");
-  const [hashtags, setHashtags] = useState<
-    searchQuestionHashtags_searchQuestionHashtags[]
-  >([]);
+  const [searchQuestionHashtagsQuery, { data: hashtagData }] =
+    useLazyQuery<searchQuestionHashtags>(SEARCH_QUESTION_HASHTAGS_QUERY);
 
-  const { data: hashtagData, fetchMore: hashtagFetchMore } =
-    useQuery<searchQuestionHashtags>(SEARCH_QUESTION_HASHTAGS_QUERY);
-
-  const onChangeInputValue = async () => {
-    const more = await hashtagFetchMore({
+  const onChangeInputValue = () => {
+    searchQuestionHashtagsQuery({
       variables: {
         keyword,
       },
     });
-    if (more?.data?.searchQuestionHashtags) {
-      setHashtags(more?.data?.searchQuestionHashtags);
-    }
   };
 
   useEffect(() => {
@@ -79,20 +69,18 @@ export default function Search() {
   }, [keyword]);
 
   // search question
-  const {
-    data: questionsData,
-    loading,
-    fetchMore,
-    refetch,
-  } = useQuery<searchQuestions>(SEARCH_QUESTIONS_QUERY);
+  const [searchQuestionsQuery, { data: questionsData, loading, fetchMore }] =
+    useLazyQuery<searchQuestions>(SEARCH_QUESTIONS_QUERY);
 
-  const onSearch = async (isTag: any = false, keyword: string) => {
+  const onSearch = async (type: string = "text", keyword: string) => {
     (document.activeElement as HTMLElement).blur();
     loadContentFinishVar(false);
     setKeyword(keyword.trim());
-    refetch({
-      keyword: keyword.trim(),
-      isTag,
+    searchQuestionsQuery({
+      variables: {
+        keyword: keyword.trim(),
+        type,
+      },
     });
   };
 
@@ -152,7 +140,7 @@ export default function Search() {
         }}
       >
         <div className="flex-1 py-4 mx-auto md:max-w-3xl md:px-8 lg:px-0">
-          <div className="flex items-center px-4 lg:mx-0 xl:px-0 sm:px-6 lg:px-8">
+          <div className="px-4 lg:mx-0 xl:px-0 sm:px-6 lg:px-8">
             <div className="w-full">
               <label htmlFor="search" className="sr-only">
                 검색
@@ -168,7 +156,7 @@ export default function Search() {
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (keyword.trim()) {
-                      onSearch(false, keyword);
+                      onSearch("text", keyword);
                     }
                   }}
                 >
@@ -189,57 +177,14 @@ export default function Search() {
             </div>
           </div>
         </div>
-
-        {/* hashtag livesearch */}
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-200"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition ease-in duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          show={inputFocused}
-        >
-          <div className="border-t border-gray-100">
-            <div className="absolute w-full h-screen bg-gray-600 bg-opacity-30"></div>
-            <div className="absolute z-10 w-full px-2 transform -translate-x-1/2 left-1/2 sm:px-0 md:max-w-3xl">
-              <div className="overflow-hidden rounded-b-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="relative grid gap-6 px-5 py-6 overflow-y-auto bg-white sm:gap-8 sm:p-8 max-h-96">
-                  {hashtags.length > 0 ? (
-                    hashtags.map((item: any, index: number) => (
-                      <button
-                        key={index}
-                        className="block w-full p-3 text-left transition duration-150 ease-in-out rounded-md hover:bg-gray-50"
-                        onClick={() => {
-                          onSearch(true, item.hashtag);
-                        }}
-                      >
-                        <p className="text-base font-medium text-gray-900">
-                          {item.hashtag}
-                        </p>
-                        <p className="mt-1 text-sm text-gray-500">
-                          게시물 {item.totalQuestions}
-                        </p>
-                      </button>
-                    ))
-                  ) : (
-                    <button
-                      className="block w-full p-3 text-left transition duration-150 ease-in-out rounded-md hover:bg-gray-50"
-                      onClick={() => {
-                        onSearch(false, keyword);
-                      }}
-                    >
-                      {!keyword.trim()
-                        ? "한 글자 이상 입력해주세요"
-                        : `'${keyword}' 를 포함한 게시물을 찾습니다`}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Transition>
+        {hashtagData?.searchQuestionHashtags && (
+          <HashtagList
+            hashtags={hashtagData.searchQuestionHashtags}
+            onSearch={onSearch}
+            inputFocused={inputFocused}
+            keyword={keyword}
+          />
+        )}
       </div>
       <ContentSection>
         <section
