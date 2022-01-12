@@ -10,8 +10,8 @@ import QuestionMasonry from "../components/questions/QuestionMasonry";
 import { searchQuestions } from "../src/__generated__/searchQuestions";
 import { searchQuestionHashtags } from "../src/__generated__/searchQuestionHashtags";
 import { loadContentFinishVar } from "../src/utils/utils";
-import HashtagList from "../components/search/hashtagList";
 import { useRouter } from "next/router";
+import HashtagList from "../components/search/HashtagList";
 
 const SEARCH_QUESTION_HASHTAGS_QUERY = gql`
   query searchQuestionHashtags($keyword: String) {
@@ -55,18 +55,14 @@ export default function Search() {
   const { data: hashtagData, refetch: hashtagRefetch } =
     useQuery<searchQuestionHashtags>(SEARCH_QUESTION_HASHTAGS_QUERY);
 
-  const onChangeInputValue = () => {
-    hashtagRefetch({
-      keyword,
-    });
-  };
-
   useEffect(() => {
     const timeout = setTimeout(() => {
-      onChangeInputValue();
+      hashtagRefetch({
+        keyword,
+      });
     }, 500);
     return () => clearTimeout(timeout);
-  }, [keyword]);
+  }, [keyword, hashtagRefetch]);
 
   // search question
   const {
@@ -80,15 +76,18 @@ export default function Search() {
     },
   });
 
-  const onSearch = async (type: string = "text", keyword: string) => {
-    (document.activeElement as HTMLElement).blur();
-    loadContentFinishVar(false);
-    setKeyword(keyword.trim());
-    questionRefetch({
-      keyword: keyword.trim(),
-      type,
-    });
-  };
+  const onSearch = useCallback(
+    async (type: string = "text", keyword: string) => {
+      (document.activeElement as HTMLElement).blur();
+      loadContentFinishVar(false);
+      setKeyword(keyword.trim());
+      questionRefetch({
+        keyword: keyword.trim(),
+        type,
+      });
+    },
+    [questionRefetch]
+  );
 
   useEffect(() => {
     if (router.query.tag) {
@@ -97,7 +96,7 @@ export default function Search() {
         keyword: router.query.tag,
       });
     }
-  }, [router.query]);
+  }, [router.query, hashtagRefetch, onSearch]);
 
   // infinity scroll
   const handleObserver = useCallback(
@@ -123,7 +122,7 @@ export default function Search() {
         }
       }
     },
-    [questionsData]
+    [questionsData, fetchMore, keyword]
   );
 
   useEffect(() => {

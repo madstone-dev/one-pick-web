@@ -40,7 +40,7 @@ export default function Home() {
       refetch();
       shouldRefetchQuestionsVar(false);
     }
-  }, [shouldRefetch]);
+  }, [shouldRefetch, refetch]);
 
   const handleObserver = useCallback(
     async (entries) => {
@@ -61,7 +61,7 @@ export default function Home() {
         }
       }
     },
-    [data]
+    [data, fetchMore]
   );
 
   useEffect(() => {

@@ -52,6 +52,6 @@ export interface searchQuestions {
 
 export interface searchQuestionsVariables {
   keyword?: string | null;
-  type?: string | null;
+  type: string;
   lastId?: number | null;
 }

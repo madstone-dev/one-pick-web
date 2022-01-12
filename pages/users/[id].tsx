@@ -72,7 +72,7 @@ export default function ShowUser({ data }: IshowUserServer) {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   return (
     <Layout>

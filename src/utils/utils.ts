@@ -13,3 +13,6 @@ export const reportTypes = [
 ];
 
 export const tabHeightVar = makeVar<any>(0);
+
+export const cardShadow = "0 1px 20px 0 rgb(0 0 0 / 10%)";
+export const actionButtonShadow = "0 0 24px 8px rgb(0 0 0 / 10%)";

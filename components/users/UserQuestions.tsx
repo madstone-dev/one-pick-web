@@ -36,7 +36,7 @@ export default function UserQuestions({
         }
       }
     },
-    [questions]
+    [questions, fetchMore]
   );
 
   useEffect(() => {

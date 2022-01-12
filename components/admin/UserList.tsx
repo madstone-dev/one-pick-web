@@ -1,3 +1,4 @@
+import { cardShadow } from "../../src/utils/utils";
 import { searchUsers_searchUsers_users } from "../../src/__generated__/searchUsers";
 import User from "./User";
 
@@ -7,13 +8,14 @@ interface IuserList {
 
 export default function UserList({ users }: IuserList) {
   return (
-    <div className="pb-20 bg-white sm:rounded-md sm:px-2">
+    <div className="pb-20 bg-white sm:rounded-3xl sm:px-2">
       <ul
         role="list"
-        className="border border-gray-100 divide-y divide-gray-200 shadow-md sm:rounded-md"
+        className="border border-gray-100 divide-y divide-gray-200 sm:rounded-3xl"
+        style={{ boxShadow: cardShadow }}
       >
         {/* list header */}
-        <li className="sm:rounded-md">
+        <li className="overflow-hidden sm:rounded-t-3xl">
           <div className="flex items-start px-6 py-3 bg-gray-50">
             <div className="flex-1 min-w-0 md:grid md:grid-cols-2 md:gap-6">
               <div>

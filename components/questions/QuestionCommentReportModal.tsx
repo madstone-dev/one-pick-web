@@ -42,7 +42,7 @@ export default function QuestionCommentReportModal({
 
   useEffect(() => {
     setReportOpen(open);
-  }, [open]);
+  }, [open, setReportOpen]);
 
   useEffect(() => {
     if (reportOpen) {

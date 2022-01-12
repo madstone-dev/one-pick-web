@@ -1,6 +1,7 @@
 import { PlusSmIcon, SearchIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import { routes } from "../src/routes";
+import { actionButtonShadow } from "../src/utils/utils";
 import { me } from "../src/__generated__/me";
 
 interface IactionBar {
@@ -15,7 +16,7 @@ export default function ActionBar({ user }: IactionBar) {
           <Link href={routes.createQuestion}>
             <a
               className="block p-3 font-bold bg-white border rounded-full border-gray-50"
-              style={{ boxShadow: "0 0 24px 8px rgb(0 0 0 / 10%)" }}
+              style={{ boxShadow: actionButtonShadow }}
             >
               <PlusSmIcon
                 className="w-6 h-6 sm:w-8 sm:h-8"
@@ -27,7 +28,7 @@ export default function ActionBar({ user }: IactionBar) {
         <Link href={routes.search}>
           <a
             className="block p-3 font-bold bg-white border rounded-full border-gray-50"
-            style={{ boxShadow: "0 0 24px 8px rgb(0 0 0 / 10%)" }}
+            style={{ boxShadow: actionButtonShadow }}
           >
             <SearchIcon className="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
           </a>

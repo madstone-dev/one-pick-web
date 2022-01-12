@@ -72,7 +72,7 @@ export default function ResetPassword() {
 
   useEffect(() => {
     setValue("email", router?.query?.email);
-  }, []);
+  }, [setValue, router?.query?.email]);
 
   return (
     <Layout>

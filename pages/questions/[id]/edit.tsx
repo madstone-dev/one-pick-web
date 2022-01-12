@@ -19,6 +19,7 @@ import {
   updateQuestion,
   updateQuestionVariables,
 } from "../../../src/__generated__/updateQuestion";
+import { cardShadow } from "../../../src/utils/utils";
 
 const UPDATE_QUESTION_MUTATION = gql`
   mutation updateQuestion(
@@ -148,13 +149,13 @@ export default function EditQuestion() {
         setEditError("참여자가 있어 수정이 불가능합니다.");
       }
     }
-  }, [questionData]);
+  }, [questionData, router, setValue]);
 
   useEffect(() => {
     if (cardRef?.current?.offsetTop) {
       setCardTop(cardRef?.current?.offsetTop);
     }
-  }, [cardRef]);
+  }, [cardRef, setCardTop]);
 
   return (
     <Layout>
@@ -176,7 +177,7 @@ export default function EditQuestion() {
             </div>
             <div
               className="max-w-4xl p-4 mx-auto overflow-hidden bg-white rounded-3xl sm:p-6 lg:p-8"
-              style={{ boxShadow: "0 1px 20px 0 rgb(0 0 0 / 10%)" }}
+              style={{ boxShadow: cardShadow }}
               ref={cardRef}
             >
               <form

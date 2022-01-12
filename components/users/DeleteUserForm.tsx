@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { routes } from "../../src/routes";
 import { ACCESS_TOKEN } from "../../src/utils/auth.utils";
+import { cardShadow } from "../../src/utils/utils";
 import { deleteUser } from "../../src/__generated__/deleteUser";
 import FormError from "../auth/FormError";
 
@@ -47,7 +48,7 @@ export default function DeleteUserForm() {
       <form onSubmit={handleSubmit(onValid)}>
         <div
           className="overflow-hidden rounded-3xl"
-          style={{ boxShadow: "0 1px 20px 0 rgb(0 0 0 / 10%)" }}
+          style={{ boxShadow: cardShadow }}
         >
           <div className="px-4 py-6 bg-white sm:p-6">
             <div>

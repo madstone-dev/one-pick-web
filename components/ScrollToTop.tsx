@@ -1,4 +1,5 @@
 import { ArrowUpIcon } from "@heroicons/react/solid";
+import { actionButtonShadow } from "../src/utils/utils";
 
 export default function ScrollToTop() {
   const onClick = () => {
@@ -16,7 +17,7 @@ export default function ScrollToTop() {
         <button
           onClick={onClick}
           className="block p-3 font-bold bg-white border rounded-full border-gray-50"
-          style={{ boxShadow: "0 0 24px 8px rgb(0 0 0 / 10%)" }}
+          style={{ boxShadow: actionButtonShadow }}
         >
           <ArrowUpIcon className="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
         </button>

@@ -18,6 +18,7 @@ import {
   showQuestion_showQuestion,
 } from "../../src/__generated__/showQuestion";
 import QuestionReportModal from "../../components/questions/QuestionReportModal";
+import { cardShadow } from "../../src/utils/utils";
 
 export const SHOW_QUESTION_QUERY = gql`
   query showQuestion($id: Int!) {
@@ -55,7 +56,7 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
     if (questionData?.showQuestion) {
       setQuestion(questionData?.showQuestion);
     }
-  }, [questionData]);
+  }, [questionData, refetch]);
 
   useEffect(() => {
     if (cardRef?.current?.offsetTop) {
@@ -80,7 +81,7 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
               <div className="w-full max-w-4xl mx-auto">
                 <div
                   className="w-full max-w-4xl p-4 mx-auto bg-white border border-gray-100 sm:p-6 lg:p-8 rounded-3xl"
-                  style={{ boxShadow: "0 1px 20px 0 rgb(0 0 0 / 10%)" }}
+                  style={{ boxShadow: cardShadow }}
                   ref={cardRef}
                 >
                   <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-6 lg:gap-8">

@@ -3,10 +3,13 @@ import { gql, useMutation, useReactiveVar } from "@apollo/client";
 import { useState } from "react";
 import FormError from "../components/auth/FormError";
 import { routes } from "../src/routes";
-import { DEFAULT_ERROR_MESSAGE } from "../src/constances";
 import Success from "../components/notifications/Success";
 import Link from "next/link";
-import { ACCESS_TOKEN, getRefreshToken } from "../src/utils/auth.utils";
+import {
+  ACCESS_TOKEN,
+  DEFAULT_ERROR_MESSAGE,
+  getRefreshToken,
+} from "../src/utils/auth.utils";
 import Layout from "../components/auth/Layout";
 import { useRouter } from "next/router";
 import { successNotificationVar } from "../src/utils/notifications.utils";

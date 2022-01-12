@@ -40,7 +40,7 @@ export default function QuestionCommentList({
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   const handleObserver = useCallback(
     async (entries) => {
@@ -62,7 +62,7 @@ export default function QuestionCommentList({
         }
       }
     },
-    [data]
+    [data, fetchMore]
   );
 
   useEffect(() => {

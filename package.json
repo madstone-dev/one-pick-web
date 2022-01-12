@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "tailwindcss-cli build -o styles/tailwindSSR.css",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -49,7 +50,9 @@
     "eslint": "8.5.0",
     "eslint-config-next": "12.0.7",
     "postcss": "^8.4.5",
+    "raw-loader": "^4.0.2",
     "tailwindcss": "^3.0.7",
+    "tailwindcss-cli": "^0.1.2",
     "typescript": "4.5.4"
   }
 }

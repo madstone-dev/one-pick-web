@@ -21,7 +21,7 @@ export default function QuestionCommentReport({
     moment.unix(Number(report.createdAt) / 1000)
   ).fromNow();
   return (
-    <li className="sm:rounded-md">
+    <li>
       <div className="flex items-start px-4 py-4 sm:px-6">
         <div className="flex items-start flex-1 min-w-0">
           <div className="flex-shrink-0">

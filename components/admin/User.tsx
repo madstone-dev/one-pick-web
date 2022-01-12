@@ -1,6 +1,5 @@
 import moment from "moment";
 import "moment/locale/ko";
-import Link from "next/link";
 import { getAvatar } from "../../src/utils/auth.utils";
 import { searchUsers_searchUsers_users } from "../../src/__generated__/searchUsers";
 import UserDropdown from "./UserDropdown";
@@ -12,7 +11,7 @@ interface Iuser {
 
 export default function User({ user, isLast }: Iuser) {
   return (
-    <li className="sm:rounded-md">
+    <li>
       <div className="flex items-start px-4 py-4 sm:px-6">
         <div className="flex items-start flex-1 min-w-0">
           <div className="flex-shrink-0">

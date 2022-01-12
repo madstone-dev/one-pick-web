@@ -2,11 +2,13 @@ import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { routes } from "../src/routes";
 import { useState } from "react";
-import { DEFAULT_ERROR_MESSAGE } from "../src/constances";
 import FormError from "../components/auth/FormError";
 import Link from "next/link";
 import Layout from "../components/auth/Layout";
-import { getRefreshToken } from "../src/utils/auth.utils";
+import {
+  DEFAULT_ERROR_MESSAGE,
+  getRefreshToken,
+} from "../src/utils/auth.utils";
 import { useRouter } from "next/router";
 import { showSuccess } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";

@@ -1,9 +1,9 @@
 import { gql, useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { apolloClient } from "../../src/apolloClient";
 import { BASIC_USER_FRAGMENT } from "../../src/fragments";
 import { getAvatar } from "../../src/utils/auth.utils";
+import { cardShadow } from "../../src/utils/utils";
 import { me } from "../../src/__generated__/me";
 import {
   updateUser,
@@ -97,7 +97,7 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
       setValue("username", userData?.me?.username);
       setValue("email", userData?.me?.email);
     }
-  }, [userData]);
+  }, [userData, setValue]);
 
   const onValid = (data: updateUserVariables) => {
     const file = photo?.file;
@@ -119,7 +119,7 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
       <form onSubmit={handleSubmit(onValid)}>
         <div
           className="overflow-hidden rounded-3xl"
-          style={{ boxShadow: "0 1px 20px 0 rgb(0 0 0 / 10%)" }}
+          style={{ boxShadow: cardShadow }}
         >
           <div className="px-4 py-6 bg-white sm:p-6">
             <div>

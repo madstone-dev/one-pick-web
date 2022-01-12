@@ -1,14 +1,14 @@
 import Layout from "../../components/auth/Layout";
 import { getRefreshToken } from "../../src/utils/auth.utils";
 import { routes } from "../../src/routes";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ProfileAside from "../../components/users/ProfileAside";
 import { ApolloQueryResult, gql, useQuery } from "@apollo/client";
 import {
   SHOW_QUESTIONS_FRAGMENT,
   SHOW_QUESTION_COMMENT_FRAGMENT,
 } from "../../src/fragments";
-import { loadContentFinishVar } from "../../src/utils/utils";
+import { cardShadow, loadContentFinishVar } from "../../src/utils/utils";
 import BlockedQuestions from "../../components/users/BlockedQuestions";
 import UserComment from "../../components/users/UserComment";
 import { myBlockContents } from "../../src/__generated__/myBlockContents";
@@ -31,10 +31,13 @@ const ME_QUERY = gql`
 `;
 
 export default function UserBlocks() {
-  const tabs = [
-    { name: "숨긴 질문", to: "qustions" },
-    { name: "숨긴 댓글", to: "comments" },
-  ];
+  const tabs = useMemo(
+    () => [
+      { name: "숨긴 질문", to: "qustions" },
+      { name: "숨긴 댓글", to: "comments" },
+    ],
+    []
+  );
   const [currentTab, setCurrentTab] = useState(tabs[0].to);
 
   const loader = useRef(null);
@@ -46,7 +49,7 @@ export default function UserBlocks() {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   const [commentCount, setCommentCount] = useState(0);
   useEffect(() => {
@@ -95,7 +98,7 @@ export default function UserBlocks() {
         }
       }
     },
-    [data]
+    [data, currentTab, fetchMore, tabs]
   );
 
   useEffect(() => {
@@ -126,7 +129,7 @@ export default function UserBlocks() {
             <section aria-labelledby="user-comments-heading">
               <div
                 className="overflow-hidden rounded-3xl"
-                style={{ boxShadow: "0 1px 20px 0 rgb(0 0 0 / 10%)" }}
+                style={{ boxShadow: cardShadow }}
               >
                 <div className="px-4 py-6 bg-white sm:p-6">
                   <div className="py-4 bg-white sm:py-6">

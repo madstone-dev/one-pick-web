@@ -36,7 +36,7 @@ export default function QuestionComment({
     if (editingComment !== comment.id) {
       setEditable(false);
     }
-  }, [editingComment]);
+  }, [editingComment, comment.id]);
 
   return (
     <div className="py-6 group">

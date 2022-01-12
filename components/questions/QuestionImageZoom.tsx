@@ -67,7 +67,11 @@ export default function QuestionImageZoom({ image }: any) {
                   </button>
                 </div>
                 <div className="flex">
-                  <img src={image} className="w-full h-full" />
+                  <img
+                    src={image}
+                    alt="확대 이미지"
+                    className="w-full h-full"
+                  />
                 </div>
               </div>
             </Transition.Child>

@@ -45,7 +45,7 @@ export default function AdminUsers() {
         keyword,
       },
     });
-  }, [page]);
+  }, [page, fetchMore, keyword]);
 
   const onSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

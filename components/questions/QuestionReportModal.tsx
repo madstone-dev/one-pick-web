@@ -43,7 +43,7 @@ export default function QuestionReportModal({
 
   useEffect(() => {
     setReportOpen(open);
-  }, [open]);
+  }, [open, setReportOpen]);
 
   useEffect(() => {
     if (reportOpen) {

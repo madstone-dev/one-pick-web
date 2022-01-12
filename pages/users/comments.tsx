@@ -7,7 +7,7 @@ import { ApolloQueryResult, gql, useQuery } from "@apollo/client";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import UserComment from "../../components/users/UserComment";
 import { myQuestionComments } from "../../src/__generated__/myQuestionComments";
-import { loadContentFinishVar } from "../../src/utils/utils";
+import { cardShadow, loadContentFinishVar } from "../../src/utils/utils";
 
 const ME_QUERY = gql`
   query myQuestionComments($lastId: Int) {
@@ -32,7 +32,7 @@ export default function UserComments() {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   const handleObserver = useCallback(
     async (entries) => {
@@ -54,7 +54,7 @@ export default function UserComments() {
         }
       }
     },
-    [data]
+    [data, fetchMore]
   );
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function UserComments() {
             <section aria-labelledby="user-comments-heading">
               <div
                 className="overflow-hidden rounded-3xl"
-                style={{ boxShadow: "0 1px 20px 0 rgb(0 0 0 / 10%)" }}
+                style={{ boxShadow: cardShadow }}
               >
                 <div className="px-4 py-6 bg-white sm:p-6">
                   <div>

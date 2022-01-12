@@ -16,6 +16,7 @@ import {
   createQuestion,
   createQuestionVariables,
 } from "../../src/__generated__/createQuestion";
+import { cardShadow } from "../../src/utils/utils";
 
 const CREATE_QUESTION_MUTATION = gql`
   mutation createQuestion(
@@ -114,7 +115,7 @@ export default function CreateQuestion() {
     if (cardRef?.current?.offsetTop) {
       setCardTop(cardRef?.current?.offsetTop);
     }
-  }, [cardRef]);
+  }, [cardRef, setCardTop]);
 
   return (
     <Layout>
@@ -130,7 +131,7 @@ export default function CreateQuestion() {
           </div>
           <div
             className="max-w-4xl p-4 mx-auto overflow-hidden bg-white rounded-3xl sm:p-6 lg:p-8"
-            style={{ boxShadow: "0 1px 20px 0 rgb(0 0 0 / 10%)" }}
+            style={{ boxShadow: cardShadow }}
             ref={cardRef}
           >
             <form

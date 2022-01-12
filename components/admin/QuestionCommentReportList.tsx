@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import { headerHeightVar } from "../../src/utils/auth.utils";
-import { tabHeightVar } from "../../src/utils/utils";
+import { cardShadow, tabHeightVar } from "../../src/utils/utils";
 import { showQuestionCommentReports } from "../../src/__generated__/showQuestionCommentReports";
 import ScrollToTop from "../ScrollToTop";
 import OffsetPaginator from "./OffsetPaginator";
@@ -46,7 +46,7 @@ export default function QuestionCommentReportList() {
         take,
       },
     });
-  }, [page]);
+  }, [page, fetchMore]);
 
   const [scrollHeight, setScrollHeight] = useState(0);
 
@@ -80,13 +80,14 @@ export default function QuestionCommentReportList() {
           setPage={setPage}
         />
       </div>
-      <div className="pb-20 bg-white sm:rounded-md sm:px-2">
+      <div className="pb-20 bg-white sm:rounded-3xl sm:px-2">
         <ul
           role="list"
-          className="border border-gray-100 divide-y divide-gray-200 shadow-md sm:rounded-md"
+          className="border border-gray-100 divide-y divide-gray-200 sm:rounded-3xl"
+          style={{ boxShadow: cardShadow }}
         >
           {/* list header */}
-          <li className="sm:rounded-md">
+          <li className="overflow-hidden sm:rounded-t-3xl">
             <div className="flex items-start px-6 py-3 bg-gray-50">
               <div className="flex-1 min-w-0 md:grid md:grid-cols-2 md:gap-6">
                 <div>
