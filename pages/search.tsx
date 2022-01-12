@@ -1,4 +1,4 @@
-import { gql, useLazyQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Layout from "../components/auth/Layout";
 import { HashLoader } from "react-spinners";
@@ -11,6 +11,7 @@ import { searchQuestions } from "../src/__generated__/searchQuestions";
 import { searchQuestionHashtags } from "../src/__generated__/searchQuestionHashtags";
 import { loadContentFinishVar } from "../src/utils/utils";
 import HashtagList from "../components/search/hashtagList";
+import { useRouter } from "next/router";
 
 const SEARCH_QUESTION_HASHTAGS_QUERY = gql`
   query searchQuestionHashtags($keyword: String) {
@@ -31,6 +32,7 @@ const SEARCH_QUESTIONS_QUERY = gql`
 `;
 
 export default function Search() {
+  const router = useRouter();
   const loader = useRef(null);
   const [scrollHeight, setScrollHeight] = useState(0);
   const [inputFocused, setInputFocused] = useState(false);
@@ -50,14 +52,12 @@ export default function Search() {
 
   // search hashtag
   const [keyword, setKeyword] = useState("");
-  const [searchQuestionHashtagsQuery, { data: hashtagData }] =
-    useLazyQuery<searchQuestionHashtags>(SEARCH_QUESTION_HASHTAGS_QUERY);
+  const { data: hashtagData, refetch: hashtagRefetch } =
+    useQuery<searchQuestionHashtags>(SEARCH_QUESTION_HASHTAGS_QUERY);
 
   const onChangeInputValue = () => {
-    searchQuestionHashtagsQuery({
-      variables: {
-        keyword,
-      },
+    hashtagRefetch({
+      keyword,
     });
   };
 
@@ -69,20 +69,35 @@ export default function Search() {
   }, [keyword]);
 
   // search question
-  const [searchQuestionsQuery, { data: questionsData, loading, fetchMore }] =
-    useLazyQuery<searchQuestions>(SEARCH_QUESTIONS_QUERY);
+  const {
+    data: questionsData,
+    loading,
+    fetchMore,
+    refetch: questionRefetch,
+  } = useQuery<searchQuestions>(SEARCH_QUESTIONS_QUERY, {
+    variables: {
+      type: "hashtag",
+    },
+  });
 
   const onSearch = async (type: string = "text", keyword: string) => {
     (document.activeElement as HTMLElement).blur();
     loadContentFinishVar(false);
     setKeyword(keyword.trim());
-    searchQuestionsQuery({
-      variables: {
-        keyword: keyword.trim(),
-        type,
-      },
+    questionRefetch({
+      keyword: keyword.trim(),
+      type,
     });
   };
+
+  useEffect(() => {
+    if (router.query.tag) {
+      onSearch("hashtag", router.query.tag as string);
+      hashtagRefetch({
+        keyword: router.query.tag,
+      });
+    }
+  }, [router.query]);
 
   // infinity scroll
   const handleObserver = useCallback(
@@ -199,7 +214,11 @@ export default function Search() {
               <HashLoader color="#777777" loading={true} size={60} />
             </div>
           )}
-          <div className={`${loading && "hidden"}`}>
+          <div
+            className={`${
+              loading && "hidden"
+            } py-4 sm:py-6 lg:py-8 w-full px-4 sm:px-6 lg:px-8`}
+          >
             {questionsData?.searchQuestions &&
             questionsData?.searchQuestions?.length > 0 ? (
               <QuestionMasonry questions={questionsData?.searchQuestions} />

@@ -73,7 +73,7 @@ export default function QuestionInfo({ question }: IquestionInfo) {
           <div className="mt-6 space-x-2 space-y-6 text-sm text-gray-600">
             {hashtags.map((tag: string, index: number) => (
               <Link key={index} href={`${routes.search}?tag=${encodeURI(tag)}`}>
-                <a className="hover:text-indigo-600">{tag}</a>
+                <a className="hover:text-indigo-600">#{tag}</a>
               </Link>
             ))}
           </div>
