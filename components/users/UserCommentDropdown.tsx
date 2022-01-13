@@ -4,7 +4,6 @@ import { DotsVerticalIcon } from "@heroicons/react/solid";
 import { focusedCommentVar } from "../../src/utils/questionComments.utils";
 import { ApolloCache, useMutation } from "@apollo/client";
 import { apolloClient } from "../../src/apolloClient";
-import { classNames } from "../../src/utils/utils";
 import { loginUserVar } from "../../src/utils/auth.utils";
 import { deleteQuestionComment } from "../../src/__generated__/deleteQuestionComment";
 import { toggleQuestionCommentBlock } from "../../src/__generated__/toggleQuestionCommentBlock";
@@ -95,46 +94,29 @@ export default function UserCommentDropdown({ comment }: IuserCommentDropdown) {
         <Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg w-fit ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             <Menu.Item>
-              {({ active }) => (
-                <Link href={`/questions/${comment.question.id}`}>
-                  <a
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
-                    )}
-                  >
-                    게시물로 이동
-                  </a>
-                </Link>
-              )}
+              <Link href={`/questions/${comment.question.id}`}>
+                <a className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap">
+                  게시물로 이동
+                </a>
+              </Link>
             </Menu.Item>
             {loginUser?.id === comment.user.id ? (
               <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
-                    )}
-                    onClick={onDeleteClick}
-                  >
-                    댓글 삭제
-                  </button>
-                )}
+                <button
+                  className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap"
+                  onClick={onDeleteClick}
+                >
+                  댓글 삭제
+                </button>
               </Menu.Item>
             ) : (
               <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
-                    )}
-                    onClick={onBlockClick}
-                  >
-                    댓글 숨기기 {comment.isBlocked && "해제"}
-                  </button>
-                )}
+                <button
+                  className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap"
+                  onClick={onBlockClick}
+                >
+                  댓글 숨기기 {comment.isBlocked && "해제"}
+                </button>
               </Menu.Item>
             )}
           </div>

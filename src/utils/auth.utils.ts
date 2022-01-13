@@ -4,7 +4,7 @@ import { getCookie } from "cookies-next";
 export const ACCESS_TOKEN = "accessToken";
 export const REFRESH_TOKEN = "refreshToken";
 export const loginUserVar = makeVar<any>(null);
-export const headerHeightVar = makeVar<any>(0);
+export const headerHeightVar = makeVar<number>(0);
 export const DEFAULT_ERROR_MESSAGE = { message: "" };
 
 export const getRefreshToken = ({ req, res }: any) => {

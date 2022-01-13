@@ -1,4 +1,4 @@
 import { makeVar } from "@apollo/client";
 
-export const focusedCommentVar = makeVar<any>(null);
-export const editingCommentVar = makeVar<any>(null);
+export const focusedCommentVar = makeVar<number | null>(null);
+export const editingCommentVar = makeVar<number | null>(null);

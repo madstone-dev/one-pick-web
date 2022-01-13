@@ -19,10 +19,7 @@ export default function UserProfile() {
             <ProfileAside />
 
             <div className="px-4 space-y-8 sm:px-6 lg:px-8 lg:col-span-9">
-              {/* 프로필 변경 */}
               <UpdateUserForm userData={userData} />
-
-              {/* 계정 삭제 */}
               <DeleteUserForm />
             </div>
           </div>

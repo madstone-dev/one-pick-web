@@ -6,7 +6,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { routes } from "../../src/routes";
-import { classNames } from "../../src/utils/utils";
 
 const subNavigation = [
   { name: "대시 보드", href: routes.adminMenu, icon: LightningBoltIcon },
@@ -23,21 +22,21 @@ export default function AdminAside() {
         {subNavigation.map((item) => (
           <Link key={item.name} href={item.href}>
             <a
-              className={classNames(
+              className={`${
                 router.pathname === item.href
                   ? "bg-gray-50 text-indigo-600 hover:bg-white"
-                  : "text-gray-900 hover:text-gray-900 hover:bg-gray-50",
-                "group rounded-md px-3 py-2 flex items-center text-sm font-medium"
-              )}
+                  : "text-gray-900 hover:text-gray-900 hover:bg-gray-50"
+              }
+                group rounded-md px-3 py-2 flex items-center text-sm font-medium`}
               aria-current={router.pathname === item.href ? "page" : undefined}
             >
               <item.icon
-                className={classNames(
+                className={`${
                   router.pathname === item.href
                     ? "text-indigo-500"
-                    : "text-gray-400 group-hover:text-gray-500",
-                  "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
-                )}
+                    : "text-gray-400 group-hover:text-gray-500"
+                }
+                  flex-shrink-0 -ml-1 mr-3 h-6 w-6`}
                 aria-hidden="true"
               />
               <span className="truncate">{item.name}</span>

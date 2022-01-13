@@ -6,7 +6,6 @@ import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { getAvatar, headerHeightVar } from "../src/utils/auth.utils";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { classNames } from "../src/utils/utils";
 import { ChevronLeftIcon } from "@heroicons/react/outline";
 import { me } from "../src/__generated__/me";
 import { shouldRefetchQuestionsVar } from "../src/utils/questions.utils";
@@ -56,7 +55,7 @@ export default function HeaderNav({ user }: IheaderNav) {
               )}
               <Link href={routes.home}>
                 <a
-                  className="flex items-center flex-shrink-0 hidden text-white md:flex"
+                  className="items-center flex-shrink-0 hidden text-white md:flex"
                   onClick={() => {
                     shouldRefetchQuestionsVar(true);
                   }}
@@ -80,12 +79,13 @@ export default function HeaderNav({ user }: IheaderNav) {
                     }
                   >
                     <a
-                      className={classNames(
-                        item.href === router.pathname
-                          ? "bg-gray-900 text-white"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "px-3 py-2 rounded-md text-sm font-medium"
-                      )}
+                      className={`
+                        ${
+                          item.href === router.pathname
+                            ? "bg-gray-900 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                        }
+                        px-3 py-2 rounded-md text-sm font-medium`}
                       onClick={
                         item.href === routes.home
                           ? () => {
@@ -144,35 +144,21 @@ export default function HeaderNav({ user }: IheaderNav) {
                       <Menu.Items className="absolute right-0 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg w-fit ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {user?.me?.role === "admin" && (
                           <Menu.Item>
-                            {({ active }) => (
-                              <Link href={routes.adminMenu}>
-                                <a
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                                  )}
-                                >
-                                  관리자 메뉴
-                                </a>
-                              </Link>
-                            )}
+                            <Link href={routes.adminMenu}>
+                              <a className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap">
+                                관리자 메뉴
+                              </a>
+                            </Link>
                           </Menu.Item>
                         )}
 
                         {userNavs.map((item) => (
                           <Menu.Item key={item.name}>
-                            {({ active }) => (
-                              <Link href={item.href}>
-                                <a
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                                  )}
-                                >
-                                  {item.name}
-                                </a>
-                              </Link>
-                            )}
+                            <Link href={item.href}>
+                              <a className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap">
+                                {item.name}
+                              </a>
+                            </Link>
                           </Menu.Item>
                         ))}
                         <Menu.Item>

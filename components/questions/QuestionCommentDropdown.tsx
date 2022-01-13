@@ -3,7 +3,6 @@ import { Menu, Transition } from "@headlessui/react";
 import { DotsVerticalIcon } from "@heroicons/react/solid";
 import { focusedCommentVar } from "../../src/utils/questionComments.utils";
 import { loginUserVar } from "../../src/utils/auth.utils";
-import { classNames } from "../../src/utils/utils";
 import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
 import QuestionCommentDeleteButton from "./QuestionCommentDeleteButton";
 import QuestionCommentEditButton from "./QuestionCommentEditButton";
@@ -72,19 +71,14 @@ export default function QuestionCommentDropdown({
                   </div>
                 </Menu.Item>
                 <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "group flex items-center px-4 py-2 text-sm w-full whitespace-nowrap"
-                      )}
-                      onClick={() => {
-                        setReportOpen(true);
-                      }}
-                    >
-                      댓글 신고
-                    </button>
-                  )}
+                  <button
+                    className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap"
+                    onClick={() => {
+                      setReportOpen(true);
+                    }}
+                  >
+                    댓글 신고
+                  </button>
                 </Menu.Item>
               </>
             )}

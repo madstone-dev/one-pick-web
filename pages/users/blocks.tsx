@@ -122,7 +122,7 @@ export default function UserBlocks() {
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
             <ProfileAside />
 
-            {/* 코멘트 리스트 */}
+            {/* 숨긴 콘텐츠 리스트 */}
             <div className="px-4 space-y-6 sm:px-6 lg:px-8 lg:col-span-9">
               <Tabs
                 tabs={tabs}

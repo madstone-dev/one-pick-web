@@ -6,7 +6,8 @@ export const SUCCESS_DEFAULT = {
   description: "",
 };
 
-export const successNotificationVar = makeVar(SUCCESS_DEFAULT);
+export const successNotificationVar =
+  makeVar<IsuccessNoticifation>(SUCCESS_DEFAULT);
 
 export const showSuccess = ({ title, description }: IsuccessNoticifation) => {
   successNotificationVar({ title, description });

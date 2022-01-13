@@ -65,21 +65,27 @@ const uploadHttpLink = createUploadLink({
   credentials: "include",
 });
 
-const mergeFilteredItems = (existing: any, incoming: any) => {
+const mergeFilteredItems = (existing: any, incoming: any, orderBy: string) => {
   const existArr = existing.map((item: any) => item.__ref);
   const filteredIncoming = incoming.filter(
     (item: any) => !existArr.includes(item.__ref)
   );
-  return [...existing, ...filteredIncoming];
+  if (orderBy === "desc") {
+    return [...existing, ...filteredIncoming];
+  } else {
+    return [...filteredIncoming, ...existing];
+  }
 };
 
-const cursurPaginate = {
-  merge(existing = [], incoming = []) {
-    return mergeFilteredItems(existing, incoming);
-  },
-  read(existing: any) {
-    return existing && Object.values(existing);
-  },
+const cursurPaginate = (orderBy: string) => {
+  return {
+    merge(existing = [], incoming = []) {
+      return mergeFilteredItems(existing, incoming, orderBy);
+    },
+    read(existing: any) {
+      return existing && Object.values(existing);
+    },
+  };
 };
 
 export const apolloClient = new ApolloClient({
@@ -88,18 +94,18 @@ export const apolloClient = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          showQuestions: cursurPaginate,
-          showQuestionComments: cursurPaginate,
-          searchQuestions: cursurPaginate,
+          showQuestions: cursurPaginate("desc"),
+          showQuestionComments: cursurPaginate("desc"),
+          searchQuestions: cursurPaginate("desc"),
         },
       },
       User: {
         keyFields: ["id"],
         fields: {
-          questions: cursurPaginate,
-          questionComments: cursurPaginate,
-          questionBlocks: cursurPaginate,
-          questionCommentBlocks: cursurPaginate,
+          questions: cursurPaginate("desc"),
+          questionComments: cursurPaginate("desc"),
+          questionBlocks: cursurPaginate("desc"),
+          questionCommentBlocks: cursurPaginate("desc"),
           totalQuestionComments: {
             keyArgs: false,
           },

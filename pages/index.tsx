@@ -36,6 +36,7 @@ export default function Home() {
     }
   );
 
+  // 필요한 경우 리패치
   useEffect(() => {
     if (shouldRefetch) {
       refetch();
@@ -43,6 +44,7 @@ export default function Home() {
     }
   }, [shouldRefetch, refetch]);
 
+  // 인피니티 스크롤 옵저버
   const handleObserver = useCallback(
     async (entries) => {
       const loadFinish = loadContentFinishVar();
