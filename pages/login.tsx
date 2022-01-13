@@ -9,6 +9,7 @@ import {
   ACCESS_TOKEN,
   DEFAULT_ERROR_MESSAGE,
   getRefreshToken,
+  REFRESH_TOKEN,
 } from "../src/utils/auth.utils";
 import Layout from "../components/auth/Layout";
 import { useRouter } from "next/router";
@@ -17,6 +18,7 @@ import ContentSection from "../components/ContentSection";
 import { login } from "../src/__generated__/login";
 import { apolloClient } from "../src/apolloClient";
 import { NextSeo } from "next-seo";
+import { removeCookies } from "cookies-next";
 
 const LOGIN_MUTATION = gql`
   mutation login($email: String!, $password: String!) {
@@ -193,7 +195,13 @@ export default function Login() {
   );
 }
 
-export async function getServerSideProps({ req, res }: any) {
+export async function getServerSideProps(context: any) {
+  const { query, req, res } = context;
+  if (query.click) {
+    removeCookies(REFRESH_TOKEN, { req, res });
+    removeCookies(`${REFRESH_TOKEN}.sig`, { req, res });
+  }
+
   const token = getRefreshToken({ req, res });
   if (token) {
     return {

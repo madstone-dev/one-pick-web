@@ -177,7 +177,7 @@ export default function HeaderNav({ user }: IheaderNav) {
             ) : (
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Link href={routes.login}>
+                  <Link href={`${routes.login}?click=true`}>
                     <a className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
                       <span>로그인</span>
                     </a>
