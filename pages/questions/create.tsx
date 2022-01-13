@@ -69,7 +69,7 @@ export default function CreateQuestion() {
       onCompleted: onCreateQuestion,
     }
   );
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState } = useForm<IcreateQuestion>({
     mode: "onChange",
   });
 

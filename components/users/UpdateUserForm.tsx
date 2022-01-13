@@ -43,8 +43,13 @@ interface Iphoto {
   file: File | undefined;
 }
 
+interface IupdateUserFormVars extends updateUserVariables {
+  email: string | null;
+}
+
 export default function UpdateUserForm({ userData }: IupdateUserForm) {
-  const { register, handleSubmit, setValue, watch, formState } = useForm();
+  const { register, handleSubmit, setValue, watch, formState } =
+    useForm<IupdateUserFormVars>();
   const [photo, setPhoto] = useState<Iphoto>();
   const [fileError, setFileError] = useState("");
   const [fileExists, setFileExists] = useState(true);

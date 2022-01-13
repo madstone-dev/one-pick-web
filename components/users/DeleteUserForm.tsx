@@ -17,9 +17,14 @@ const DELETE_USER = gql`
   }
 `;
 
+interface IdeleteUserform {
+  repeat: string;
+}
+
 export default function DeleteUserForm() {
   const router = useRouter();
-  const { register, handleSubmit, watch, formState } = useForm();
+  const { register, handleSubmit, watch, formState } =
+    useForm<IdeleteUserform>();
   const [deleteError, setDeleteError] = useState("");
 
   const onDeleteUser = (data: deleteUser) => {

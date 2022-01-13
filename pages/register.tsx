@@ -30,7 +30,7 @@ const CREATE_USER_MUTATION = gql`
 export default function Register() {
   const router = useRouter();
   const [createUserError, setCreateUserError] = useState(DEFAULT_ERROR_MESSAGE);
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState } = useForm<createUserVariables>({
     mode: "onChange",
   });
   const onSubmitValid = (data: createUserVariables) => {

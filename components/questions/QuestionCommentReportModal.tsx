@@ -29,6 +29,10 @@ interface IquestionCommentReportModal {
   setReportOpen: Dispatch<SetStateAction<boolean>>;
 }
 
+interface IcommentReportForm {
+  commentReport: string | null;
+}
+
 export default function QuestionCommentReportModal({
   comment,
   reportOpen,
@@ -36,7 +40,8 @@ export default function QuestionCommentReportModal({
 }: IquestionCommentReportModal) {
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
-  const { register, handleSubmit, watch, setValue } = useForm();
+  const { register, handleSubmit, watch, setValue } =
+    useForm<IcommentReportForm>();
   const [reportQuestionCommentMutation] =
     useMutation<createQuestionCommentReport>(REPORT_QUESTION_COMMENT_MUTATION);
 
@@ -51,12 +56,15 @@ export default function QuestionCommentReportModal({
   }, [reportOpen]);
 
   const onValid = () => {
-    reportQuestionCommentMutation({
-      variables: {
-        id: comment.id,
-        type: parseInt(watch("commentReport")),
-      },
-    });
+    const type = watch("commentReport");
+    if (type) {
+      reportQuestionCommentMutation({
+        variables: {
+          id: comment.id,
+          type: parseInt(type),
+        },
+      });
+    }
     setOpen(false);
     alert("신고 완료");
   };

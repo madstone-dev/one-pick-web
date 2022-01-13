@@ -32,7 +32,7 @@ export default function UpdateQuestionCommentForm({
   comment,
   setEditable,
 }: IupdateQuestionCommentForm) {
-  const { register, handleSubmit, setValue, watch } = useForm({
+  const { register, handleSubmit, setValue, watch } = useForm<Icomment>({
     mode: "onChange",
     defaultValues: {
       content: comment.content,

@@ -35,7 +35,7 @@ export default function QuestionCommentForm({
   refetch: refetchComments,
 }: IquestionCommentForm) {
   const [formFocused, setFormFocused] = useState(false);
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue } = useForm<Icomment>();
   const loginUser = loginUserVar();
 
   const onCompleted = (data: createQuestionComment) => {

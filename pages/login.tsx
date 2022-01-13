@@ -15,7 +15,7 @@ import Layout from "../components/auth/Layout";
 import { useRouter } from "next/router";
 import { successNotificationVar } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
-import { login } from "../src/__generated__/login";
+import { login, loginVariables } from "../src/__generated__/login";
 import { apolloClient } from "../src/apolloClient";
 import { NextSeo } from "next-seo";
 import { removeCookies } from "cookies-next";
@@ -34,10 +34,10 @@ export default function Login() {
   const successNotification = useReactiveVar(successNotificationVar);
   const router = useRouter();
   const [loginError, setLoginError] = useState(DEFAULT_ERROR_MESSAGE);
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState } = useForm<loginVariables>({
     mode: "onChange",
   });
-  const onSubmitValid = (data: login) => {
+  const onSubmitValid = (data: loginVariables) => {
     if (loading) {
       return;
     }

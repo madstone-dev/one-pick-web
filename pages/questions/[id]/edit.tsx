@@ -91,9 +91,10 @@ export default function EditQuestion() {
       onCompleted: onUpdateQuestion,
     }
   );
-  const { register, handleSubmit, formState, setValue } = useForm({
-    mode: "onChange",
-  });
+  const { register, handleSubmit, formState, setValue } =
+    useForm<IupdateQuestion>({
+      mode: "onChange",
+    });
 
   const onSubmitValid = (data: IupdateQuestion) => {
     updateQuestionMutation({

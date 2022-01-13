@@ -26,10 +26,14 @@ const FORGOT_PASSWORD_MUTATION = gql`
   }
 `;
 
+interface IforgotPassword {
+  email: string;
+}
+
 export default function ForgotPassword() {
   const successNotification = useReactiveVar(successNotificationVar);
   const [formError, setFormError] = useState("");
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState } = useForm<IforgotPassword>({
     mode: "onChange",
   });
 

@@ -27,13 +27,19 @@ const RESET_PASSWORD_MUTATION = gql`
   }
 `;
 
+interface IresetPasswordForm {
+  email: string | null;
+  password: string | null;
+}
+
 export default function ResetPassword() {
   const router = useRouter();
   const successNotification = useReactiveVar(successNotificationVar);
   const [formError, setFormError] = useState("");
-  const { register, handleSubmit, formState, setValue } = useForm({
-    mode: "onChange",
-  });
+  const { register, handleSubmit, formState, setValue } =
+    useForm<IresetPasswordForm>({
+      mode: "onChange",
+    });
 
   const onCompleted = (data: resetPassword) => {
     if (data?.resetPassword?.ok) {
@@ -54,7 +60,7 @@ export default function ResetPassword() {
     }
   );
 
-  const onSubmitValid = (data: resetPasswordVariables) => {
+  const onSubmitValid = (data: IresetPasswordForm) => {
     const {
       query: { email, token },
     } = router;
@@ -72,7 +78,7 @@ export default function ResetPassword() {
   };
 
   useEffect(() => {
-    setValue("email", router?.query?.email);
+    setValue("email", router?.query?.email as string);
   }, [setValue, router?.query?.email]);
 
   return (

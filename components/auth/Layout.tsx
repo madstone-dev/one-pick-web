@@ -15,7 +15,7 @@ export default function Layout({ children }: Ichildren) {
   useEffect(() => {
     setIsUserLoad(!loading);
     loginUserVar(data?.me);
-  }, [loading]);
+  }, [loading, data?.me]);
 
   return (
     <div className="flex flex-col items-stretch w-full h-full min-h-screen">
