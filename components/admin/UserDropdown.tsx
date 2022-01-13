@@ -3,6 +3,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { DotsVerticalIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 import { searchUsers_searchUsers_users } from "../../src/__generated__/searchUsers";
+import UserRoleChangeButton from "./UserRoleChangeButton";
 
 interface IquestionDropdown {
   user: searchUsers_searchUsers_users;
@@ -40,6 +41,11 @@ export default function UserDropdown({ user, isLast }: IquestionDropdown) {
                   보기
                 </a>
               </Link>
+            </Menu.Item>
+            <Menu.Item>
+              <div>
+                <UserRoleChangeButton user={user} />
+              </div>
             </Menu.Item>
           </div>
         </Menu.Items>
