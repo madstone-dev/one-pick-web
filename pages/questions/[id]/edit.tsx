@@ -168,7 +168,7 @@ export default function EditQuestion() {
               <HashLoader color="#777777" loading={true} size={60} />
             </div>
           )}
-          <div className={`${showLoading && "hidden"} w-full`}>
+          <div className={`${showLoading ? "hidden" : ""} w-full`}>
             <div className="w-full px-4 py-4 sm:py-6 lg:py-8 sm:px-6 lg:px-8">
               <div
                 className="sticky"
@@ -380,7 +380,9 @@ export default function EditQuestion() {
                     </div>
                   </div>
                   <div className="pt-5">
-                    <div className={`${editError && "mb-3"} flex justify-end`}>
+                    <div
+                      className={`${editError ? "mb-3" : ""} flex justify-end`}
+                    >
                       <FormError message={editError} />
                     </div>
                     <div className="flex justify-end">
@@ -405,7 +407,7 @@ export default function EditQuestion() {
                           type={loading ? "button" : "submit"}
                           disabled={loading}
                           className={`inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                            loading && "opacity-50"
+                            loading ? "opacity-50" : ""
                           }`}
                         >
                           {loading ? "기다리는 중..." : "수정"}

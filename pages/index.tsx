@@ -87,7 +87,7 @@ export default function Home() {
           <section
             aria-labelledby="questions-heading"
             className={`py-4 sm:py-6 lg:py-8 w-full px-4 sm:px-6 lg:px-8 ${
-              loading && "contents"
+              loading ? "contents" : ""
             }`}
           >
             <h2 id="questions-heading" className="sr-only">
@@ -98,7 +98,7 @@ export default function Home() {
                 <HashLoader color="#777777" loading={true} size={60} />
               </div>
             )}
-            <div className={`${loading && "hidden"}`}>
+            <div className={`${loading ? "hidden" : ""}`}>
               {data?.showQuestions && data?.showQuestions?.length > 0 ? (
                 <QuestionMasonry questions={data.showQuestions} />
               ) : (

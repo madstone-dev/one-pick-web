@@ -206,7 +206,9 @@ export default function Search() {
         <ContentSection>
           <section
             aria-labelledby="search-heading"
-            className={`pb-4 sm:pb-6 lg:pb-8 w-full ${loading && "contents"}`}
+            className={`pb-4 sm:pb-6 lg:pb-8 w-full ${
+              loading ? "contents" : ""
+            }`}
           >
             <h2 id="search-heading" className="sr-only">
               검색
@@ -218,7 +220,7 @@ export default function Search() {
             )}
             <div
               className={`${
-                loading && "hidden"
+                loading ? "hidden" : ""
               } py-4 sm:py-6 lg:py-8 w-full px-4 sm:px-6 lg:px-8`}
             >
               {questionsData?.searchQuestions &&

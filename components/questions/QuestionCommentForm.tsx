@@ -95,7 +95,7 @@ export default function QuestionCommentForm({
           minRows={2}
           disabled={!question.myPick}
           className={`${
-            !question.myPick && "bg-gray-100"
+            !question.myPick ? "bg-gray-100" : ""
           } block w-full border-gray-300 rounded-md shadow-sm resize-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
         />
       </div>
@@ -111,7 +111,7 @@ export default function QuestionCommentForm({
             onClick={handleSubmit(onSubmitValid)}
             disabled={loading}
             className={`inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-              loading && "opacity-50 pointer-events-none"
+              loading ? "opacity-50 pointer-events-none" : ""
             }`}
           >
             댓글
