@@ -6,6 +6,7 @@ import Layout from "../../components/auth/Layout";
 import { routes } from "../../src/routes";
 import { getRefreshToken } from "../../src/utils/auth.utils";
 import { showAdminDashboard } from "../../src/__generated__/showAdminDashboard";
+import { NextSeo } from "next-seo";
 
 const SHOW_ADMIN_DASHBOARD = gql`
   query showAdminDashboard {
@@ -21,19 +22,22 @@ export default function AdminDashboard() {
   const { data } = useQuery<showAdminDashboard>(SHOW_ADMIN_DASHBOARD);
 
   return (
-    <AdminGuard>
-      <Layout>
-        <main className="w-full pb-10 mx-auto max-w-7xl lg:py-12 lg:px-8">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-            <AdminAside />
+    <>
+      <NextSeo title="대시보드" />
+      <AdminGuard>
+        <Layout>
+          <main className="w-full pb-10 mx-auto max-w-7xl lg:py-12 lg:px-8">
+            <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
+              <AdminAside />
 
-            <div className="px-4 space-y-8 sm:px-6 lg:px-8 lg:col-span-9">
-              {data && <DashboardStats stats={data.showAdminDashboard} />}
+              <div className="px-4 space-y-8 sm:px-6 lg:px-8 lg:col-span-9">
+                {data && <DashboardStats stats={data.showAdminDashboard} />}
+              </div>
             </div>
-          </div>
-        </main>
-      </Layout>
-    </AdminGuard>
+          </main>
+        </Layout>
+      </AdminGuard>
+    </>
   );
 }
 

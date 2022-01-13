@@ -13,6 +13,7 @@ import ContentSection from "../components/ContentSection";
 import QuestionMasonry from "../components/questions/QuestionMasonry";
 import { showQuestions } from "../src/__generated__/showQuestions";
 import { loadContentFinishVar } from "../src/utils/utils";
+import { NextSeo } from "next-seo";
 
 const SHOW_QUESTIONS_QUERY = gql`
   query showQuestions($lastId: Int) {
@@ -77,42 +78,45 @@ export default function Home() {
   }, [handleObserver]);
 
   return (
-    <Layout>
-      <ContentSection>
-        <section
-          aria-labelledby="questions-heading"
-          className={`py-4 sm:py-6 lg:py-8 w-full px-4 sm:px-6 lg:px-8 ${
-            loading && "contents"
-          }`}
-        >
-          <h2 id="questions-heading" className="sr-only">
-            질문들
-          </h2>
-          {loading && (
-            <div className="flex items-center justify-center flex-1">
-              <HashLoader color="#777777" loading={true} size={60} />
-            </div>
-          )}
-          <div className={`${loading && "hidden"}`}>
-            {data?.showQuestions && data?.showQuestions?.length > 0 ? (
-              <QuestionMasonry questions={data.showQuestions} />
-            ) : (
-              <div
-                className="absolute text-2xl font-bold text-center text-gray-600"
-                style={{
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%,-50%)",
-                }}
-              >
-                <span className="block">당신이 처음입니다</span>
-                <span className="block">첫 게시물을 작성해보세요!</span>
+    <>
+      <NextSeo title="홈" />
+      <Layout>
+        <ContentSection>
+          <section
+            aria-labelledby="questions-heading"
+            className={`py-4 sm:py-6 lg:py-8 w-full px-4 sm:px-6 lg:px-8 ${
+              loading && "contents"
+            }`}
+          >
+            <h2 id="questions-heading" className="sr-only">
+              질문들
+            </h2>
+            {loading && (
+              <div className="flex items-center justify-center flex-1">
+                <HashLoader color="#777777" loading={true} size={60} />
               </div>
             )}
-          </div>
-          <div ref={loader} />
-        </section>
-      </ContentSection>
-    </Layout>
+            <div className={`${loading && "hidden"}`}>
+              {data?.showQuestions && data?.showQuestions?.length > 0 ? (
+                <QuestionMasonry questions={data.showQuestions} />
+              ) : (
+                <div
+                  className="absolute text-2xl font-bold text-center text-gray-600"
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%,-50%)",
+                  }}
+                >
+                  <span className="block">당신이 처음입니다</span>
+                  <span className="block">첫 게시물을 작성해보세요!</span>
+                </div>
+              )}
+            </div>
+            <div ref={loader} />
+          </section>
+        </ContentSection>
+      </Layout>
+    </>
   );
 }

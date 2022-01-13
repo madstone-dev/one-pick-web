@@ -13,6 +13,7 @@ import BlockedQuestions from "../../components/users/BlockedQuestions";
 import UserComment from "../../components/users/UserComment";
 import { myBlockContents } from "../../src/__generated__/myBlockContents";
 import Tabs from "../../components/Tabs";
+import { NextSeo } from "next-seo";
 
 const ME_QUERY = gql`
   query myBlockContents($lastId: Int) {
@@ -114,59 +115,64 @@ export default function UserBlocks() {
   }, [handleObserver]);
 
   return (
-    <Layout>
-      <main className="w-full pb-10 mx-auto max-w-7xl lg:py-12 lg:px-8">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-          <ProfileAside />
+    <>
+      <NextSeo title="숨긴 콘텐츠" />
+      <Layout>
+        <main className="w-full pb-10 mx-auto max-w-7xl lg:py-12 lg:px-8">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
+            <ProfileAside />
 
-          {/* 코멘트 리스트 */}
-          <div className="px-4 space-y-6 sm:px-6 lg:px-8 lg:col-span-9">
-            <Tabs
-              tabs={tabs}
-              currentTab={currentTab}
-              setCurrentTab={setCurrentTab}
-            />
-            <section aria-labelledby="user-comments-heading">
-              <div
-                className="overflow-hidden rounded-3xl"
-                style={{ boxShadow: cardShadow }}
-              >
-                <div className="px-4 py-6 bg-white sm:p-6">
-                  <div className="py-4 bg-white sm:py-6">
-                    {currentTab === tabs[0].to
-                      ? data?.me?.questionBlocks && (
-                          <BlockedQuestions
-                            questions={data?.me?.questionBlocks}
-                            fetchMore={fetchMore}
-                          />
+            {/* 코멘트 리스트 */}
+            <div className="px-4 space-y-6 sm:px-6 lg:px-8 lg:col-span-9">
+              <Tabs
+                tabs={tabs}
+                currentTab={currentTab}
+                setCurrentTab={setCurrentTab}
+              />
+              <section aria-labelledby="user-comments-heading">
+                <div
+                  className="overflow-hidden rounded-3xl"
+                  style={{ boxShadow: cardShadow }}
+                >
+                  <div className="px-4 py-6 bg-white sm:p-6">
+                    <div className="py-4 bg-white sm:py-6">
+                      {currentTab === tabs[0].to
+                        ? data?.me?.questionBlocks && (
+                            <BlockedQuestions
+                              questions={data?.me?.questionBlocks}
+                              fetchMore={fetchMore}
+                            />
+                          )
+                        : null}
+                      {currentTab === tabs[1].to ? (
+                        commentCount > 0 ? (
+                          data?.me?.questionCommentBlocks?.map(
+                            (comment) =>
+                              comment?.isBlocked && (
+                                <UserComment
+                                  key={comment?.id}
+                                  comment={comment}
+                                />
+                              )
+                          )
+                        ) : (
+                          <div className="text-lg font-bold text-center text-gray-600 sm:text-xl">
+                            <span className="block">
+                              숨겨둔 댓글이 없습니다
+                            </span>
+                          </div>
                         )
-                      : null}
-                    {currentTab === tabs[1].to ? (
-                      commentCount > 0 ? (
-                        data?.me?.questionCommentBlocks?.map(
-                          (comment) =>
-                            comment?.isBlocked && (
-                              <UserComment
-                                key={comment?.id}
-                                comment={comment}
-                              />
-                            )
-                        )
-                      ) : (
-                        <div className="text-lg font-bold text-center text-gray-600 sm:text-xl">
-                          <span className="block">숨겨둔 댓글이 없습니다</span>
-                        </div>
-                      )
-                    ) : null}
+                      ) : null}
+                    </div>
+                    <div ref={loader} />
                   </div>
-                  <div ref={loader} />
                 </div>
-              </div>
-            </section>
+              </section>
+            </div>
           </div>
-        </div>
-      </main>
-    </Layout>
+        </main>
+      </Layout>
+    </>
   );
 }
 
