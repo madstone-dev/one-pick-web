@@ -50,7 +50,7 @@ export default function Tabs({ tabs, currentTab, setCurrentTab }: Itabs) {
       <div className="py-4">
         <div className="px-4 mx-auto sm:px-6 lg:px-8">
           <nav
-            className="block mx-auto -mb-px space-x-8 w-fit"
+            className="flex block mx-auto -mb-px space-x-8 w-fit"
             aria-label="Tabs"
           >
             {tabs.map((tab: any) => (

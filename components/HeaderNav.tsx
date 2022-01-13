@@ -56,16 +56,18 @@ export default function HeaderNav({ user }: IheaderNav) {
               )}
               <Link href={routes.home}>
                 <a
-                  className="items-center flex-shrink-0 hidden text-white md:flex"
+                  className="flex items-center flex-shrink-0 hidden text-white md:flex"
                   onClick={() => {
                     shouldRefetchQuestionsVar(true);
                   }}
                 >
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="relative mr-3 text-2xl"
+                    className="relative w-6 h-6 mr-3 text-2xl"
                   />
-                  <span className="text-xl font-semibold">One Pick !</span>
+                  <span className="text-xl font-semibold whitespace-nowrap">
+                    One Pick !
+                  </span>
                 </a>
               </Link>
               <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
@@ -100,12 +102,14 @@ export default function HeaderNav({ user }: IheaderNav) {
             </div>
             <div className="flex items-center md:hidden">
               <Link href={routes.home}>
-                <a className="items-center flex-shrink-0 text-white ">
+                <a className="flex items-center flex-shrink-0 text-white">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="relative mr-3 text-2xl"
+                    className="relative w-6 h-6 mr-3 text-2xl"
                   />
-                  <span className="text-xl font-semibold">One Pick !</span>
+                  <span className="text-xl font-semibold whitespace-nowrap">
+                    One Pick !
+                  </span>
                 </a>
               </Link>
             </div>
