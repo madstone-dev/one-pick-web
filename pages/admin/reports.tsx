@@ -4,9 +4,8 @@ import QuestionCommentReportList from "../../components/admin/QuestionCommentRep
 import QuestionReportList from "../../components/admin/QuestionReportList";
 import Layout from "../../components/auth/Layout";
 import Tabs from "../../components/Tabs";
-import { routes } from "../../src/routes";
-import { getRefreshToken } from "../../src/utils/auth.utils";
 import { NextSeo } from "next-seo";
+import AdminOnly from "../../components/auth/AdminOnly";
 
 export default function AdminReports() {
   const tabs = [
@@ -16,9 +15,9 @@ export default function AdminReports() {
   const [currentTab, setCurrentTab] = useState(tabs[0].to);
 
   return (
-    <>
+    <Layout>
       <NextSeo title="신고 목록" />
-      <Layout>
+      <AdminOnly>
         <main className="w-full pb-10 mx-auto max-w-7xl lg:py-12 lg:px-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
             <AdminAside />
@@ -33,22 +32,7 @@ export default function AdminReports() {
             </div>
           </div>
         </main>
-      </Layout>
-    </>
+      </AdminOnly>
+    </Layout>
   );
-}
-
-export async function getServerSideProps({ req, res }: any) {
-  const token = getRefreshToken({ req, res });
-  if (!token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: routes.home,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }

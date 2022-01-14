@@ -20,6 +20,8 @@ import {
 import QuestionReportModal from "../../components/questions/QuestionReportModal";
 import { cardShadow } from "../../src/utils/utils";
 import { NextSeo } from "next-seo";
+import { NextPageContext } from "next";
+import { routes } from "../../src/routes";
 
 export const SHOW_QUESTION_QUERY = gql`
   query showQuestion($id: Int!) {
@@ -31,7 +33,7 @@ export const SHOW_QUESTION_QUERY = gql`
 `;
 
 interface IshowQuestionServer {
-  data: showQuestion_showQuestion;
+  data: showQuestion_showQuestion | null;
 }
 
 export default function ShowQuestion({ data }: IshowQuestionServer) {
@@ -71,25 +73,25 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
         title={`${
           questionData?.showQuestion
             ? questionData.showQuestion.content
-            : data.content
+            : data?.content
         }`}
         openGraph={{
           type: "page",
           title: `${
             questionData?.showQuestion
               ? questionData.showQuestion.content
-              : data.content
+              : data?.content
           }`,
           description: `${
             questionData?.showQuestion
               ? questionData.showQuestion.content
-              : data.content
+              : data?.content
           }`,
           images: [
             {
               url: questionData?.showQuestion
                 ? questionData.showQuestion.image.Location
-                : data.image.Location,
+                : data?.image.Location,
             },
           ],
         }}
@@ -181,24 +183,20 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
   );
 }
 
-export async function getServerSideProps(context: any) {
+ShowQuestion.getInitialProps = async (context: NextPageContext) => {
   const {
     data: { showQuestion },
   } = await apolloClient.query<showQuestion>({
     query: SHOW_QUESTION_QUERY,
     variables: {
-      id: parseInt(context.query.id),
+      id: parseInt(context.query.id as string),
     },
   });
   if (!showQuestion) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/404",
-      },
-    };
+    context.res?.writeHead(301, {
+      Location: routes.home,
+    });
+    context.res?.end();
   }
-  return {
-    props: { data: showQuestion },
-  };
-}
+  return { data: showQuestion };
+};

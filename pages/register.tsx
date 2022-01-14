@@ -5,10 +5,7 @@ import { useState } from "react";
 import FormError from "../components/auth/FormError";
 import Link from "next/link";
 import Layout from "../components/auth/Layout";
-import {
-  DEFAULT_ERROR_MESSAGE,
-  getRefreshToken,
-} from "../src/utils/auth.utils";
+import { DEFAULT_ERROR_MESSAGE } from "../src/utils/auth.utils";
 import { useRouter } from "next/router";
 import { showSuccess } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
@@ -17,6 +14,7 @@ import {
   createUserVariables,
 } from "../src/__generated__/createUser";
 import { NextSeo } from "next-seo";
+import PublicOnly from "../components/auth/PublicOnly";
 
 const CREATE_USER_MUTATION = gql`
   mutation createUser($email: String!, $username: String!, $password: String!) {
@@ -67,9 +65,9 @@ export default function Register() {
   };
 
   return (
-    <>
+    <Layout>
       <NextSeo title="회원가입" />
-      <Layout>
+      <PublicOnly>
         <ContentSection>
           <div className="flex flex-col justify-center w-full min-h-full py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -214,22 +212,7 @@ export default function Register() {
             </div>
           </div>
         </ContentSection>
-      </Layout>
-    </>
+      </PublicOnly>
+    </Layout>
   );
-}
-
-export async function getServerSideProps({ req, res }: any) {
-  const refreshToken = getRefreshToken({ req, res });
-  if (refreshToken) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: routes.home,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }

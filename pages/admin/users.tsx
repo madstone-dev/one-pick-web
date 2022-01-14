@@ -7,10 +7,10 @@ import UserList from "../../components/admin/UserList";
 import Layout from "../../components/auth/Layout";
 import ScrollToTop from "../../components/ScrollToTop";
 import { BASIC_USER_FRAGMENT } from "../../src/fragments";
-import { routes } from "../../src/routes";
-import { getRefreshToken, headerHeightVar } from "../../src/utils/auth.utils";
+import { headerHeightVar } from "../../src/utils/auth.utils";
 import { searchUsers } from "../../src/__generated__/searchUsers";
 import { NextSeo } from "next-seo";
+import AdminOnly from "../../components/auth/AdminOnly";
 
 const SEARCH_UESRS_QUERY = gql`
   query searchUsers($keyword: String, $page: Int, $take: Int) {
@@ -71,9 +71,9 @@ export default function AdminUsers() {
   }, []);
 
   return (
-    <>
+    <Layout>
       <NextSeo title="유저 목록" />
-      <Layout>
+      <AdminOnly>
         <main className="w-full pb-10 mx-auto max-w-7xl lg:py-12 lg:px-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
             <AdminAside />
@@ -134,22 +134,7 @@ export default function AdminUsers() {
         <div className={`${scrollHeight > 0 ? "" : "hidden"}`}>
           <ScrollToTop />
         </div>
-      </Layout>
-    </>
+      </AdminOnly>
+    </Layout>
   );
-}
-
-export async function getServerSideProps({ req, res }: any) {
-  const token = getRefreshToken({ req, res });
-  if (!token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: routes.home,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }

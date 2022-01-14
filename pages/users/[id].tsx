@@ -18,6 +18,7 @@ import { showUser, showUser_showUser } from "../../src/__generated__/showUser";
 import Tabs from "../../components/Tabs";
 import { loadContentFinishVar } from "../../src/utils/utils";
 import { NextSeo } from "next-seo";
+import { NextPageContext } from "next";
 
 const SHOW_USER_QUERY = gql`
   query showUser($id: Int!, $lastId: Int) {
@@ -175,24 +176,20 @@ export default function ShowUser({ data }: IshowUserServer) {
   );
 }
 
-export async function getServerSideProps(context: any) {
+ShowUser.getInitialProps = async (context: NextPageContext) => {
   const {
     data: { showUser },
   } = await apolloClient.query<showUser>({
     query: SHOW_USER_QUERY,
     variables: {
-      id: parseInt(context.query.id),
+      id: parseInt(context.query.id as string),
     },
   });
   if (!showUser) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/404",
-      },
-    };
+    context.res?.writeHead(301, {
+      Location: routes.home,
+    });
+    context.res?.end();
   }
-  return {
-    props: { data: showUser },
-  };
-}
+  return { data: showUser };
+};

@@ -1,6 +1,4 @@
 import Layout from "../../components/auth/Layout";
-import { getRefreshToken } from "../../src/utils/auth.utils";
-import { routes } from "../../src/routes";
 import { useCallback, useEffect, useRef } from "react";
 import ProfileAside from "../../components/users/ProfileAside";
 import { ApolloQueryResult, gql, useQuery } from "@apollo/client";
@@ -9,6 +7,7 @@ import UserComment from "../../components/users/UserComment";
 import { myQuestionComments } from "../../src/__generated__/myQuestionComments";
 import { cardShadow, loadContentFinishVar } from "../../src/utils/utils";
 import { NextSeo } from "next-seo";
+import LoginOnly from "../../components/auth/LoginOnly";
 
 const ME_QUERY = gql`
   query myQuestionComments($lastId: Int) {
@@ -71,9 +70,9 @@ export default function UserComments() {
   }, [handleObserver]);
 
   return (
-    <>
+    <Layout>
       <NextSeo title="작성한 댓글" />
-      <Layout>
+      <LoginOnly>
         <main className="w-full pb-10 mx-auto max-w-7xl lg:py-12 lg:px-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
             <ProfileAside />
@@ -122,22 +121,7 @@ export default function UserComments() {
             </div>
           </div>
         </main>
-      </Layout>
-    </>
+      </LoginOnly>
+    </Layout>
   );
-}
-
-export async function getServerSideProps({ req, res }: any) {
-  const token = getRefreshToken({ req, res });
-  if (!token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: routes.home,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }

@@ -2,7 +2,6 @@ import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
-import { routes } from "./routes";
 import { ACCESS_TOKEN } from "./utils/auth.utils";
 
 const REFRESH_TOKEN_MUTATION = gql`
@@ -61,7 +60,7 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
 const uploadHttpLink = createUploadLink({
   uri:
     process.env.NODE_ENV === "production"
-      ? "https://one-pick-madstone.herokuapp.com"
+      ? "https://graphql.onepick.fun"
       : "http://localhost:4000",
   credentials: "include",
 });

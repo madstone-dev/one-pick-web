@@ -3,8 +3,18 @@ import type { AppProps } from "next/app";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "../src/apolloClient";
 import { DefaultSeo } from "next-seo";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    if (process.browser && process.env.NODE_ENV === "production") {
+      const httpTokens = /^http:\/\/(.*)$/.exec(window.location.href);
+      if (httpTokens) {
+        window.location.replace("https://" + httpTokens[1]);
+      }
+    }
+  }, []);
+
   return (
     <ApolloProvider client={apolloClient}>
       <DefaultSeo

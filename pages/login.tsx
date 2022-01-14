@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { gql, useMutation, useReactiveVar } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormError from "../components/auth/FormError";
 import { routes } from "../src/routes";
 import Success from "../components/notifications/Success";
@@ -8,9 +8,9 @@ import Link from "next/link";
 import {
   ACCESS_TOKEN,
   DEFAULT_ERROR_MESSAGE,
-  getRefreshToken,
-  REFRESH_TOKEN,
+  loginUserVar,
 } from "../src/utils/auth.utils";
+import PublicOnly from "../components/auth/PublicOnly";
 import Layout from "../components/auth/Layout";
 import { useRouter } from "next/router";
 import { successNotificationVar } from "../src/utils/notifications.utils";
@@ -18,7 +18,6 @@ import ContentSection from "../components/ContentSection";
 import { login, loginVariables } from "../src/__generated__/login";
 import { apolloClient } from "../src/apolloClient";
 import { NextSeo } from "next-seo";
-import { removeCookies } from "cookies-next";
 
 const LOGIN_MUTATION = gql`
   mutation login($email: String!, $password: String!) {
@@ -31,12 +30,20 @@ const LOGIN_MUTATION = gql`
 `;
 
 export default function Login() {
+  const loginUser = loginUserVar();
   const successNotification = useReactiveVar(successNotificationVar);
   const router = useRouter();
   const [loginError, setLoginError] = useState(DEFAULT_ERROR_MESSAGE);
   const { register, handleSubmit, formState } = useForm<loginVariables>({
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (loginUser) {
+      router.replace(routes.home);
+    }
+  }, [loginUser]);
+
   const onSubmitValid = (data: loginVariables) => {
     if (loading) {
       return;
@@ -70,9 +77,9 @@ export default function Login() {
   };
 
   return (
-    <>
+    <Layout>
       <NextSeo title="로그인" />
-      <Layout>
+      <PublicOnly>
         <ContentSection>
           <div className="flex flex-col justify-center w-full min-h-full py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -190,28 +197,7 @@ export default function Login() {
             ) : null}
           </div>
         </ContentSection>
-      </Layout>
-    </>
+      </PublicOnly>
+    </Layout>
   );
-}
-
-export async function getServerSideProps(context: any) {
-  const { query, req, res } = context;
-  if (query.click) {
-    removeCookies(REFRESH_TOKEN, { req, res });
-    removeCookies(`${REFRESH_TOKEN}.sig`, { req, res });
-  }
-
-  const token = getRefreshToken({ req, res });
-  if (token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: routes.home,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }

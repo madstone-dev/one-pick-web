@@ -2,9 +2,7 @@ import { useForm } from "react-hook-form";
 import { gql, useMutation, useReactiveVar } from "@apollo/client";
 import { useState } from "react";
 import FormError from "../components/auth/FormError";
-import { routes } from "../src/routes";
 import Success from "../components/notifications/Success";
-import { getRefreshToken } from "../src/utils/auth.utils";
 import Layout from "../components/auth/Layout";
 import {
   showSuccess,
@@ -16,6 +14,7 @@ import {
   forgotPasswordVariables,
 } from "../src/__generated__/forgotPassword";
 import { NextSeo } from "next-seo";
+import PublicOnly from "../components/auth/PublicOnly";
 
 const FORGOT_PASSWORD_MUTATION = gql`
   mutation forgotPassword($email: String!) {
@@ -68,9 +67,9 @@ export default function ForgotPassword() {
   };
 
   return (
-    <>
+    <Layout>
       <NextSeo title="비밀번호 찾기" />
-      <Layout>
+      <PublicOnly>
         <ContentSection>
           <div className="flex flex-col justify-center w-full min-h-full pb-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -142,22 +141,7 @@ export default function ForgotPassword() {
             ) : null}
           </div>
         </ContentSection>
-      </Layout>
-    </>
+      </PublicOnly>
+    </Layout>
   );
-}
-
-export async function getServerSideProps({ req, res }: any) {
-  const token = getRefreshToken({ req, res });
-  if (token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: routes.home,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }

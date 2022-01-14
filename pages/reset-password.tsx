@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import FormError from "../components/auth/FormError";
 import { routes } from "../src/routes";
 import Success from "../components/notifications/Success";
-import { getRefreshToken } from "../src/utils/auth.utils";
 import Layout from "../components/auth/Layout";
 import { useRouter } from "next/router";
 import {
@@ -12,11 +11,9 @@ import {
   successNotificationVar,
 } from "../src/utils/notifications.utils";
 import ContentSection from "../components/ContentSection";
-import {
-  resetPassword,
-  resetPasswordVariables,
-} from "../src/__generated__/resetPassword";
+import { resetPassword } from "../src/__generated__/resetPassword";
 import { NextSeo } from "next-seo";
+import PublicOnly from "../components/auth/PublicOnly";
 
 const RESET_PASSWORD_MUTATION = gql`
   mutation resetPassword($email: String!, $token: String!, $password: String!) {
@@ -82,9 +79,9 @@ export default function ResetPassword() {
   }, [setValue, router?.query?.email]);
 
   return (
-    <>
+    <Layout>
       <NextSeo title="비밀번호 재설정" />
-      <Layout>
+      <PublicOnly>
         <ContentSection>
           <div className="flex flex-col justify-center w-full min-h-full pb-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -175,22 +172,7 @@ export default function ResetPassword() {
             ) : null}
           </div>
         </ContentSection>
-      </Layout>
-    </>
+      </PublicOnly>
+    </Layout>
   );
-}
-
-export async function getServerSideProps({ req, res }: any) {
-  const token = getRefreshToken({ req, res });
-  if (token) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: routes.home,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }

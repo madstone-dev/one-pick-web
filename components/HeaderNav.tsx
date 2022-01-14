@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { ChevronLeftIcon } from "@heroicons/react/outline";
 import { me } from "../src/__generated__/me";
 import { shouldRefetchQuestionsVar } from "../src/utils/questions.utils";
+import LogoutButton from "./auth/LogoutButton";
 
 interface IheaderNav {
   user: me | undefined;
@@ -18,9 +19,6 @@ export default function HeaderNav({ user }: IheaderNav) {
   const headerRef = useRef<any>();
   const router = useRouter();
 
-  const userLogout = () => {
-    router.replace(routes.logout);
-  };
   const onBackClick = () => {
     router.back();
   };
@@ -39,7 +37,10 @@ export default function HeaderNav({ user }: IheaderNav) {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               {router.pathname !== routes.home ? (
-                <div className="p-2 rounded-full" onClick={onBackClick}>
+                <div
+                  className="p-2 rounded-full cursor-pointer"
+                  onClick={onBackClick}
+                >
                   <ChevronLeftIcon
                     className="w-6 h-6 text-white sm:w-8 sm:h-8 md:hidden"
                     aria-hidden="true"
@@ -162,12 +163,9 @@ export default function HeaderNav({ user }: IheaderNav) {
                           </Menu.Item>
                         ))}
                         <Menu.Item>
-                          <button
-                            onClick={userLogout}
-                            className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                          >
-                            로그아웃
-                          </button>
+                          <div>
+                            <LogoutButton />
+                          </div>
                         </Menu.Item>
                       </Menu.Items>
                     </Transition>
@@ -177,7 +175,7 @@ export default function HeaderNav({ user }: IheaderNav) {
             ) : (
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Link href={`${routes.login}?click=true`}>
+                  <Link href={routes.login}>
                     <a className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
                       <span>로그인</span>
                     </a>

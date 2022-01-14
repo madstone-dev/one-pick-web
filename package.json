@@ -6,7 +6,9 @@
     "prebuild": "tailwindcss-cli build -o styles/tailwindSSR.css",
     "build": "next build",
     "start": "next start -p $PORT",
+    "start:local": "next start",
     "lint": "next lint",
+    "heroku-postbuild": "npm run build",
     "codegen": "apollo client:codegen src/__generated__ --target=typescript --outputFlat"
   },
   "dependencies": {
@@ -23,7 +25,6 @@
     "@heroicons/react": "^1.0.5",
     "@tailwindcss/forms": "^0.4.0",
     "@types/apollo-upload-client": "^14.1.0",
-    "@types/express": "^4.17.13",
     "@types/graphql": "^14.5.0",
     "@types/moment": "^2.13.0",
     "@types/next-auth": "^3.15.0",
@@ -31,7 +32,6 @@
     "@types/react-lines-ellipsis": "^0.15.1",
     "apollo-upload-client": "^17.0.0",
     "cookies-next": "^2.0.3",
-    "express": "^4.17.2",
     "graphql": "^16.2.0",
     "moment": "^2.29.1",
     "next": "12.0.7",
