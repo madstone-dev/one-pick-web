@@ -62,6 +62,7 @@ export default function CreateQuestion() {
     router.push(routes.home);
   };
   const [fileError, setFileError] = useState("");
+  const imageFormRef = useRef<any>(null);
 
   const [createQuestionMutation, { loading }] = useMutation<createQuestion>(
     CREATE_QUESTION_MUTATION,
@@ -85,6 +86,7 @@ export default function CreateQuestion() {
       });
     } else {
       setFileError("이미지는 필수 입니다.");
+      imageFormRef.current && imageFormRef.current.focus();
     }
   };
 
@@ -164,7 +166,9 @@ export default function CreateQuestion() {
                           </label>
                           <label
                             htmlFor="photo"
-                            className="flex justify-center px-6 pt-5 pb-6 mt-1 border-2 border-gray-300 border-dashed rounded-md cursor-pointer hover:bg-gray-50"
+                            ref={imageFormRef}
+                            tabIndex={0}
+                            className="flex justify-center px-6 pt-5 pb-6 mt-1 border-2 border-gray-300 border-dashed rounded-md outline-none cursor-pointer hover:bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 ring-0"
                           >
                             <div className="space-y-1 text-center">
                               <svg

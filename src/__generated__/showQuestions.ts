@@ -36,6 +36,7 @@ export interface showQuestions_showQuestions {
   content: string;
   image: any | null;
   choice: string[];
+  hashtagString: string | null;
   questionHashtags: showQuestions_showQuestions_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;

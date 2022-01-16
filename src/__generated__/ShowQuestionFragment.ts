@@ -44,6 +44,7 @@ export interface ShowQuestionFragment {
   content: string;
   image: any | null;
   choice: string[];
+  hashtagString: string | null;
   questionHashtags: ShowQuestionFragment_questionHashtags[];
   totalPickers: number;
   isPicker: boolean;

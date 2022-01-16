@@ -36,6 +36,7 @@ export interface ShowQuestionsFragment {
   content: string;
   image: any | null;
   choice: string[];
+  hashtagString: string | null;
   questionHashtags: ShowQuestionsFragment_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;

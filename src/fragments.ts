@@ -27,6 +27,7 @@ export const SHOW_QUESTIONS_FRAGMENT = gql`
     content
     image
     choice
+    hashtagString
     questionHashtags {
       hashtag
     }
@@ -51,6 +52,7 @@ export const SHOW_QUESTION_FRAGMENT = gql`
     content
     image
     choice
+    hashtagString
     questionHashtags {
       hashtag
       id

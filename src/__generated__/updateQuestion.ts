@@ -36,6 +36,7 @@ export interface updateQuestion_updateQuestion_question {
   content: string;
   image: any | null;
   choice: string[];
+  hashtagString: string | null;
   questionHashtags: updateQuestion_updateQuestion_question_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
@@ -61,6 +62,6 @@ export interface updateQuestionVariables {
   id: number;
   content?: string | null;
   image?: any | null;
-  choice?: (string | null)[] | null;
+  choice?: string[] | null;
   questionHashtags?: string | null;
 }

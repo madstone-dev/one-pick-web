@@ -27,7 +27,7 @@ const UPDATE_QUESTION_MUTATION = gql`
     $id: Int!
     $content: String
     $image: Upload
-    $choice: [String]
+    $choice: [String!]
     $questionHashtags: String
   ) {
     updateQuestion(
@@ -143,10 +143,7 @@ export default function EditQuestion() {
       setValue("content", data.content);
       setValue("firstPick", data.choice[0]);
       setValue("secondPick", data.choice[1]);
-      setValue(
-        "questionHashtags",
-        data.questionHashtags?.map((item: any) => item.hashtag).join(" ")
-      );
+      setValue("questionHashtags", data.hashtagString);
       if (data.totalPickers > 0) {
         setEditError("참여자가 있어 수정이 불가능합니다.");
       }

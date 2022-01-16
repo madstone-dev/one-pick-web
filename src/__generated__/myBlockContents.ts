@@ -36,6 +36,7 @@ export interface myBlockContents_me_questionBlocks {
   content: string;
   image: any | null;
   choice: string[];
+  hashtagString: string | null;
   questionHashtags: myBlockContents_me_questionBlocks_questionHashtags[];
   isPicker: boolean;
   totalPickers: number;
