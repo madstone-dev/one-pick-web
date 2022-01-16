@@ -161,9 +161,6 @@ export default function CreateQuestion() {
                             className="block text-sm font-medium text-gray-700"
                           >
                             커버 이미지
-                            <span className="ml-2 text-xs text-gray-500">
-                              (선택)
-                            </span>
                           </label>
                           <label
                             htmlFor="photo"
