@@ -17,7 +17,7 @@ export default function QuestionImageZoom({ image }: any) {
       >
         <FontAwesomeIcon
           icon={faExpand}
-          className="text-xl text-gray-400 hover:text-gray-500"
+          className="w-5 h-5 text-xl text-gray-400 hover:text-gray-500"
         />
       </button>
       <Transition.Root show={open} as={Fragment}>

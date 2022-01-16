@@ -58,6 +58,11 @@ export const SHOW_QUESTION_FRAGMENT = gql`
     totalPickers
     isPicker
     myPick
+    userPicks {
+      first
+      second
+      total
+    }
     totalComments
     isLiked
     totalLikes

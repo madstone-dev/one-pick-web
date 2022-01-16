@@ -67,7 +67,7 @@ export default function QuestionInfo({ question }: IquestionInfo) {
             )}
           </div>
 
-          <div className="px-1 mt-4 space-y-6 text-base text-gray-600">
+          <div className="mt-4 space-y-6 text-base text-gray-600">
             {question.content}
           </div>
           <div className="mt-6 space-x-2 space-y-6 text-sm text-gray-600">

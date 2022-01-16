@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { apolloClient } from "../../src/apolloClient";
 import { routes } from "../../src/routes";
 import { ACCESS_TOKEN } from "../../src/utils/auth.utils";
+import { logout } from "../../src/__generated__/logout";
 
 const LOGOUT_MUTATION = gql`
   mutation logout {
@@ -16,7 +17,7 @@ const LOGOUT_MUTATION = gql`
 export default function LogoutButton() {
   const router = useRouter();
 
-  const onCompleted = (data: any) => {
+  const onCompleted = (data: logout) => {
     if (data?.logout?.ok) {
       apolloClient.cache.evict({
         fieldName: "me",
@@ -26,7 +27,7 @@ export default function LogoutButton() {
     }
   };
 
-  const [logoutMutation] = useMutation(LOGOUT_MUTATION, {
+  const [logoutMutation] = useMutation<logout>(LOGOUT_MUTATION, {
     onCompleted,
   });
 

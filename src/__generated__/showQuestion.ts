@@ -29,6 +29,13 @@ export interface showQuestion_showQuestion_questionHashtags {
   id: number;
 }
 
+export interface showQuestion_showQuestion_userPicks {
+  __typename: "QuestionUserPicks";
+  first: number;
+  second: number;
+  total: number;
+}
+
 export interface showQuestion_showQuestion {
   __typename: "Question";
   id: number;
@@ -41,6 +48,7 @@ export interface showQuestion_showQuestion {
   totalPickers: number;
   isPicker: boolean;
   myPick: number | null;
+  userPicks: showQuestion_showQuestion_userPicks;
   totalComments: number;
   isLiked: boolean;
   totalLikes: number;

@@ -13,8 +13,6 @@ export default function Layout({ children }: Ichildren) {
   const { data, loading } = useUser();
 
   useEffect(() => {
-    console.log(loading, "loading");
-    console.log(data?.me, "user");
     loginUserVar(data?.me);
     loadingUserVar(loading);
   }, [loading, data?.me]);
