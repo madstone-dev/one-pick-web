@@ -21,6 +21,7 @@ import {
 } from "../../../src/__generated__/updateQuestion";
 import { cardShadow } from "../../../src/utils/utils";
 import { NextSeo } from "next-seo";
+import Compressor from "compressorjs";
 
 const UPDATE_QUESTION_MUTATION = gql`
   mutation updateQuestion(
@@ -118,12 +119,18 @@ export default function EditQuestion() {
       event.target.value = "";
       return;
     }
-    const photo = {
-      url: URL.createObjectURL(file),
-      file,
-    };
-    setPhoto(photo);
-    event.target.value = "";
+
+    new Compressor(file, {
+      quality: 0.8,
+      success(result) {
+        const photo = {
+          url: URL.createObjectURL(result),
+          file,
+        };
+        setPhoto(photo);
+        event.target.value = "";
+      },
+    });
   };
 
   useEffect(() => {
@@ -249,11 +256,11 @@ export default function EditQuestion() {
                             />
                             <label
                               htmlFor="photo"
-                              className="inline-flex cursor-pointer absolute top-10 right-10 items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                              className="inline-flex cursor-pointer absolute top-10 right-10 items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 whitespace-nowrap"
                             >
                               <FontAwesomeIcon
                                 icon={faSyncAlt}
-                                className="relative mr-2"
+                                className="relative w-3 h-3 mr-2 text-xs"
                               />
                               변경
                             </label>

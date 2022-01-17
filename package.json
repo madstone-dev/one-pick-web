@@ -31,6 +31,7 @@
     "@types/next-seo": "^2.1.2",
     "@types/react-lines-ellipsis": "^0.15.1",
     "apollo-upload-client": "^17.0.0",
+    "compressorjs": "^1.1.1",
     "cookies-next": "^2.0.3",
     "graphql": "^16.2.0",
     "moment": "^2.29.1",

@@ -10,6 +10,7 @@ import {
   updateUserVariables,
 } from "../../src/__generated__/updateUser";
 import FormError from "../auth/FormError";
+import Compressor from "compressorjs";
 
 const UPDATE_USER = gql`
   mutation updateUser(
@@ -87,13 +88,19 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
         event.target.value = "";
         return;
       }
-      const photo = {
-        url: URL.createObjectURL(file),
-        file,
-      };
-      setFileExists(true);
-      setPhoto(photo);
-      event.target.value = "";
+
+      new Compressor(file, {
+        quality: 0.8,
+        success(result) {
+          const photo = {
+            url: URL.createObjectURL(result),
+            file,
+          };
+          setFileExists(true);
+          setPhoto(photo);
+          event.target.value = "";
+        },
+      });
     }
   };
 
