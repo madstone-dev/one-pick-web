@@ -78,56 +78,54 @@ export default function AdminUsers() {
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
             <AdminAside />
             <div className="space-y-4 sm:px-6 lg:px-8 lg:col-span-9">
-              {data?.searchUsers && (
-                <>
-                  <div
-                    className={`${
-                      headerHeightVar() < scrollHeight ? "shadow-sm" : ""
-                    } sticky px-4 pt-4 pb-2 space-y-2 bg-white sm:pt-0 sm:pb-0 sm:grid sm:grid-cols-2 sm:space-y-0`}
-                    style={{
-                      top: `${headerHeightVar()}px`,
-                    }}
-                  >
-                    <div>
-                      <div className="flex items-center flex-1">
-                        <div className="w-full sm:max-w-xs">
-                          <label htmlFor="search" className="sr-only">
-                            닉네임 검색
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                              <SearchIcon
-                                className="w-5 h-5 text-gray-400"
-                                aria-hidden="true"
-                              />
-                            </div>
-                            <form onSubmit={onSearch}>
-                              <input
-                                ref={inputRef}
-                                id="search"
-                                name="search"
-                                className="block w-full py-2 pl-10 pr-3 text-sm placeholder-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:text-gray-900 focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                placeholder="닉네임 검색"
-                                type="search"
-                                defaultValue={keyword}
-                                autoFocus
-                              />
-                            </form>
-                          </div>
+              <div
+                className={`${
+                  headerHeightVar() < scrollHeight ? "shadow-sm" : ""
+                } sticky px-4 pt-4 pb-2 space-y-2 bg-white sm:pt-0 sm:pb-0 sm:grid sm:grid-cols-2 sm:space-y-0`}
+                style={{
+                  top: `${headerHeightVar()}px`,
+                }}
+              >
+                <div>
+                  <div className="flex items-center flex-1">
+                    <div className="w-full sm:max-w-xs">
+                      <label htmlFor="search" className="sr-only">
+                        닉네임 검색
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          <SearchIcon
+                            className="w-5 h-5 text-gray-400"
+                            aria-hidden="true"
+                          />
                         </div>
+                        <form onSubmit={onSearch}>
+                          <input
+                            ref={inputRef}
+                            id="search"
+                            name="search"
+                            className="block w-full py-2 pl-10 pr-3 text-sm placeholder-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:text-gray-900 focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="닉네임 검색"
+                            type="search"
+                            defaultValue={keyword}
+                            autoFocus
+                          />
+                        </form>
                       </div>
                     </div>
-                    <OffsetPaginator
-                      itemTotal={data.searchUsers.totalUsers}
-                      currentPage={page}
-                      take={take}
-                      lastPage={data.searchUsers.lastPage}
-                      setPage={setPage}
-                    />
                   </div>
-                  <UserList users={data.searchUsers.users} />
-                </>
-              )}
+                </div>
+                {data?.searchUsers && (
+                  <OffsetPaginator
+                    itemTotal={data.searchUsers.totalUsers}
+                    currentPage={page}
+                    take={take}
+                    lastPage={data.searchUsers.lastPage}
+                    setPage={setPage}
+                  />
+                )}
+              </div>
+              {data?.searchUsers && <UserList users={data.searchUsers.users} />}
             </div>
           </div>
         </main>

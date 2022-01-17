@@ -30,8 +30,8 @@ export default function Question({ question, showBlocked }: Iquestion) {
                   className={`${
                     focusedQuestion === question.id
                       ? "opacity-100"
-                      : "sm:opacity-0 group-hover:opacity-100"
-                  } p-3`}
+                      : "opacity-0 group-hover:opacity-100"
+                  } p-3 hidden lg:block`}
                 >
                   <QuestionDropdown
                     question={question}
@@ -50,8 +50,16 @@ export default function Question({ question, showBlocked }: Iquestion) {
               <NoImage title={question.content} className="blur-md" />
             )}
           </div>
-          <div className="py-3 text-sm italic font-medium text-gray-600">
-            사용자에 의해 숨겨진 콘텐츠입니다
+          <div className="flex items-start justify-between">
+            <div className="py-3 text-sm italic font-medium text-gray-600">
+              사용자에 의해 숨겨진 콘텐츠입니다
+            </div>
+            <div className="relative z-10 lg:hidden">
+              <QuestionDropdown
+                question={question}
+                setReportOpen={setReportOpen}
+              />
+            </div>
           </div>
         </>
       ) : (
@@ -63,8 +71,8 @@ export default function Question({ question, showBlocked }: Iquestion) {
                   className={`${
                     focusedQuestion === question.id
                       ? "opacity-100"
-                      : "sm:opacity-0 group-hover:opacity-100"
-                  } bg-opacity-10 sm:bg-gray-100 rounded-full`}
+                      : "opacity-0 group-hover:opacity-100"
+                  } bg-opacity-10 sm:bg-gray-100 rounded-full hidden lg:block`}
                 >
                   <QuestionDropdown
                     question={question}
@@ -89,17 +97,25 @@ export default function Question({ question, showBlocked }: Iquestion) {
               </a>
             </Link>
           </div>
-          <Link href="/questions/[id]" as={`/questions/${question.id}`}>
-            <a>
-              <div className="py-3 text-sm font-medium text-gray-900">
-                <LinesEllipsis
-                  text={question.content}
-                  maxLine="1"
-                  ellipsis="..."
-                />
-              </div>
-            </a>
-          </Link>
+          <div className="relative flex items-center justify-between">
+            <Link href="/questions/[id]" as={`/questions/${question.id}`}>
+              <a>
+                <div className="py-3 text-sm font-medium text-gray-900">
+                  <LinesEllipsis
+                    text={question.content}
+                    maxLine="2"
+                    ellipsis="..."
+                  />
+                </div>
+              </a>
+            </Link>
+            <div className="relative z-10 lg:hidden">
+              <QuestionDropdown
+                question={question}
+                setReportOpen={setReportOpen}
+              />
+            </div>
+          </div>
         </>
       )}
 

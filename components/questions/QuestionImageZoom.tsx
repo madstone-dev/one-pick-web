@@ -26,7 +26,7 @@ export default function QuestionImageZoom({ image }: any) {
           className="fixed inset-0 z-10 overflow-y-auto"
           onClose={setOpen}
         >
-          <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-8">
+          <div className="flex items-start justify-center min-h-screen px-4 pt-32 pb-4 text-center sm:block sm:p-8">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"

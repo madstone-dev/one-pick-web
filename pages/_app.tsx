@@ -23,8 +23,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         openGraph={{
           type: "website",
           title: "둘 중에 하나만 골라, 원픽!",
-          description: "선택하세요 원픽",
+          description: "살까 말까? 먹을까 말까? 둘 중에 하나만 골라, 원픽!",
           site_name: "원픽",
+          images: [
+            {
+              url: "/og-image.png",
+            },
+          ],
         }}
       />
       <Component {...pageProps} />

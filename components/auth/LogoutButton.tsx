@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { apolloClient } from "../../src/apolloClient";
 import { routes } from "../../src/routes";
 import { ACCESS_TOKEN } from "../../src/utils/auth.utils";
+import { shouldRefetchQuestionsVar } from "../../src/utils/questions.utils";
 import { logout } from "../../src/__generated__/logout";
 
 const LOGOUT_MUTATION = gql`
@@ -22,6 +23,7 @@ export default function LogoutButton() {
       apolloClient.cache.evict({
         fieldName: "me",
       });
+      shouldRefetchQuestionsVar(true);
       localStorage.removeItem(ACCESS_TOKEN);
       router.push(routes.home);
     }

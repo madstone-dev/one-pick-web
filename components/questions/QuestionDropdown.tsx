@@ -21,7 +21,10 @@ export default function QuestionDropdown({
       <div>
         <Menu.Button className="flex items-center p-2 rounded-full sm:text-gray-600 bg-opacity-10 hover:bg-gray-100 sm:hover:text-gray-700 focus:outline-none">
           <span className="sr-only">Open options</span>
-          <DotsVerticalIcon className="w-5 h-5" aria-hidden="true" />
+          <DotsVerticalIcon
+            className="w-4 h-4 rotate-90 lg:w-5 lg:h-5"
+            aria-hidden="true"
+          />
         </Menu.Button>
       </div>
 

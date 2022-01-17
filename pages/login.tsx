@@ -18,6 +18,7 @@ import ContentSection from "../components/ContentSection";
 import { login, loginVariables } from "../src/__generated__/login";
 import { apolloClient } from "../src/apolloClient";
 import { NextSeo } from "next-seo";
+import { shouldRefetchQuestionsVar } from "../src/utils/questions.utils";
 
 const LOGIN_MUTATION = gql`
   mutation login($email: String!, $password: String!) {
@@ -72,6 +73,7 @@ export default function Login() {
     setLoginError(DEFAULT_ERROR_MESSAGE);
   };
   const userLogin = (token: string) => {
+    shouldRefetchQuestionsVar(true);
     localStorage.setItem(ACCESS_TOKEN, token);
     router.push(routes.home);
   };
