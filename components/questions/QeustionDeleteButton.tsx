@@ -59,13 +59,15 @@ export default function QuestionDeleteButton({
     }
   };
 
-  const [deleteQuestionMutation, { loading: deleteLoading }] =
-    useMutation<deleteQuestion>(DELETE_QUESTION_MUTATION, {
+  const [deleteQuestionMutation, { loading }] = useMutation<deleteQuestion>(
+    DELETE_QUESTION_MUTATION,
+    {
       variables: {
         id: question.id,
       },
       onCompleted,
-    });
+    }
+  );
 
   const onDeleteClick = () => {
     if (window.confirm("해당 글을 삭제하시겠습니까?")) {
@@ -75,12 +77,12 @@ export default function QuestionDeleteButton({
 
   return (
     <button
-      className={`${
-        fontSize ? fontSize : "text-sm"
+      className={`${fontSize ? fontSize : "text-sm"} ${
+        loading ? "pointer-events-none bg-gray-100" : ""
       } block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap`}
       onClick={onDeleteClick}
     >
-      {deleteLoading ? "삭제중..." : "콘텐츠 삭제"}
+      {loading ? "콘텐츠 삭제중..." : "콘텐츠 삭제"}
     </button>
   );
 }

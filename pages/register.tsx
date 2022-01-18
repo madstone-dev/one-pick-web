@@ -41,17 +41,17 @@ export default function Register() {
   };
   const onCompleted = (data: createUser) => {
     const { createUser } = data;
-    if (!createUser?.ok) {
+    if (createUser?.ok) {
+      showSuccess({
+        title: "회원가입 완료!",
+        description: "계정이 생성되었습니다. 로그인 하세요!",
+      });
+      router.push(routes.login);
+    } else {
       setCreateUserError({
         message: createUser?.error || "",
       });
-      return;
     }
-    showSuccess({
-      title: "회원가입 완료!",
-      description: "계정이 생성되었습니다. 로그인 하세요!",
-    });
-    router.push(routes.login);
   };
   const [createUserMutation, { loading }] = useMutation<createUser>(
     CREATE_USER_MUTATION,

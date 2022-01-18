@@ -1,7 +1,8 @@
-import { ApolloCache, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
+import { apolloClient } from "../../src/apolloClient";
 import { SHOW_QUESTION_COMMENT_FRAGMENT } from "../../src/fragments";
 import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
 import { updateQuestionComment } from "../../src/__generated__/updateQuestionComment";
@@ -38,22 +39,24 @@ export default function UpdateQuestionCommentForm({
       content: comment.content,
     },
   });
-  const onUpdateQuestionComment = (
-    cache: ApolloCache<showQuestionComments_showQuestionComments>
-  ) => {
-    cache.modify({
-      id: `QuestionComment:${comment.id}`,
-      fields: {
-        content() {
-          return watch("content");
+  const onCompleted = (data: updateQuestionComment) => {
+    if (data.updateQuestionComment.ok) {
+      apolloClient.cache.modify({
+        id: `QuestionComment:${comment.id}`,
+        fields: {
+          content() {
+            return watch("content");
+          },
         },
-      },
-    });
-    setEditable(false);
+      });
+      setEditable(false);
+    } else {
+      alert("수정 실패");
+    }
   };
   const [updateQuestionCommentMutation, { loading }] =
     useMutation<updateQuestionComment>(UPDATE_QUESTION_COMMENT_MUTATION, {
-      update: onUpdateQuestionComment,
+      onCompleted,
     });
   const onSubmitValid = (data: Icomment) => {
     updateQuestionCommentMutation({

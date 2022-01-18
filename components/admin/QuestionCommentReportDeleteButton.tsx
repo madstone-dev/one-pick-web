@@ -45,10 +45,12 @@ export default function QuestionCommentReportDeleteButton({
   const onCompleted = (data: deleteQuestionCommentReport) => {
     if (data.deleteQuestionCommentReport.ok) {
       deleteQuestionCache();
+    } else {
+      alert("삭제 실패");
     }
   };
 
-  const [deleteQuestionCommentReportMutation] =
+  const [deleteQuestionCommentReportMutation, { loading }] =
     useMutation<deleteQuestionCommentReport>(DELETE_QUESTION_COMMENT_REPORT, {
       variables: {
         id: report.id,
@@ -59,17 +61,18 @@ export default function QuestionCommentReportDeleteButton({
   const onDeleteClick = () => {
     if (window.confirm("해당 리포트를 삭제하시겠습니까?")) {
       deleteQuestionCommentReportMutation();
+      deleteQuestionCache();
     }
   };
 
   return (
     <button
-      className={`${
-        fontSize ? fontSize : "text-sm"
+      className={`${fontSize ? fontSize : "text-sm"} ${
+        loading ? "pointer-events-none bg-gray-100" : ""
       } block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap`}
       onClick={onDeleteClick}
     >
-      신고 삭제
+      신고 삭제{loading && "중..."}
     </button>
   );
 }

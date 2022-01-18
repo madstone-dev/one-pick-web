@@ -102,7 +102,7 @@ export default function DeleteUserForm() {
                 watch("repeat") !== "회원 탈퇴에 동의합니다" || loading
                   ? "opacity-50 pointer-events-none"
                   : "hover:bg-red-700"
-              }inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500`}
+              } inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500`}
               disabled={watch("repeat") !== "회원 탈퇴에 동의합니다"}
             >
               {loading ? "삭제 중" : "삭제"}

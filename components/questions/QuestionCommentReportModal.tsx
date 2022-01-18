@@ -26,7 +26,7 @@ export default function QuestionCommentReportModal({
 }: IquestionCommentReportModal) {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<string | null>(null);
-  const [reportQuestionCommentMutation] =
+  const [reportQuestionCommentMutation, { loading }] =
     useMutation<createQuestionCommentReport>(REPORT_QUESTION_COMMENT_MUTATION);
 
   useEffect(() => {
@@ -58,6 +58,7 @@ export default function QuestionCommentReportModal({
       type={type}
       setType={setType}
       onSubmit={onSubmit}
+      loading={loading}
       open={open}
       setOpen={setOpen}
     />

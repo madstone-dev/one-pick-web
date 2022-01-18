@@ -26,10 +26,12 @@ export default function LogoutButton() {
       shouldRefetchQuestionsVar(true);
       localStorage.removeItem(ACCESS_TOKEN);
       router.push(routes.home);
+    } else {
+      alert("로그아웃 실패");
     }
   };
 
-  const [logoutMutation] = useMutation<logout>(LOGOUT_MUTATION, {
+  const [logoutMutation, { loading }] = useMutation<logout>(LOGOUT_MUTATION, {
     onCompleted,
   });
 
@@ -40,9 +42,11 @@ export default function LogoutButton() {
   return (
     <button
       onClick={userLogout}
-      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+      className={`${
+        loading ? "pointer-events-none bg-gray-100" : ""
+      } block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 whitespace-nowrap`}
     >
-      로그아웃
+      로그아웃 {loading && "중..."}
     </button>
   );
 }

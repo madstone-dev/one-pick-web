@@ -7,6 +7,7 @@ import { pick } from "../../src/__generated__/pick";
 import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
 
 const PICK_MUTATION = gql`
   mutation pick($id: Int!, $pick: Int!) {
@@ -36,6 +37,11 @@ export default function Pick({ question }: Ipick) {
       router.push(routes.login);
       return;
     }
+
+    if (pick === question.myPick) {
+      return;
+    }
+
     pickMutation({
       variables: {
         id,
@@ -48,6 +54,37 @@ export default function Pick({ question }: Ipick) {
       fields: {
         myPick() {
           return pick;
+        },
+        userPicks(prev, { readField }) {
+          if (readField("myPick")) {
+            if (readField("myPick") === 1) {
+              return {
+                ...prev,
+                first: prev.first - 1,
+                second: prev.second + 1,
+              };
+            } else {
+              return {
+                ...prev,
+                first: prev.first + 1,
+                second: prev.second - 1,
+              };
+            }
+          } else {
+            if (pick === 1) {
+              return {
+                ...prev,
+                first: 1,
+                total: 1,
+              };
+            } else {
+              return {
+                ...prev,
+                second: 1,
+                total: 1,
+              };
+            }
+          }
         },
       },
     });

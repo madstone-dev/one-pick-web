@@ -49,6 +49,9 @@ export default function QuestionCommentForm({
           },
         },
       });
+      setValue("content", "");
+    } else {
+      alert("저장 실패");
     }
   };
 
@@ -64,7 +67,6 @@ export default function QuestionCommentForm({
         content: data.content,
       },
     });
-    setValue("content", "");
   };
 
   const onCancelClick = () => {

@@ -26,9 +26,8 @@ export default function QuestionReportModal({
 }: IquestionReportModal) {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<string | null>(null);
-  const [reportQuestionMutation] = useMutation<createQuestionReport>(
-    REPORT_QUESTION_MUTATION
-  );
+  const [reportQuestionMutation, { loading }] =
+    useMutation<createQuestionReport>(REPORT_QUESTION_MUTATION);
 
   useEffect(() => {
     setReportOpen(open);
@@ -59,6 +58,7 @@ export default function QuestionReportModal({
       type={type}
       setType={setType}
       onSubmit={onSubmit}
+      loading={loading}
       open={open}
       setOpen={setOpen}
     />

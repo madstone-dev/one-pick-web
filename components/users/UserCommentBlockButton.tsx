@@ -1,5 +1,6 @@
-import { ApolloCache, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Dispatch, SetStateAction } from "react";
+import { apolloClient } from "../../src/apolloClient";
 import { myQuestionComments_me_questionComments } from "../../src/__generated__/myQuestionComments";
 import { toggleQuestionCommentBlock } from "../../src/__generated__/toggleQuestionCommentBlock";
 import { TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION } from "../questions/QuestionCommentBlockButton";
@@ -15,8 +16,8 @@ export default function UserCommentBlockButton({
   fontSize,
   setOpen,
 }: IuserCommentBlockButton) {
-  const onUpdatedCommentBlock = (cache: ApolloCache<any>) => {
-    cache.modify({
+  const updateCache = () => {
+    apolloClient.cache.modify({
       id: `QuestionComment:${comment.id}`,
       fields: {
         isBlocked(prev) {
@@ -36,12 +37,12 @@ export default function UserCommentBlockButton({
         variables: {
           id: comment.id,
         },
-        update: onUpdatedCommentBlock,
       }
     );
 
   const onBlockClick = () => {
     toggleQuestionCommentBlockMutation();
+    updateCache();
   };
 
   return (

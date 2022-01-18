@@ -16,7 +16,7 @@ import {
   createQuestion,
   createQuestionVariables,
 } from "../../src/__generated__/createQuestion";
-import { cardShadow } from "../../src/utils/utils";
+import { cardShadow, validateFileExtensions } from "../../src/utils/utils";
 import { NextSeo } from "next-seo";
 import Compressor from "compressorjs";
 
@@ -58,17 +58,23 @@ export default function CreateQuestion() {
   const [cardTop, setCardTop] = useState(0);
   const router = useRouter();
   const [photo, setPhoto] = useState<Iphoto>();
-  const onCreateQuestion = () => {
-    shouldRefetchQuestionsVar(true);
-    router.push(routes.home);
-  };
   const [fileError, setFileError] = useState("");
+  const [createError, setCreateError] = useState("");
   const imageFormRef = useRef<any>(null);
+
+  const onCompleted = (data: createQuestion) => {
+    if (data.createQuestion.ok) {
+      shouldRefetchQuestionsVar(true);
+      router.push(routes.home);
+    } else {
+      setCreateError(data.createQuestion.error || "");
+    }
+  };
 
   const [createQuestionMutation, { loading }] = useMutation<createQuestion>(
     CREATE_QUESTION_MUTATION,
     {
-      onCompleted: onCreateQuestion,
+      onCompleted,
     }
   );
   const { register, handleSubmit, formState } = useForm<IcreateQuestion>({
@@ -97,6 +103,11 @@ export default function CreateQuestion() {
     } = event;
     const file = files && files[0];
     if (file) {
+      if (!validateFileExtensions(file)) {
+        setFileError("jpg, png 형식의 확장자만 지원합니다.");
+        event.target.value = "";
+        return;
+      }
       if (file.size > 5242880) {
         setFileError("최대 5MB 까지 가능합니다.");
         event.target.value = "";
@@ -344,6 +355,11 @@ export default function CreateQuestion() {
                 </div>
 
                 <div className="pt-5">
+                  <div
+                    className={`${createError ? "mb-3" : ""} flex justify-end`}
+                  >
+                    <FormError message={createError} />
+                  </div>
                   <div className="flex justify-end">
                     {!loading && (
                       <Link href={routes.home}>

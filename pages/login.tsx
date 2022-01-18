@@ -59,12 +59,13 @@ export default function Login() {
   };
   const onCompleted = (data: login) => {
     const { login } = data;
-    if (!login?.ok) {
+    if (login?.ok) {
+      login?.accessToken && userLogin(login.accessToken);
+    } else {
       setLoginError({
         message: login?.error || "",
       });
     }
-    login?.accessToken && userLogin(login.accessToken);
   };
   const [loginMutation, { loading }] = useMutation<login>(LOGIN_MUTATION, {
     onCompleted,
@@ -164,11 +165,11 @@ export default function Login() {
                       className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
                         !formState.isValid || loading
                           ? "opacity-50 pointer-events-none"
-                          : null
+                          : ""
                       }`}
                       disabled={!formState.isValid || loading}
                     >
-                      {loading ? "로그인중..." : "로그인"}
+                      {loading ? "로그인 중..." : "로그인"}
                     </button>
                   </div>
                 </form>

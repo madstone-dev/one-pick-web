@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BASIC_USER_FRAGMENT } from "../../src/fragments";
 import { getAvatar } from "../../src/utils/auth.utils";
-import { cardShadow } from "../../src/utils/utils";
+import { cardShadow, validateFileExtensions } from "../../src/utils/utils";
 import { me } from "../../src/__generated__/me";
 import {
   updateUser,
@@ -56,7 +56,7 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
   const [fileExists, setFileExists] = useState(true);
   const [updateError, setUpdateError] = useState("");
 
-  const onUpdateUser = (data: updateUser) => {
+  const onCompleted = (data: updateUser) => {
     if (data.updateUser?.ok) {
       setValue("password", "");
       alert("저장 완료");
@@ -65,9 +65,12 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
     }
   };
 
-  const [updateUserMutation] = useMutation<updateUser>(UPDATE_USER, {
-    onCompleted: onUpdateUser,
-  });
+  const [updateUserMutation, { loading }] = useMutation<updateUser>(
+    UPDATE_USER,
+    {
+      onCompleted,
+    }
+  );
 
   const onFileDelete = () => {
     setFileExists(false);
@@ -83,6 +86,11 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
     } = event;
     const file = files && files[0];
     if (file) {
+      if (!validateFileExtensions(file)) {
+        setFileError("jpg, png 형식의 확장자만 지원합니다.");
+        event.target.value = "";
+        return;
+      }
       if (file.size > 5242880) {
         setFileError("최대 5MB 까지 가능합니다.");
         event.target.value = "";
@@ -151,16 +159,18 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
                 사진
               </span>
               <div className="flex items-center mt-1">
-                <img
-                  className="inline-block w-12 h-12 rounded-full"
-                  src={
-                    photo
-                      ? photo.url
-                      : userData?.me?.avatar?.Location ||
-                        getAvatar(userData?.me?.username || "")
-                  }
-                  alt=""
-                />
+                <div className="inline-block w-12 h-12 rounded-full">
+                  <img
+                    className="inline-block object-cover object-center w-12 h-12 rounded-full"
+                    src={
+                      photo
+                        ? photo.url
+                        : userData?.me?.avatar?.Location ||
+                          getAvatar(userData?.me?.username || "")
+                    }
+                    alt=""
+                  />
+                </div>
                 <div className="flex ml-4">
                   <label
                     htmlFor="user-photo"
@@ -175,6 +185,7 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
                       id="user-photo"
                       name="user-photo"
                       type="file"
+                      accept=".jpg, .png"
                       className="absolute inset-0 w-full h-full border-gray-300 rounded-md opacity-0 pointer-events-none"
                     />
                   </label>
@@ -251,14 +262,16 @@ export default function UpdateUserForm({ userData }: IupdateUserForm) {
                 !photo
                   ? "opacity-50 pointer-events-none"
                   : "hover:bg-indigo-700"
-              }inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+              } ${
+                loading ? "opacity-50 pointer-events-none" : ""
+              } inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
               disabled={
                 watch("username") === userData?.me?.username &&
                 watch("password") === "" &&
                 !photo
               }
             >
-              저장
+              저장{loading && "중..."}
             </button>
           </div>
         </div>

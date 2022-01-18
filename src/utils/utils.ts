@@ -12,3 +12,14 @@ export const tabHeightVar = makeVar<number>(0);
 
 export const cardShadow = "0 1px 20px 0 rgb(0 0 0 / 10%)";
 export const actionButtonShadow = "0 0 24px 8px rgb(0 0 0 / 10%)";
+
+export const validateFileExtensions = (file: File): boolean => {
+  const { name } = file;
+  const extensions = ["jpg", "jpeg", "png"];
+  const extension = name.split(".").pop()?.toLowerCase();
+  if (extension && extensions.indexOf(extension) >= 0) {
+    return true;
+  } else {
+    return false;
+  }
+};

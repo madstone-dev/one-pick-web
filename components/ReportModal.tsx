@@ -8,6 +8,7 @@ interface IreportModal {
   type: string | null;
   setType: Function;
   onSubmit: Function;
+  loading: boolean;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -17,6 +18,7 @@ export default function ReportModal({
   type,
   setType,
   onSubmit,
+  loading,
   open,
   setOpen,
 }: IreportModal) {
@@ -104,6 +106,8 @@ export default function ReportModal({
                     type
                       ? "bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       : "text-gray-600 bg-gray-100 pointer-events-none"
+                  } ${
+                    loading ? "pointer-events-none opacity-50" : ""
                   } inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white border border-transparent rounded-md shadow-sm sm:ml-3 sm:w-auto sm:text-sm`}
                   onClick={() => {
                     onSubmit();

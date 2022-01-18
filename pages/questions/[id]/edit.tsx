@@ -19,7 +19,7 @@ import {
   updateQuestion,
   updateQuestionVariables,
 } from "../../../src/__generated__/updateQuestion";
-import { cardShadow } from "../../../src/utils/utils";
+import { cardShadow, validateFileExtensions } from "../../../src/utils/utils";
 import { NextSeo } from "next-seo";
 import Compressor from "compressorjs";
 
@@ -76,7 +76,9 @@ export default function EditQuestion() {
   );
 
   const [photo, setPhoto] = useState<Iphoto>();
-  const onUpdateQuestion = (data: updateQuestion) => {
+  const [fileError, setFileError] = useState("");
+
+  const onCompleted = (data: updateQuestion) => {
     if (data.updateQuestion.ok) {
       shouldRefetchQuestionsVar(true);
       router.push(routes.home);
@@ -84,12 +86,11 @@ export default function EditQuestion() {
       setEditError(data.updateQuestion.error || "");
     }
   };
-  const [fileError, setFileError] = useState("");
 
   const [updateQuestionMutation, { loading }] = useMutation<updateQuestion>(
     UPDATE_QUESTION_MUTATION,
     {
-      onCompleted: onUpdateQuestion,
+      onCompleted,
     }
   );
   const { register, handleSubmit, formState, setValue } =
@@ -114,6 +115,11 @@ export default function EditQuestion() {
       target: { files },
     } = event;
     const file = files[0];
+    if (!validateFileExtensions(file)) {
+      setFileError("jpg, png 형식의 확장자만 지원합니다.");
+      event.target.value = "";
+      return;
+    }
     if (file.size > 5242880) {
       setFileError("최대 5MB 까지 가능합니다.");
       event.target.value = "";

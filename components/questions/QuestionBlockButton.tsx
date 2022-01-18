@@ -1,6 +1,7 @@
-import { ApolloCache, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
+import { apolloClient } from "../../src/apolloClient";
 import { routes } from "../../src/routes";
 import { showQuestions_showQuestions } from "../../src/__generated__/showQuestions";
 import { toggleQuestionBlock } from "../../src/__generated__/toggleQuestionBlock";
@@ -26,8 +27,8 @@ export default function QuestionBlockButton({
   setOpen,
 }: IquestionBlockButton) {
   const router = useRouter();
-  const onUpdatedBlock = (cache: ApolloCache<any>) => {
-    cache.modify({
+  const updateCache = () => {
+    apolloClient.cache.modify({
       id: `Question:${question.id}`,
       fields: {
         isBlocked(prev) {
@@ -49,12 +50,12 @@ export default function QuestionBlockButton({
       variables: {
         id: question.id,
       },
-      update: onUpdatedBlock,
     }
   );
 
   const onBlockClick = () => {
     toggleQuestionBlockMutation();
+    updateCache();
   };
 
   return (
