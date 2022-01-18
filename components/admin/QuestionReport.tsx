@@ -2,8 +2,8 @@ import moment from "moment";
 import "moment/locale/ko";
 import { reportTypes } from "../../src/utils/utils";
 import { showQuestionReports_showQuestionReports_reports } from "../../src/__generated__/showQuestionReports";
-import NoImage from "../NoImage";
 import QuestionReportDropdown from "./QuestionReportDropdown";
+import QuestionReportMobileMenu from "./QuestionReportMobileMenu";
 
 interface IquestionReport {
   report: showQuestionReports_showQuestionReports_reports;
@@ -18,19 +18,15 @@ export default function QuestionReport({ report, isLast }: IquestionReport) {
     moment.unix(Number(report.createdAt) / 1000)
   ).fromNow();
   return (
-    <li>
+    <div>
       <div className="flex items-start px-4 py-4 sm:px-6">
         <div className="flex items-start flex-1 min-w-0">
           <div className="flex-shrink-0">
-            {report.question.image?.Location ? (
-              <img
-                src={report.question.image?.Location}
-                alt={report.question.content}
-                className="object-cover object-center w-12 h-12 rounded-md"
-              />
-            ) : (
-              <NoImage title={report.question.content} />
-            )}
+            <img
+              src={report.question.image?.Location}
+              alt={report.question.content}
+              className="object-cover object-center w-12 h-12 rounded-md"
+            />
           </div>
           <div className="flex-1 min-w-0 px-4 md:grid md:grid-cols-2 md:gap-4">
             <div>
@@ -50,10 +46,13 @@ export default function QuestionReport({ report, isLast }: IquestionReport) {
             </div>
           </div>
         </div>
-        <div>
+        <div className="hidden lg:block">
           <QuestionReportDropdown report={report} isLast={isLast} />
         </div>
+        <div className="block lg:hidden">
+          <QuestionReportMobileMenu report={report} />
+        </div>
       </div>
-    </li>
+    </div>
   );
 }

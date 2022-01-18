@@ -13,6 +13,7 @@ import Link from "next/link";
 import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
 import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
 import UpdateQuestionCommentForm from "./UpdateQuestionCommentForm";
+import QuestionCommentMobileMenu from "./QuestionCommentMobileMenu";
 
 interface IquestionComment {
   question: showQuestion_showQuestion;
@@ -95,19 +96,29 @@ export default function QuestionComment({
           )}
         </div>
         {loginUser && (
-          <div
-            className={
-              focusedComment === comment.id
-                ? "opacity-100"
-                : "sm:opacity-0 group-hover:opacity-100"
-            }
-          >
-            <QuestionCommentDropdown
-              comment={comment}
-              setEditable={setEditable}
-              setReportOpen={setReportOpen}
-            />
-          </div>
+          <>
+            <div
+              className={`${
+                focusedComment === comment.id
+                  ? "opacity-100"
+                  : "sm:opacity-0 group-hover:opacity-100"
+              }
+                hidden lg:block`}
+            >
+              <QuestionCommentDropdown
+                comment={comment}
+                setEditable={setEditable}
+                setReportOpen={setReportOpen}
+              />
+            </div>
+            <div className="block lg:hidden">
+              <QuestionCommentMobileMenu
+                comment={comment}
+                setEditable={setEditable}
+                setReportOpen={setReportOpen}
+              />
+            </div>
+          </>
         )}
       </div>
       {loginUser && (

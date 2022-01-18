@@ -81,13 +81,12 @@ export default function QuestionReportList() {
         />
       </div>
       <div className="pb-20 sm:rounded-3xl sm:px-2">
-        <ul
-          role="list"
+        <div
           className="divide-y divide-gray-200 sm:rounded-3xl"
           style={{ boxShadow: cardShadow }}
         >
-          {/* list header */}
-          <li className="overflow-hidden sm:rounded-t-3xl">
+          {/* header */}
+          <div className="overflow-hidden sm:rounded-t-3xl">
             <div className="flex items-start px-6 py-3 bg-gray-50">
               <div className="flex-1 min-w-0 md:grid md:grid-cols-2 md:gap-6">
                 <div>
@@ -99,7 +98,7 @@ export default function QuestionReportList() {
               </div>
               <div className="sr-only">메뉴</div>
             </div>
-          </li>
+          </div>
           {data?.showQuestionReports &&
             data?.showQuestionReports?.reports?.map((report, index) => (
               <QuestionReport
@@ -111,7 +110,7 @@ export default function QuestionReportList() {
                 }
               />
             ))}
-        </ul>
+        </div>
       </div>
       <div className={`${scrollHeight > 0 ? "" : "hidden"}`}>
         <ScrollToTop />

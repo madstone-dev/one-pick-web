@@ -1,4 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
+import { Dispatch, SetStateAction } from "react";
 import { apolloClient } from "../../src/apolloClient";
 import { deleteQuestionReport } from "../../src/__generated__/deleteQuestionReport";
 import { showQuestionReports_showQuestionReports_reports } from "../../src/__generated__/showQuestionReports";
@@ -14,10 +15,14 @@ const DELETE_QUESTION_REPORT = gql`
 
 interface IquestionReportDeleteButton {
   report: showQuestionReports_showQuestionReports_reports;
+  fontSize?: string;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function QuestionReportDeleteButton({
   report,
+  fontSize,
+  setOpen,
 }: IquestionReportDeleteButton) {
   const deleteQuestionCache = () => {
     apolloClient.cache.evict({
@@ -32,6 +37,9 @@ export default function QuestionReportDeleteButton({
       },
     });
     apolloClient.cache.gc();
+    if (setOpen) {
+      setOpen(false);
+    }
   };
 
   const onCompleted = (data: deleteQuestionReport) => {
@@ -58,7 +66,9 @@ export default function QuestionReportDeleteButton({
 
   return (
     <button
-      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap"
+      className={`${
+        fontSize ? fontSize : " text-sm"
+      } block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap`}
       onClick={onDeleteClick}
     >
       신고 삭제

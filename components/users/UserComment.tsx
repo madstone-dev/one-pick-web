@@ -6,6 +6,7 @@ import "moment/locale/ko";
 import Link from "next/link";
 import UserCommentDropdown from "./UserCommentDropdown";
 import { myQuestionComments_me_questionComments } from "../../src/__generated__/myQuestionComments";
+import UserCommentMobileMenu from "./UserCommentMobileMenu";
 
 interface IuserComment {
   comment: myQuestionComments_me_questionComments;
@@ -49,15 +50,21 @@ export default function UserComment({ comment }: IuserComment) {
           </div>
         </div>
         {loginUser && (
-          <div
-            className={
-              focusedComment === comment.id
-                ? "opacity-100"
-                : "sm:opacity-0 group-hover:opacity-100"
-            }
-          >
-            <UserCommentDropdown comment={comment} />
-          </div>
+          <>
+            <div
+              className={`${
+                focusedComment === comment.id
+                  ? "opacity-100"
+                  : "sm:opacity-0 group-hover:opacity-100"
+              }
+                hidden lg:block`}
+            >
+              <UserCommentDropdown comment={comment} />
+            </div>
+            <div className="block lg:hidden">
+              <UserCommentMobileMenu comment={comment} />
+            </div>
+          </>
         )}
       </div>
     </div>

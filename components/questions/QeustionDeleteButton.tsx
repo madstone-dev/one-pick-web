@@ -1,5 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import { Dispatch, SetStateAction } from "react";
 import { apolloClient } from "../../src/apolloClient";
 import { routes } from "../../src/routes";
 import { deleteQuestion } from "../../src/__generated__/deleteQuestion";
@@ -16,10 +17,14 @@ const DELETE_QUESTION_MUTATION = gql`
 
 interface IquestionDeleteButton {
   question: showQuestions_showQuestions;
+  fontSize?: string;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function QuestionDeleteButton({
   question,
+  fontSize,
+  setOpen,
 }: IquestionDeleteButton) {
   const router = useRouter();
 
@@ -30,9 +35,13 @@ export default function QuestionDeleteButton({
     apolloClient.cache.gc();
     if (
       router.pathname !== routes.adminReport &&
-      router.pathname !== "/users/[id]"
+      router.pathname !== "/users/[id]" &&
+      router.pathname !== routes.home
     ) {
       router.push(routes.home);
+    }
+    if (setOpen) {
+      setOpen(false);
     }
   };
 
@@ -66,7 +75,9 @@ export default function QuestionDeleteButton({
 
   return (
     <button
-      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap"
+      className={`${
+        fontSize ? fontSize : "text-sm"
+      } block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap`}
       onClick={onDeleteClick}
     >
       {deleteLoading ? "삭제중..." : "콘텐츠 삭제"}

@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Layout from "../../components/auth/Layout";
-import NoImage from "../../components/NoImage";
 import QuestionInfo from "../../components/questions/QuestionInfo";
 import Pick from "../../components/questions/Pick";
 import { apolloClient } from "../../src/apolloClient";
@@ -22,6 +21,7 @@ import { cardShadow } from "../../src/utils/utils";
 import { NextSeo } from "next-seo";
 import { NextPageContext } from "next";
 import { routes } from "../../src/routes";
+import QuestionMobileMenu from "../../components/questions/QuestionMobileMenu";
 
 export const SHOW_QUESTION_QUERY = gql`
   query showQuestion($id: Int!) {
@@ -119,39 +119,49 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
                       <div className="flex justify-between sm:hidden">
                         <QuestionInfo question={question} />
                         {userData && (
-                          <div className="relative z-10 shrink-0">
-                            <QuestionDropdown
-                              question={question}
-                              setReportOpen={setReportOpen}
-                            />
-                          </div>
+                          <>
+                            <div className="relative z-10 hidden shrink-0 lg:block">
+                              <QuestionDropdown
+                                question={question}
+                                setReportOpen={setReportOpen}
+                              />
+                            </div>
+                            <div className="relative z-10 block shrink-0 lg:hidden">
+                              <QuestionMobileMenu
+                                question={question}
+                                setReportOpen={setReportOpen}
+                              />
+                            </div>
+                          </>
                         )}
                       </div>
                       <div className="overflow-hidden group aspect-w-2 aspect-h-1 sm:aspect-h-1 sm:aspect-w-1 sm:row-span-2">
-                        {question.image ? (
-                          <div className="relative justify-center overflow-hidden rounded-3xl bg-gray-50">
-                            <img
-                              src={question?.image.Location}
-                              alt={`${question?.content}`}
-                              className="object-contain w-full h-full"
-                            />
-                            <QuestionImageZoom
-                              image={question?.image.Location}
-                            />
-                          </div>
-                        ) : (
-                          <NoImage className={"rounded-3xl"} />
-                        )}
+                        <div className="relative justify-center overflow-hidden rounded-3xl bg-gray-50">
+                          <img
+                            src={question?.image.Location}
+                            alt={`${question?.content}`}
+                            className="object-contain w-full h-full"
+                          />
+                          <QuestionImageZoom image={question?.image.Location} />
+                        </div>
                       </div>
                       <div className="justify-between hidden sm:flex">
                         <QuestionInfo question={question} />
                         {userData && (
-                          <div className="shrink-0">
-                            <QuestionDropdown
-                              question={question}
-                              setReportOpen={setReportOpen}
-                            />
-                          </div>
+                          <>
+                            <div className="hidden shrink-0 lg:block">
+                              <QuestionDropdown
+                                question={question}
+                                setReportOpen={setReportOpen}
+                              />
+                            </div>
+                            <div className="block shrink-0 lg:hidden">
+                              <QuestionMobileMenu
+                                question={question}
+                                setReportOpen={setReportOpen}
+                              />
+                            </div>
+                          </>
                         )}
                       </div>
                       <div>

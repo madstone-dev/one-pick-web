@@ -1,27 +1,20 @@
-import { ApolloCache, gql, useMutation } from "@apollo/client";
+import { ApolloCache, useMutation } from "@apollo/client";
 import { Dispatch, SetStateAction } from "react";
-import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
+import { myQuestionComments_me_questionComments } from "../../src/__generated__/myQuestionComments";
 import { toggleQuestionCommentBlock } from "../../src/__generated__/toggleQuestionCommentBlock";
+import { TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION } from "../questions/QuestionCommentBlockButton";
 
-export const TOGGLE_QUESTION_COMMENT_BLOCK_MUTATION = gql`
-  mutation toggleQuestionCommentBlock($id: Int!) {
-    toggleQuestionCommentBlock(id: $id) {
-      ok
-      error
-    }
-  }
-`;
-
-interface IquestionCommentBlockButton {
-  comment: showQuestionComments_showQuestionComments;
+interface IuserCommentBlockButton {
+  comment: myQuestionComments_me_questionComments;
   fontSize?: string;
   setOpen?: Dispatch<SetStateAction<boolean>>;
 }
-export default function QuestionCommentBlockButton({
+
+export default function UserCommentBlockButton({
   comment,
   fontSize,
   setOpen,
-}: IquestionCommentBlockButton) {
+}: IuserCommentBlockButton) {
   const onUpdatedCommentBlock = (cache: ApolloCache<any>) => {
     cache.modify({
       id: `QuestionComment:${comment.id}`,

@@ -4,16 +4,19 @@ import {
   useQuery,
   useReactiveVar,
 } from "@apollo/client";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { shouldRefetchQuestionsVar } from "../src/utils/questions.utils";
 import Layout from "../components/auth/Layout";
-import { HashLoader } from "react-spinners";
 import { SHOW_QUESTIONS_FRAGMENT } from "../src/fragments";
 import ContentSection from "../components/ContentSection";
 import QuestionMasonry from "../components/questions/QuestionMasonry";
-import { showQuestions } from "../src/__generated__/showQuestions";
+import {
+  showQuestions,
+  showQuestions_showQuestions,
+} from "../src/__generated__/showQuestions";
 import { loadContentFinishVar } from "../src/utils/utils";
 import { NextSeo } from "next-seo";
+import { apolloClient } from "../src/apolloClient";
 
 const SHOW_QUESTIONS_QUERY = gql`
   query showQuestions($lastId: Int) {
@@ -24,17 +27,32 @@ const SHOW_QUESTIONS_QUERY = gql`
   ${SHOW_QUESTIONS_FRAGMENT}
 `;
 
-export default function Home() {
+interface Ihome {
+  data: showQuestions_showQuestions[] | null;
+}
+
+export default function Home({ data }: Ihome) {
+  const [isCSR, setIsCSR] = useState(false);
+  const [questions, setQuestions] = useState(data);
   const shouldRefetch = useReactiveVar(shouldRefetchQuestionsVar);
   const loader = useRef(null);
-  const { data, loading, fetchMore, refetch } = useQuery<showQuestions>(
-    SHOW_QUESTIONS_QUERY,
-    {
-      onCompleted: () => {
-        loadContentFinishVar(false);
-      },
+  const {
+    data: questionsData,
+    fetchMore,
+    refetch,
+  } = useQuery<showQuestions>(SHOW_QUESTIONS_QUERY, {
+    onCompleted: () => {
+      loadContentFinishVar(false);
+    },
+  });
+
+  // SSR -> CSR 전환
+  useEffect(() => {
+    if (questionsData?.showQuestions) {
+      setQuestions(questionsData?.showQuestions);
+      setIsCSR(true);
     }
-  );
+  }, [questionsData]);
 
   // 필요한 경우 리패치
   useEffect(() => {
@@ -48,12 +66,12 @@ export default function Home() {
   const handleObserver = useCallback(
     async (entries) => {
       const loadFinish = loadContentFinishVar();
-      if (loadFinish) {
+      if (loadFinish || !isCSR) {
         return;
       }
       const target = entries[0];
-      if (data?.showQuestions && target.isIntersecting) {
-        const lastId = data?.showQuestions[data.showQuestions.length - 1]?.id;
+      if (questions && target.isIntersecting) {
+        const lastId = questions[questions.length - 1]?.id;
         const more: ApolloQueryResult<showQuestions> = await fetchMore({
           variables: {
             lastId,
@@ -64,7 +82,7 @@ export default function Home() {
         }
       }
     },
-    [data, fetchMore]
+    [data, fetchMore, isCSR]
   );
 
   useEffect(() => {
@@ -86,21 +104,14 @@ export default function Home() {
         <ContentSection>
           <section
             aria-labelledby="questions-heading"
-            className={`py-4 sm:py-6 lg:py-8 w-full px-4 sm:px-6 lg:px-8 ${
-              loading ? "contents" : ""
-            }`}
+            className="w-full px-4 py-4 sm:py-6 lg:py-8 sm:px-6 lg:px-8"
           >
             <h2 id="questions-heading" className="sr-only">
               질문들
             </h2>
-            {loading && (
-              <div className="flex items-center justify-center flex-1">
-                <HashLoader color="#777777" loading={true} size={60} />
-              </div>
-            )}
-            <div className={`${loading ? "hidden" : ""}`}>
-              {data?.showQuestions && data?.showQuestions?.length > 0 ? (
-                <QuestionMasonry questions={data.showQuestions} />
+            <div className={`${isCSR ? "" : "opacity-0"}`}>
+              {questions && questions?.length > 0 ? (
+                <QuestionMasonry questions={questions} />
               ) : (
                 <div
                   className="absolute text-2xl font-bold text-center text-gray-600"
@@ -122,3 +133,12 @@ export default function Home() {
     </>
   );
 }
+
+Home.getInitialProps = async () => {
+  const {
+    data: { showQuestions },
+  } = await apolloClient.query<showQuestions>({
+    query: SHOW_QUESTIONS_QUERY,
+  });
+  return { data: showQuestions };
+};

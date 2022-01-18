@@ -4,6 +4,7 @@ import { getAvatar } from "../../src/utils/auth.utils";
 import { reportTypes } from "../../src/utils/utils";
 import { showQuestionCommentReports_showQuestionCommentReports_reports } from "../../src/__generated__/showQuestionCommentReports";
 import QuestionCommentReportDropdown from "./QuestionCommentReportDropdown";
+import QuestionCommentReportMobileMenu from "./QuestionCommentReportMobileMenu";
 
 interface IquestionReport {
   report: showQuestionCommentReports_showQuestionCommentReports_reports;
@@ -21,7 +22,7 @@ export default function QuestionCommentReport({
     moment.unix(Number(report.createdAt) / 1000)
   ).fromNow();
   return (
-    <li>
+    <div>
       <div className="flex items-start px-4 py-4 sm:px-6">
         <div className="flex items-start flex-1 min-w-0">
           <div className="flex-shrink-0">
@@ -52,10 +53,13 @@ export default function QuestionCommentReport({
             </div>
           </div>
         </div>
-        <div>
+        <div className="hidden lg:block">
           <QuestionCommentReportDropdown report={report} isLast={isLast} />
         </div>
+        <div className="block lg:hidden">
+          <QuestionCommentReportMobileMenu report={report} />
+        </div>
       </div>
-    </li>
+    </div>
   );
 }

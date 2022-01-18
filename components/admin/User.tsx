@@ -3,15 +3,15 @@ import "moment/locale/ko";
 import { getAvatar } from "../../src/utils/auth.utils";
 import { searchUsers_searchUsers_users } from "../../src/__generated__/searchUsers";
 import UserDropdown from "./UserDropdown";
+import UserMobileMenu from "./UserMobileMenu";
 
 interface Iuser {
   user: searchUsers_searchUsers_users;
-  isLast: boolean;
 }
 
-export default function User({ user, isLast }: Iuser) {
+export default function User({ user }: Iuser) {
   return (
-    <li>
+    <div>
       <div className="flex items-start px-4 py-4 sm:px-6">
         <div className="flex items-start flex-1 min-w-0">
           <div className="flex-shrink-0">
@@ -52,10 +52,13 @@ export default function User({ user, isLast }: Iuser) {
             </div>
           </div>
         </div>
-        <div>
-          <UserDropdown user={user} isLast={isLast} />
+        <div className="hidden lg:block">
+          <UserDropdown user={user} />
+        </div>
+        <div className="block lg:hidden">
+          <UserMobileMenu user={user} />
         </div>
       </div>
-    </li>
+    </div>
   );
 }

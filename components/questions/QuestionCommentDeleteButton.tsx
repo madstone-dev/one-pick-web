@@ -1,4 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
+import { Dispatch, SetStateAction } from "react";
 import { apolloClient } from "../../src/apolloClient";
 import { deleteQuestionComment } from "../../src/__generated__/deleteQuestionComment";
 import { showQuestionComments_showQuestionComments } from "../../src/__generated__/showQuestionComments";
@@ -14,16 +15,23 @@ export const DELETE_QUESTION_COMMENT_MUTATION = gql`
 
 interface IquestionCommentDeleteButton {
   comment: showQuestionComments_showQuestionComments;
+  fontSize?: string;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function QuestionCommentDeleteButton({
   comment,
+  fontSize,
+  setOpen,
 }: IquestionCommentDeleteButton) {
   const deleteQuestionCommentCache = () => {
     apolloClient.cache.evict({
       id: `QuestionComment:${comment.id}`,
     });
     apolloClient.cache.gc();
+    if (setOpen) {
+      setOpen(false);
+    }
   };
 
   const onCompleted = (data: deleteQuestionComment) => {
@@ -66,7 +74,9 @@ export default function QuestionCommentDeleteButton({
 
   return (
     <button
-      className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap"
+      className={`${
+        fontSize ? fontSize : "text-sm"
+      } block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap`}
       onClick={onDeleteClick}
     >
       댓글 삭제
