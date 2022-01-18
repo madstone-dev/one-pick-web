@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useReactiveVar } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Layout from "../../components/auth/Layout";
@@ -22,6 +22,7 @@ import { NextSeo } from "next-seo";
 import { NextPageContext } from "next";
 import { routes } from "../../src/routes";
 import QuestionMobileMenu from "../../components/questions/QuestionMobileMenu";
+import { loginUserVar } from "../../src/utils/auth.utils";
 
 export const SHOW_QUESTION_QUERY = gql`
   query showQuestion($id: Int!) {
@@ -37,6 +38,7 @@ interface IshowQuestionServer {
 }
 
 export default function ShowQuestion({ data }: IshowQuestionServer) {
+  const loginUser = useReactiveVar(loginUserVar);
   const { data: userData } = useUser();
   const router = useRouter();
   const cardRef = useRef<any>();
@@ -44,22 +46,18 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
   const [question, setQuestion] = useState(data);
   const [reportOpen, setReportOpen] = useState(false);
   const id = parseInt(router.query.id as string);
-  const { data: questionData, refetch } = useQuery<showQuestion>(
-    SHOW_QUESTION_QUERY,
-    {
-      variables: {
-        id,
-      },
-    }
-  );
+  const { data: questionData } = useQuery<showQuestion>(SHOW_QUESTION_QUERY, {
+    variables: {
+      id,
+    },
+  });
 
   // SSR -> CSR 전환
   useEffect(() => {
-    refetch();
     if (questionData?.showQuestion) {
       setQuestion(questionData?.showQuestion);
     }
-  }, [questionData, refetch]);
+  }, [questionData, loginUser]);
 
   useEffect(() => {
     if (cardRef?.current?.offsetTop) {

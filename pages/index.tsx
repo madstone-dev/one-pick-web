@@ -17,6 +17,7 @@ import {
 import { loadContentFinishVar } from "../src/utils/utils";
 import { NextSeo } from "next-seo";
 import { apolloClient } from "../src/apolloClient";
+import { loginUserVar } from "../src/utils/auth.utils";
 
 const SHOW_QUESTIONS_QUERY = gql`
   query showQuestions($lastId: Int) {
@@ -32,6 +33,7 @@ interface Ihome {
 }
 
 export default function Home({ data }: Ihome) {
+  const loginUser = useReactiveVar(loginUserVar);
   const [isCSR, setIsCSR] = useState(false);
   const [questions, setQuestions] = useState(data);
   const shouldRefetch = useReactiveVar(shouldRefetchQuestionsVar);
@@ -52,7 +54,7 @@ export default function Home({ data }: Ihome) {
       setQuestions(questionsData?.showQuestions);
       setIsCSR(true);
     }
-  }, [questionsData]);
+  }, [questionsData, loginUser]);
 
   // 필요한 경우 리패치
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useReactiveVar } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "../../components/auth/Layout";
@@ -44,14 +44,10 @@ interface IshowUserServer {
 
 export default function ShowUser({ data }: IshowUserServer) {
   const router = useRouter();
-  const loginUser = loginUserVar();
+  const loginUser = useReactiveVar(loginUserVar);
   const id = parseInt(router.query.id as string);
   const [user, setUser] = useState(data);
-  const {
-    data: userData,
-    fetchMore,
-    refetch,
-  } = useQuery<showUser>(SHOW_USER_QUERY, {
+  const { data: userData, fetchMore } = useQuery<showUser>(SHOW_USER_QUERY, {
     variables: {
       id,
     },
@@ -70,11 +66,7 @@ export default function ShowUser({ data }: IshowUserServer) {
     if (userData?.showUser) {
       setUser(userData?.showUser);
     }
-  }, [userData]);
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+  }, [userData, loginUser]);
 
   let userProfileImage = "";
   if (userData?.showUser) {
@@ -143,7 +135,7 @@ export default function ShowUser({ data }: IshowUserServer) {
             </div>
           </div>
           <div className="flex flex-col-reverse w-full max-w-sm mx-auto mt-6 space-y-4 h-fit">
-            {id === loginUser?.id ? (
+            {loginUser && id === loginUser?.id ? (
               <Link href={routes.userProfile}>
                 <a className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                   계정 설정
