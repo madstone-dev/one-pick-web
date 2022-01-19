@@ -49,7 +49,7 @@ export default function QuestionDeleteButton({
     if (data.deleteQuestion.ok) {
       deleteQuestionCache();
       apolloClient.cache.modify({
-        id: `User:{"id":${question.user?.id}}`,
+        id: `User:${question.user?.id}`,
         fields: {
           totalQuestions(prev) {
             return prev - 1;

@@ -77,7 +77,7 @@ const mergeFilteredItems = (existing: any, incoming: any, orderBy: string) => {
   }
 };
 
-const cursurPaginate = (orderBy: string) => {
+const cursorPaginate = (orderBy: string) => {
   return {
     merge(existing = [], incoming = []) {
       return mergeFilteredItems(existing, incoming, orderBy);
@@ -94,18 +94,25 @@ export const apolloClient = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          showQuestions: cursurPaginate("desc"),
-          showQuestionComments: cursurPaginate("desc"),
-          searchQuestions: cursurPaginate("desc"),
+          showQuestions: cursorPaginate("desc"),
+          showQuestionComments: cursorPaginate("desc"),
+          searchQuestions: cursorPaginate("desc"),
         },
       },
       User: {
-        keyFields: ["id"],
         fields: {
-          questions: cursurPaginate("desc"),
-          questionComments: cursurPaginate("desc"),
-          questionBlocks: cursurPaginate("desc"),
-          questionCommentBlocks: cursurPaginate("desc"),
+          questions: cursorPaginate("desc"),
+          questionComments: cursorPaginate("desc"),
+          questionBlocks: cursorPaginate("desc"),
+          questionCommentBlocks: cursorPaginate("desc"),
+          followings: {
+            keyArgs: false,
+            ...cursorPaginate("desc"),
+          },
+          followers: {
+            keyArgs: false,
+            ...cursorPaginate("desc"),
+          },
           totalQuestionComments: {
             keyArgs: false,
           },

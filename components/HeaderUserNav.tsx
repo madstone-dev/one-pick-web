@@ -21,7 +21,6 @@ export default function HeaderUserNav({ user }: IheaderUserNav) {
           <div>
             <Menu.Button className="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
               <span className="sr-only">Open user menu</span>
-
               <img
                 className="object-cover rounded-full w-9 h-9"
                 src={

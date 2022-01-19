@@ -80,7 +80,7 @@ export default function QuestionCommentForm({
         <img
           src={loginUser?.avatar?.Location || getAvatar(loginUser?.username)}
           alt={`${loginUser?.username}의 프로필`}
-          className="w-10 h-10 mr-3 rounded-full"
+          className="object-cover object-center w-10 h-10 mr-3 rounded-full"
         />
         <TextareaAutosize
           {...register("content", {

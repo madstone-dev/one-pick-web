@@ -3,6 +3,7 @@ import { apolloClient } from "../../src/apolloClient";
 import { CheckIcon } from "@heroicons/react/outline";
 import { toggleFollowUser } from "../../src/__generated__/toggleFollowUser";
 import { showUser_showUser } from "../../src/__generated__/showUser";
+import { shouldFollowRefetch } from "../../src/utils/userFollow.utils";
 
 const TOGGLE_FOLLOW_USER = gql`
   mutation toggleFollowUser($id: Int!) {
@@ -24,13 +25,21 @@ export default function ToggleFollowButton({ user }: ItoggleFollowButton) {
       return;
     } else {
       apolloClient.cache.modify({
-        id: `User:{"id":${user?.id}}`,
+        id: `User:${user?.id}`,
         fields: {
           isFollowing(prev) {
             return !prev;
           },
+          totalFollowers(prev, { readField }) {
+            if (readField("isFollowing")) {
+              return prev - 1;
+            } else {
+              return prev + 1;
+            }
+          },
         },
       });
+      shouldFollowRefetch(true);
     }
   };
 

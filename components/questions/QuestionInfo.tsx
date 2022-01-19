@@ -30,7 +30,7 @@ export default function QuestionInfo({ question }: IquestionInfo) {
                         getAvatar(question.user.username)
                       }
                       alt={`${question.user.username}의 프로필`}
-                      className="w-12 h-12 rounded-full"
+                      className="object-cover object-center w-12 h-12 rounded-full"
                     />
                   </a>
                 </Link>
@@ -52,7 +52,7 @@ export default function QuestionInfo({ question }: IquestionInfo) {
                 <img
                   src={getAvatar("UN")}
                   alt="탈퇴한 유저"
-                  className="w-12 h-12 rounded-full"
+                  className="object-cover object-center w-12 h-12 rounded-full"
                 />
                 <div className="ml-4">
                   <h4 className="text-sm italic font-semibold text-gray-900">

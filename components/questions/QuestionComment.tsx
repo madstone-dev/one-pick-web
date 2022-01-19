@@ -50,7 +50,7 @@ export default function QuestionComment({
                 getAvatar(comment.user.username)
               }
               alt={`${comment.user.username}.`}
-              className="w-10 h-10 rounded-full"
+              className="object-cover object-center w-10 h-10 rounded-full"
             />
           </a>
         </Link>

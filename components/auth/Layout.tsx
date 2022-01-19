@@ -1,14 +1,19 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
+import { HashLoader } from "react-spinners";
 import useUser from "../../src/hooks/useUser";
-import { Ichildren } from "../../src/interfaces";
 import { routes } from "../../src/routes";
 import { loadingUserVar, loginUserVar } from "../../src/utils/auth.utils";
 import ActionBar from "../ActionBar";
 import HeaderNav from "../HeaderNav";
 
-export default function Layout({ children }: Ichildren) {
+interface Ilayout {
+  children: ReactNode;
+  childrenLoading?: boolean;
+}
+
+export default function Layout({ children, childrenLoading }: Ilayout) {
   const router = useRouter();
   const { data, loading } = useUser();
 
@@ -100,7 +105,15 @@ export default function Layout({ children }: Ichildren) {
       </Head>
       <div className="flex flex-col items-stretch w-full h-full min-h-screen">
         <HeaderNav user={data} />
-        <div className="flex flex-col flex-1">{children}</div>
+        <div className="flex flex-col flex-1">
+          {childrenLoading ? (
+            <div className="flex items-center justify-center flex-1">
+              <HashLoader color="#777777" loading={true} size={60} />
+            </div>
+          ) : (
+            children
+          )}
+        </div>
         {(router.pathname === routes.home ||
           router.pathname === routes.search) && <ActionBar user={data} />}
       </div>

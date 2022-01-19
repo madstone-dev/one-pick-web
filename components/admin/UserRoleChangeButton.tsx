@@ -27,7 +27,7 @@ export default function UserRoleChangeButton({
   const onCompleted = (data: changeUserRole) => {
     if (data.changeUserRole.ok) {
       apolloClient.cache.modify({
-        id: `User:{"id":${user.id}}`,
+        id: `User:${user.id}`,
         fields: {
           role(prev) {
             return prev === "admin" ? "user" : "admin";
