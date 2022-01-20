@@ -23,7 +23,7 @@ export default function Success({ title, description }: IsuccessNoticifation) {
   return (
     <div
       aria-live="assertive"
-      className="fixed inset-0 z-50 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:items-start"
+      className="fixed inset-0 z-50 flex items-start px-4 pt-20 pb-6 pointer-events-none sm:p-6 sm:items-start"
     >
       <div className="flex flex-col items-center w-full space-y-4 sm:items-end">
         <Transition

@@ -170,7 +170,7 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
                         )}
                       </div>
                       <div>
-                        <Pick question={question} refetch={refetch} />
+                        <Pick question={question} />
                       </div>
                     </div>
                     <div className="mt-12">
@@ -199,19 +199,23 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
 }
 
 ShowQuestion.getInitialProps = async (context: NextPageContext) => {
-  const {
-    data: { showQuestion },
-  } = await apolloClient.query<showQuestion>({
-    query: SHOW_QUESTION_QUERY,
-    variables: {
-      id: parseInt(context.query.id as string),
-    },
-  });
-  if (!showQuestion) {
-    context.res?.writeHead(301, {
-      Location: routes.home,
+  if (context.query.id) {
+    const {
+      data: { showQuestion },
+    } = await apolloClient.query<showQuestion>({
+      query: SHOW_QUESTION_QUERY,
+      variables: {
+        id: parseInt(context.query.id as string),
+      },
     });
-    context.res?.end();
+    if (!showQuestion) {
+      context.res?.writeHead(301, {
+        Location: routes.home,
+      });
+      context.res?.end();
+    }
+    return { data: showQuestion };
+  } else {
+    return { data: null };
   }
-  return { data: showQuestion };
 };

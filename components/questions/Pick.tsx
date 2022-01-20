@@ -7,7 +7,6 @@ import { pick } from "../../src/__generated__/pick";
 import { showQuestion_showQuestion } from "../../src/__generated__/showQuestion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
 
 const PICK_MUTATION = gql`
   mutation pick($id: Int!, $pick: Int!) {
@@ -20,10 +19,9 @@ const PICK_MUTATION = gql`
 
 interface Ipick {
   question: showQuestion_showQuestion;
-  refetch: Function;
 }
 
-export default function Pick({ question, refetch }: Ipick) {
+export default function Pick({ question }: Ipick) {
   const loginUser = loginUserVar();
   const router = useRouter();
   const id = question.id;
@@ -72,7 +70,19 @@ export default function Pick({ question, refetch }: Ipick) {
               };
             }
           } else {
-            refetch();
+            if (pick === 1) {
+              return {
+                ...prev,
+                first: prev.first + 1,
+                total: prev.total + 1,
+              };
+            } else {
+              return {
+                ...prev,
+                second: prev.second + 1,
+                total: prev.total + 1,
+              };
+            }
           }
         },
       },
@@ -98,18 +108,16 @@ export default function Pick({ question, refetch }: Ipick) {
             onPickClick(1);
           }}
         >
-          {question.myPick && (
-            <div
-              className={`absolute w-full h-full top-0 left-0 z-0 duration-500 ${
-                question?.myPick === 1
-                  ? "bg-indigo-300 group-hover:bg-indigo-400"
-                  : "bg-gray-300 group-hover:bg-gray-400"
-              }`}
-              style={{
-                width: `${Number(firstPickPercent)}%`,
-              }}
-            />
-          )}
+          <div
+            className={`absolute w-full h-full top-0 left-0 z-0 duration-500 ${
+              question?.myPick === 1
+                ? "bg-indigo-300 group-hover:bg-indigo-400"
+                : "bg-gray-300 group-hover:bg-gray-400"
+            }`}
+            style={{
+              width: `${Number(firstPickPercent)}%`,
+            }}
+          />
           <div className="relative bg-transparent">
             <span className="block text-sm font-medium text-gray-700">
               선택 1
@@ -117,11 +125,9 @@ export default function Pick({ question, refetch }: Ipick) {
             <div className="mt-1 text-lg font-semibold">
               {question?.choice[0]}
             </div>
-            {question.myPick && (
-              <span className="block mt-3 text-lg font-medium text-right text-gray-700">
-                {Number(firstPickPercent)}%
-              </span>
-            )}
+            <span className="block mt-3 text-lg font-medium text-right text-gray-700">
+              {Number(firstPickPercent)}%
+            </span>
           </div>
         </div>
 
@@ -133,18 +139,16 @@ export default function Pick({ question, refetch }: Ipick) {
             onPickClick(2);
           }}
         >
-          {question.myPick && (
-            <div
-              className={`absolute w-full h-full top-0 left-0 z-0 duration-500 ${
-                question?.myPick === 2
-                  ? "bg-indigo-300 group-hover:bg-indigo-400"
-                  : "bg-gray-300 group-hover:bg-gray-400"
-              }`}
-              style={{
-                width: `${100 - Number(firstPickPercent)}%`,
-              }}
-            />
-          )}
+          <div
+            className={`absolute w-full h-full top-0 left-0 z-0 duration-500 ${
+              question?.myPick === 2
+                ? "bg-indigo-300 group-hover:bg-indigo-400"
+                : "bg-gray-300 group-hover:bg-gray-400"
+            }`}
+            style={{
+              width: `${100 - Number(firstPickPercent)}%`,
+            }}
+          />
           <div className="relative bg-transparent">
             <span className="block text-sm font-medium text-gray-700">
               선택 2
@@ -152,11 +156,9 @@ export default function Pick({ question, refetch }: Ipick) {
             <div className="mt-1 text-lg font-semibold">
               {question?.choice[1]}
             </div>
-            {question.myPick && (
-              <span className="block mt-3 text-lg font-medium text-right text-gray-700">
-                {100 - Number(firstPickPercent)}%
-              </span>
-            )}
+            <span className="block mt-3 text-lg font-medium text-right text-gray-700">
+              {100 - Number(firstPickPercent)}%
+            </span>
           </div>
         </div>
       </div>

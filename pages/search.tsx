@@ -65,6 +65,15 @@ export default function Search() {
     return () => clearTimeout(timeout);
   }, [keyword, hashtagRefetch]);
 
+  const onCompleted = () => {
+    if (process.browser) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
+
   // search question
   const {
     data: questionsData,
@@ -75,6 +84,7 @@ export default function Search() {
     variables: {
       type: "hashtag",
     },
+    onCompleted,
   });
 
   const onSearch = useCallback(

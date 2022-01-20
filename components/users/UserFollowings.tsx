@@ -18,7 +18,7 @@ import {
 import Link from "next/link";
 
 const SHOW_USER_FOLLOWERS_QUERY = gql`
-  query showUserFollowers($id: Int!, $lastId: Int) {
+  query showUserFollowings($id: Int!, $lastId: Int) {
     showUser(id: $id) {
       id
       followings(lastId: $lastId) {
