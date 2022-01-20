@@ -46,11 +46,14 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
   const [question, setQuestion] = useState(data);
   const [reportOpen, setReportOpen] = useState(false);
   const id = parseInt(router.query.id as string);
-  const { data: questionData } = useQuery<showQuestion>(SHOW_QUESTION_QUERY, {
-    variables: {
-      id,
-    },
-  });
+  const { data: questionData, refetch } = useQuery<showQuestion>(
+    SHOW_QUESTION_QUERY,
+    {
+      variables: {
+        id,
+      },
+    }
+  );
 
   // SSR -> CSR 전환
   useEffect(() => {
@@ -64,6 +67,10 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
       setCardTop(cardRef?.current?.offsetTop);
     }
   }, [cardRef]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <>
@@ -163,7 +170,7 @@ export default function ShowQuestion({ data }: IshowQuestionServer) {
                         )}
                       </div>
                       <div>
-                        <Pick question={question} />
+                        <Pick question={question} refetch={refetch} />
                       </div>
                     </div>
                     <div className="mt-12">

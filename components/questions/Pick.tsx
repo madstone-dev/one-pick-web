@@ -20,9 +20,10 @@ const PICK_MUTATION = gql`
 
 interface Ipick {
   question: showQuestion_showQuestion;
+  refetch: Function;
 }
 
-export default function Pick({ question }: Ipick) {
+export default function Pick({ question, refetch }: Ipick) {
   const loginUser = loginUserVar();
   const router = useRouter();
   const id = question.id;
@@ -71,19 +72,7 @@ export default function Pick({ question }: Ipick) {
               };
             }
           } else {
-            if (pick === 1) {
-              return {
-                ...prev,
-                first: 1,
-                total: 1,
-              };
-            } else {
-              return {
-                ...prev,
-                second: 1,
-                total: 1,
-              };
-            }
+            refetch();
           }
         },
       },
