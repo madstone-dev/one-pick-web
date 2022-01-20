@@ -39,7 +39,8 @@ export default function UserCommentDeleteButton({
     });
 
   const onDeleteClick = () => {
-    if (window.confirm("댓글을 삭제하시겠습니까?")) {
+    const ok = window.confirm("댓글을 삭제하시겠습니까?");
+    if (ok) {
       deleteQuestionCommentMutation();
     }
   };

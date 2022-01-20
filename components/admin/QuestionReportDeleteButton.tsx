@@ -59,7 +59,8 @@ export default function QuestionReportDeleteButton({
   );
 
   const onDeleteClick = () => {
-    if (window.confirm("해당 리포트를 삭제하시겠습니까?")) {
+    const ok = window.confirm("해당 리포트를 삭제하시겠습니까?");
+    if (ok) {
       deleteQuestionReportMutation();
     }
   };

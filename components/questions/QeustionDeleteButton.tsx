@@ -70,7 +70,8 @@ export default function QuestionDeleteButton({
   );
 
   const onDeleteClick = () => {
-    if (window.confirm("해당 글을 삭제하시겠습니까?")) {
+    const ok = window.confirm("해당 글을 삭제하시겠습니까?");
+    if (ok) {
       deleteQuestionMutation();
     }
   };

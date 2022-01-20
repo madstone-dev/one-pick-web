@@ -55,13 +55,12 @@ export default function UserRoleChangeButton({
 
   const onClick = () => {
     if (process.browser) {
-      if (
-        window.confirm(
-          `유저 권한을 ${
-            user.role === "admin" ? "user" : "admin"
-          }으로 변경 하겠습니까?`
-        )
-      ) {
+      const ok = window.confirm(
+        `유저 권한을 ${
+          user.role === "admin" ? "user" : "admin"
+        }으로 변경 하겠습니까?`
+      );
+      if (ok) {
         changeUserRoleMutation();
       }
     }
