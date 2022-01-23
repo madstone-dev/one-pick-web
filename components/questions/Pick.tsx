@@ -146,7 +146,9 @@ export default function Pick({ question }: Ipick) {
                 : "bg-gray-300 group-hover:bg-gray-400"
             }`}
             style={{
-              width: `${100 - Number(firstPickPercent)}%`,
+              width: `${
+                totalPicks === 0 ? 0 : 100 - Number(firstPickPercent)
+              }%`,
             }}
           />
           <div className="relative bg-transparent">
@@ -157,7 +159,7 @@ export default function Pick({ question }: Ipick) {
               {question?.choice[1]}
             </div>
             <span className="block mt-3 text-lg font-medium text-right text-gray-700">
-              {100 - Number(firstPickPercent)}%
+              {totalPicks === 0 ? 0 : 100 - Number(firstPickPercent)}%
             </span>
           </div>
         </div>
