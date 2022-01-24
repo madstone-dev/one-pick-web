@@ -51,7 +51,7 @@ export default function QuestionCommentForm({
       });
       setValue("content", "");
     } else {
-      alert("저장 실패");
+      alert(data.createQuestionComment.error);
     }
   };
 

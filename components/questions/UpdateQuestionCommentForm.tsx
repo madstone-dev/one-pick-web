@@ -51,7 +51,7 @@ export default function UpdateQuestionCommentForm({
       });
       setEditable(false);
     } else {
-      alert("수정 실패");
+      alert(data.updateQuestionComment.error);
     }
   };
   const [updateQuestionCommentMutation, { loading }] =
