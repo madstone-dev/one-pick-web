@@ -42,6 +42,8 @@ SitemapXML.getInitialProps = async (context: NextPageContext) => {
         <url>
             <loc>${`${DOMAIN}/${route}`}</loc>
             <lastmod>${getDate}</lastmod>
+            <changefreq>monthly</changefreq>
+            <priority>1.0</priority>
         </url>
         `
     )
@@ -54,6 +56,8 @@ SitemapXML.getInitialProps = async (context: NextPageContext) => {
         <url>
             <loc>${`${DOMAIN}/questions/${question.id}`}</loc>
             <lastmod>${getDate}</lastmod>
+            <changefreq>daily</changefreq>
+            <priority>1.0</priority>
         </url>
       `
     )
