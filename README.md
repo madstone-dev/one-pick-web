@@ -1,34 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+[골라골라 원픽](https://www.onepick.fun/) 입니다.
 
-## Getting Started
+## 프로젝트 소개
 
-First, run the development server:
+- 이지선다형 투표 게시물을 등록할 수 있는 커뮤니티 서비스입니다.
+- 게시물의 내용에 투표하거나, 댓글을 달 수 있습니다.
+- 투표된 게시물에는 참여자 수와 비율리 나타납니다.
+- 마음에 들지 않는 게시물은 숨기기와 신고가 가능합니다.
+- 관리자 페이지가 존재하여, 신고된 게시물은 관리자가 삭제할 수 있습니다.
+- 비밀번호 재설정 링크는 이메일로 전달됩니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+### 기술
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- `Next.js` `React`로 빌드 하였습니다.
+- `GraphQL` `Apollo Client` `TailwindCSS`를 사용했습니다.
